@@ -97,6 +97,7 @@ text-decoration: none;
     font-size: 26px;
     text-align: center;
     color: #56465a;
+    margin-bottom: 16px;
 }
 
 .form {
@@ -165,10 +166,15 @@ color: #87788a;
 div.check_ok{
 display:flex
 }
-
-/*
+.athoner-register{
+    text-align: center;
+}
+.athoner-register span{
+    color: #333;
+    font-weight: 500;
+}
 @media (max-width : 569px) {
     .inner {
         height: 100vh;
     }
-}*/
+}

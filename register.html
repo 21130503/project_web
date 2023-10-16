@@ -8,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sign Up</title>
     <link rel="stylesheet" href="./register.css">
+    <link rel="stylesheet" href="./common.css">
 </head>
 
 <body>
@@ -15,14 +16,17 @@
     <h1 class="logo">Nhóm 26</h1>
     <h3 class="title">Sign Up</h3>
     <form action="get" class="form">
-        <input type="text" placeholder="Username">
         <input type="email" id="email" placeholder="Email">
+        <input type="text" placeholder="Username">
         <input type="password" placeholder="Password">
         <input type="password" placeholder="Confirm password">
+        <div class="bt_sign_up">
+            <button type="submit">Sign Up</button>
+    </div>
     </form>
 
 
-    <form action="" class="check">
+    <!-- <form action="" class="check">
 
         <p class="gender">Choose your gender</p>
 
@@ -46,17 +50,22 @@
             </div>
         </div>
 
-        <div class="bt_sign_up">
-            <form action="">
-                <button type="submit">Sign Up</button>
-            </form>
-        </div>
-    </form>
+    </form> -->
+    <div class="athoner-register">
+        <span>Or register with</span>
+        <ul class="list">
+            <li class="item"><a href="" class="link">
+                <img src="./asset/face.png" alt="" class="img-logo">
+            </a></li>
+            <li class="item"><a href="" class="link">
+                <img src="./asset/gg.png" alt="" class="img-logo">
+            </a></li>
+        </ul>
+    </div>
 
-
-    <div class="signin">
+    <div class="signin mt-8">
         <span>Have an account ?</span><br>
-        <a href="login.html" class="none_decorate">Sign in</a>
+        <a href="login.html" class="none_decorate mt-8 db">Sign in</a>
     </div>
 
 </div>
