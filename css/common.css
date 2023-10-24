@@ -4,3 +4,6 @@
 .db{
     display: block;
 }
+.caret{
+    caret-color: #c057d7;
+}

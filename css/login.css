@@ -6,7 +6,7 @@
 body{
     height: 100vh;
     width: 100vw;
-    background-image: url('./asset/anh-nen-vu-tru-003.jpg');
+    background-image: url('../asset/anh-nen-vu-tru-003.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
