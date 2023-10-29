@@ -1,140 +1,74 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title> Đăng Ký </title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="./css/register.css">
+    <link rel="stylesheet" href="./css/common.css">
 </head>
-<form action="google.com">
-    <body>
-    <h1> ĐĂNG KÝ THÀNH CÔNG</h1>
-    <table >
-        <tbody>
-        <tr>
-            <td colspan="2"><b> THÔNG TIN ĐĂNG NHẬP</b></td>
-        </tr>
-        <tr>
-            <td> Email:</td>
-            <td><input type ="email" name ="email" id ="idEmail"></td>
-        </tr>
-        <tr>
-            <td> Mật Khẩu:</td>
-            <td><input type="password" name ="password" id="idPassword" /> </td>
-        </tr>
-        <tr>
-            <td> Nhập lại mật khẩu:</td>
-            <td><input type ="password" name="re_password" id="idRe_password" /> </td>
-        </tr>
-        <tr>
-            <td colspan="2"><strong>THÔNG TIN CÁ NHÂN</strong> </td>
-        </tr>
-        <tr>
-            <td>Họ và tên:</td>
-            <td><input type="text" name ="hoVaTen " id="idhoVaTen"></td>
-        </tr>
-        <tr>
-            <td>Giới tính:</td>
-            <td><input type="radio"	name ="gioiTinh" id="idGioiTinhM" value ="M" ><label for="idGioiTinhM">Nam</label>
-                <input type="radio" name ="gioiTinh" id ="idGioiTinhF" value ="F"><label for ="idGioiTinhF">Nữ</label>
-            </td>
-        </tr>
-        <tr>
-            <td> Ngày sinh :</td>
-            <td><input type="date" name="ngaySinh" id="idNgaySinh"/></td>
-        </tr>
-        <tr>
-            <td>Số điện thoại:</td>
-            <td><input type="tel" name="soDienThoai" id="idSoDienThoai"/></td>
-        </tr>
-        <tr>
-            <td>Số di động:</td>
-            <td><input type="tel" name ="soDiDong" id="idSoDiDong"/></td>
-        </tr>
-        <tr>
-            <td colspan="2"><b>ĐỊA CHỈ</b></td>
-        </tr>
-        <tr>
-            <td>Quốc gia</td>
-            <td>
-                <select name="quocGia" id="idQuocGia">
-                    <option value="VN">Việt Nam</option>
-                    <option value="HK">Hoa Kỳ</option>
-                    <option value="KRO">Hàn Quốc</option>
 
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Tỉnh Thành</td>
-            <td>
-                <select name="tinhThanh" id="idtinhThanh">
-                    <option value="HCM">Hồ Chí Minh </option>
-                    <option value="ĐN">Đà Nẵng </option>
-                    <option value="HN">Hà Nội</option>
-
-                </select>
-        <tr>
-            <td>Quận Huyện</td>
-            <td>
-                <select name="quanHuyen" id="idquanHuyen">
-                    <option value="Thủ Đức">Thủ Đức </option>
-                    <option value="Quận 1">Quận 1</option>
-                    <option value="Quận Bình Thạnh">Quận Bình Thạnh</option>
-
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Địa chỉ</td>
-            <td>
-                <textarea rows="5" cols="" name="diaChi" id=idDiaChi></textarea>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2"><strong>BỔ SUNG</strong></td>
-        </tr>
-        <tr>
-            <td>Sở Thích</td>
-            <td>
-                <input type ="checkbox" name="soThich" id="idSoThich"><label for="idSoThich">Đọc Sách</label>
-                <input type ="checkbox" name="soThich" id="idSoThich"><label for="idSoThich">Thư Giãn</label>
-            </td>
-        </tr>
-        <tr>
-            <td>Hình ảnh</td>
-            <td>
-                <input type="file" name ="hinhAnh" id="idHinhAnh">
-            </td>
-        </tr>
-        <tr>
-            <td>Tuổi</td>
-            <td>
-                <input type="number" name ="tuoi" id="idTuoi" min="0">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" value="Đăng Ký">
-                <input type="reset" value="Reset">
-            </td>
-        </tr>
+<body>
+<div class="inner">
+    <h1 class="logo">Nhóm 26</h1>
+    <h3 class="title">Sign Up</h3>
+    <form action="get" class="form">
+        <input type="email" id="email" placeholder="Email" class="caret">
+        <input type="text" placeholder="Username" class="caret">
+        <input type="password" placeholder="Password" class="caret">
+        <input type="password" placeholder="Confirm password" class="caret">
+        <div class="bt_sign_up">
+            <button type="submit">Sign Up</button>
+    </div>
+    </form>
 
 
+    <!-- <form action="" class="check">
 
+        <p class="gender">Choose your gender</p>
 
+        <div class="gender_choose">
+            <label for="male">Male</label>
+            <input type="radio" id="male" name="gender">
 
+            <label for="female">Female</label>
+            <input type="radio" id="female" name="gender">
 
+            <label for="female">Other</label>
+            <input type="radio" id="other" name="gender">
+        </div>
 
+        <div class="check_ok">
+            <div class="inp_check">
+                <input type="checkbox" name="ok" id="ok">
+            </div>
+            <div class="label_ok">
+                <label for="ok">I Agree To The <span>Term</span> & <span>Conditions</span> </label>
+            </div>
+        </div>
 
+    </form> -->
+    <div class="athoner-register">
+        <span>Or register with</span>
+        <ul class="list">
+            <li class="item"><a href="" class="link">
+                <img src="./asset/face.png" alt="" class="img-logo">
+            </a></li>
+            <li class="item"><a href="" class="link">
+                <img src="./asset/gg.png" alt="" class="img-logo">
+            </a></li>
+        </ul>
+    </div>
 
+    <div class="signin mt-8">
+        <span>Have an account ?</span><br>
+        <a href="login.html" class="none_decorate mt-8 db">Sign in</a>
+    </div>
 
+</div>
+</body>
 
-
-
-
-
-        </tbody>
-    </table>
-    </from>
-
-    </body>
 </html>
