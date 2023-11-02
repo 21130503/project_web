@@ -5,7 +5,7 @@
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
-:root {
+ :root {
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
@@ -9582,8 +9582,7 @@ a.text-dark:hover, a.text-dark:focus {
     transform: translateY(-15px);
   }
 }
-<<<<<<< HEAD
-=======
+
 .logo{
   text-align: center;
   font-size: 50px;
@@ -9593,4 +9592,3 @@ a.text-dark:hover, a.text-dark:focus {
   -webkit-text-fill-color: transparent;
   height: 100%;
 }
->>>>>>> 2894c25732737c9f136c6de8b9ef7a3bb7417902
