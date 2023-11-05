@@ -16,11 +16,6 @@ body {
     justify-content: center;
 }
 
-span{
-font-weight: bold;
-color: red;
-}
-
 button {
     padding: 10px 8px;
     background-color: #c057d7;
@@ -144,7 +139,7 @@ padding: 6px 0px;
 .signin{
     text-align: center;
     color: #c057d7;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 500;
 }
 
@@ -168,6 +163,9 @@ display:flex
 }
 .athoner-register{
     text-align: center;
+}
+a.athoner-register span{
+    font-weight: bold;
 }
 .athoner-register span{
     color: #333;

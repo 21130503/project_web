@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sign Up</title>
+    <title>Đăng kí</title>
     <link rel="stylesheet" href="./css/register.css">
     <link rel="stylesheet" href="./css/common.css">
 </head>
@@ -14,45 +14,30 @@
 <body>
 <div class="inner">
     <h1 class="logo">Nhóm 26</h1>
-    <h3 class="title">Sign Up</h3>
-    <form action="get" class="form">
-        <input type="email" id="email" placeholder="Email" class="caret">
-        <input type="text" placeholder="Username" class="caret">
-        <input type="password" placeholder="Password" class="caret">
-        <input type="password" placeholder="Confirm password" class="caret">
+    <h3 class="title">Đăng kí</h3>
+    <form action="get" class="form" id="form">
+        <div class="form-group">
+            <input type="email" id="email" placeholder="Email" class="caret" >
+            <span class="show-message"></span>
+        </div>
+        <div class="form-group">
+            <input type="text" placeholder="Tên người dùng" class="caret" id="fullname">
+            <span  class="show-message"></span>
+        </div>
+        <div class="form-group">
+            <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" class="caret">
+            <span class="show-message"></span>
+        </div>
+        <div class="form-group">
+            <input type="password" placeholder="Nhập lại mật khẩu" class="caret" id="password_confirmation">
+            <span class="show-message"></span>
+        </div>
         <div class="bt_sign_up">
-            <button type="submit">Sign Up</button>
+            <button type="submit">Đăng kí</button>
     </div>
     </form>
-
-
-    <!-- <form action="" class="check">
-
-        <p class="gender">Choose your gender</p>
-
-        <div class="gender_choose">
-            <label for="male">Male</label>
-            <input type="radio" id="male" name="gender">
-
-            <label for="female">Female</label>
-            <input type="radio" id="female" name="gender">
-
-            <label for="female">Other</label>
-            <input type="radio" id="other" name="gender">
-        </div>
-
-        <div class="check_ok">
-            <div class="inp_check">
-                <input type="checkbox" name="ok" id="ok">
-            </div>
-            <div class="label_ok">
-                <label for="ok">I Agree To The <span>Term</span> & <span>Conditions</span> </label>
-            </div>
-        </div>
-
-    </form> -->
     <div class="athoner-register">
-        <span>Or register with</span>
+        <span>Hoặc đăng kí với</span>
         <ul class="list">
             <li class="item"><a href="" class="link">
                 <img src="./asset/face.png" alt="" class="img-logo">
@@ -64,11 +49,33 @@
     </div>
 
     <div class="signin mt-8">
-        <span>Have an account ?</span><br>
-        <a href="login.html" class="none_decorate mt-8 db">Sign in</a>
+        <span>Bạn đã có tài khoản ?</span>
+        <a href="login.html" class="none_decorate">Đăng nhập</a>
     </div>
 
 </div>
+<script src="./js/formValidation.js"></script>
+<script>
+    Validator({
+        form: '#form',
+        errorSelector:'.show-message',
+        rules:[
+            Validator.isRequired('#fullname','Vui lòng nhập trường này'),
+            Validator.isRequired('#email','Vui lòng nhập trường này'),
+            Validator.isEmail('#email','Trường này phải là email'),
+            Validator.isRequired('#password','Vui lòng nhập trường này'),
+            Validator.minLength('#password',6),
+            Validator.isRequired('#password_confirmation','Vui lòng nhập trường này'),
+            Validator.isConfirmed('#password_confirmation',function(){
+              return document.querySelector('#form #password').value;
+            },'Mật khẩu nhập lại không chính xác')
+
+        ],
+        onSubmit:(data)=>{
+          log(data)
+        }
+    })
+</script>
 </body>
 
 </html>
