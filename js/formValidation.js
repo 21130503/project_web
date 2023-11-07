@@ -48,7 +48,7 @@ function Validator(option){
                     var formValue = Array.from(formEnableInput).reduce((values, input)=>{
                         return (values[input.name] = input.value) && values
                     },{})
-                    option.onSubmit(obj)
+                    option.onSubmit(formValue)
                 }
             }
             else{
