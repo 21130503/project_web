@@ -99,6 +99,10 @@ button{
     cursor: pointer;
     text-decoration: none;
 }
+.fogot{
+    font-size: 14px;
+    margin-top: 8px;
+}
 a{
     text-decoration: underline;
 }
