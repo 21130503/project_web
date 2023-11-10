@@ -28,9 +28,10 @@
 </head>
 
 <body>
+    <!-- Start - Phần dùng chung cho các trang dành cho user -->
+
     <!-- Topbar Start -->
     <div class="container-fluid">
-
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a href="" class="text-decoration-none">
@@ -42,7 +43,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                         <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
+                            <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
                                 <i class="fa fa-search"></i>
                             </span>
                         </div>
@@ -50,11 +51,11 @@
                 </form>
             </div>
             <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
+                <a href="favourite.html" class="btn border" title="Yêu thích">
                     <i class="fas fa-heart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
-                <a href="" class="btn border">
+                <a href="cart.html" class="btn border" title="Giỏ hàng">
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
@@ -101,7 +102,7 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="index.html" class="nav-item nav-link">Trang chủ</a>
                             <a href="shop.html" class="nav-item nav-link">Cửa hàng</a>
-                            <a href="albumnew.html" class="nav-item nav-link">Bộ sưu tập mới</a>
+                            <a href="donhangcuaban.html" class="nav-item nav-link">Đơn hàng của bạn</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Trang</a>
                                 <div class="dropdown-menu rounded-0 m-0">
@@ -109,7 +110,7 @@
                                     <a href="checkout.html" class="dropdown-item active">Thanh toán</a>
                                 </div>
                             </div>
-                            <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
+                            <a href="contact.html" class="nav-item nav-link ">Liên hệ</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             <a href="login.html" class="nav-item nav-link">Đăng nhập</a>
@@ -121,6 +122,8 @@
         </div>
     </div>
     <!-- Navbar End -->
+
+    <!-- End - Phần dùng chung cho các trang dành cho user -->
 
 
     <!-- Page Header Start -->
@@ -265,35 +268,39 @@
                     <div class="card-body">
                         <h5 class="font-weight-medium mb-3">Các Sản Phẩm</h5>
                         <div class="d-flex justify-content-between">
-                            <p id="product1">Album Số 1</p>
-                            <p id="price1">$150</p>
+                            <p id="product1">Album Chó</p>
+                            <p id="price1">150.000 VNĐ </p>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <p id="product2">Ảnh Thiên Nhiên Số 103</p>
-                            <p id="price2">$150</p>
+                            <p id="product2">Album Đua xe</p>
+                            <p id="price2">100.000 VNĐ </p>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <p id="product3">Album Vũ Trụ 4</p>
-                            <p id="price3">$250</p>
+                            <p id="product3">Album Vũ Trụ </p>
+                            <p id="price3">200.000 VNĐ </p>
                         </div>
                         <hr class="mt-0">
                         <div class="d-flex justify-content-between mb-3 pt-1">
                             <h6 class="font-weight-medium">Tổng Tiền Chưa Thuế</h6>
-                            <h6 class="font-weight-medium" id="subtotal">$550</h6>
+                            <h6 class="font-weight-medium" id="subtotal"></h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Giá Vận Chuyển</h6>
-                            <h6 class="font-weight-medium" id="shippingFee">$10</h6>
+                            <h6 class="font-weight-medium" id="shippingFee">40.000 VNĐh6>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Thuế VAT</h6>
+                            <h6 class="font-weight-medium">Thuế VAT <i style="padding-left: 10px;"
+                                    class="far fa-question-circle"
+                                    title=" (Value Added Tax) là một loại thuế tiêu thụ được áp dụng trên giá trị gia tăng
+                                    của sản phẩm hoặc dịch vụ trong quá trình chuỗi cung ứng."></i>
+                            </h6>
                             <h6 class="font-weight-medium" id="vatRate">6%</h6>
                         </div>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
                             <h5 class="font-weight-bold">Tổng Cộng</h5>
-                            <h5 class="font-weight-bold" id="total">$560</h5>
+                            <h5 class="font-weight-bold" id="total"></h5>
                         </div>
                     </div>
                 </div>
@@ -338,18 +345,19 @@
                         </div>
                     </div>
                 </div> -->
+                <!-- Mã cũ không js -->
 
                 <div class="card border-secondary mb-5">
                     <div class="card-header bg-secondary border-0">
                         <h4 class="font-weight-semi-bold m-0">Phương Thức Trả</h4>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <div class="custom-control custom-radio">
                                 <input type="radio" class="custom-control-input" name="payment" id="paypal">
                                 <label class="custom-control-label" for="paypal">Paypal</label>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <div class="custom-control custom-radio">
                                 <input type="radio" class="custom-control-input" name="payment" id="directcheck">
@@ -374,10 +382,8 @@
     <!-- Checkout End -->
 
 
-    <!-- Footer Start -->
+    <!-- Footer chung cho các trang - Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
-
-        <!-- Footer chung cho các trang -->
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="" class="text-decoration-none">
@@ -397,10 +403,10 @@
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Trang
                                 chủ</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Của
+                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Cửa
                                 hàng</a>
-                            <a class="text-dark mb-2" href="albumnew.html"><i class="fa fa-angle-right mr-2"></i>Bộ sưu
-                                tập mới</a>
+                            <a class="text-dark mb-2" href="donhangcuaban.html"><i
+                                    class="fa fa-angle-right mr-2"></i>Đơn hàng của bạn</a>
                             <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Giỏ
                                 hàng</a>
                             <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Thanh
@@ -428,10 +434,8 @@
                 </div>
             </div>
         </div>
-        <!-- Footer chung cho các trang -->
-
     </div>
-    <!-- Footer End -->
+    <!-- Footer chung cho các trang - End -->
 
 
     <!-- Back to Top -->
@@ -449,26 +453,44 @@
     <script src="mail/contact.js"></script>
 
     <!-- Template Javascript -->
-
     <script>
-        function calculateTotal() {
-            const price1 = parseFloat(document.getElementById("price1").textContent.slice(1)); // Loại bỏ ký tự "$" và chuyển đổi sang số
-            const price2 = parseFloat(document.getElementById("price2").textContent.slice(1));
-            const price3 = parseFloat(document.getElementById("price3").textContent.slice(1));
-            const shippingFee = parseFloat(document.getElementById("shippingFee").textContent.slice(1));
-            const vatRate = parseFloat(document.getElementById("vatRate").textContent);
-
-            const subtotal = price1 + price2 + price3;
-            const vat = (subtotal + shippingFee) * (vatRate / 100);
-            const total = subtotal + shippingFee + vat;
-
-            document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById("total").textContent = `$${total.toFixed(2)}`;
-        }
-
-        // Tính toán tổng cộng khi trang tải lần đầu
-        calculateTotal();
+        document.addEventListener("DOMContentLoaded", function () {
+            // Định nghĩa giá của các sản phẩm
+            const prices = {
+                product1: 150000,
+                product2: 100000,
+                product3: 200000
+            };
+    
+            // Lấy các phần tử HTML cần thiết
+            const subtotalElement = document.getElementById("subtotal");
+            const shippingFeeElement = document.getElementById("shippingFee");
+            const vatRateElement = document.getElementById("vatRate");
+            const totalElement = document.getElementById("total");
+    
+            // Tính tổng tiền chưa thuế
+            const subtotal = Object.values(prices).reduce((acc, price) => acc + price, 0);
+            subtotalElement.textContent = formatCurrency(subtotal);
+    
+            // Tính tổng cộng (bao gồm cả thuế và phí vận chuyển)
+            const vatRate = 0.06; // 6%
+            const shippingFee = 40000; // 40,000 VNĐ
+            const total = subtotal + shippingFee + (subtotal * vatRate);
+            totalElement.textContent = formatCurrency(total);
+    
+            // Hiển thị phí vận chuyển và thuế VAT
+            shippingFeeElement.textContent = formatCurrency(shippingFee);
+            vatRateElement.textContent = (vatRate * 100) + "%";
+    
+            // Hàm để định dạng số tiền sang định dạng tiền tệ
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount).replace('₫', 'VNĐ');
+            }
+        });
     </script>
+    
+
+
     <script src="js/main.js"></script>
 </body>
 

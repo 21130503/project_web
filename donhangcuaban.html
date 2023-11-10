@@ -31,21 +31,22 @@
 </head>
 
 <body>
+    <!-- Start - Phần dùng chung cho các trang dành cho user -->
+
     <!-- Topbar Start -->
     <div class="container-fluid">
-
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <a href="./index.html" class="text-decoration-none">
+                <a href="" class="text-decoration-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
                 <form action="">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm bạn cần">
+                        <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                         <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
+                            <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
                                 <i class="fa fa-search"></i>
                             </span>
                         </div>
@@ -53,11 +54,11 @@
                 </form>
             </div>
             <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
+                <a href="favourite.html" class="btn border" title="Yêu thích">
                     <i class="fas fa-heart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
-                <a href="" class="btn border">
+                <a href="cart.html" class="btn border" title="Giỏ hàng">
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
@@ -65,6 +66,9 @@
         </div>
     </div>
     <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
     <div class="container-fluid">
         <div class="row border-top px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
@@ -101,7 +105,7 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="index.html" class="nav-item nav-link">Trang chủ</a>
                             <a href="shop.html" class="nav-item nav-link">Cửa hàng</a>
-                            <a href="albumnew.html" class="nav-item nav-link">Bộ sưu tập mới</a>
+                            <a href="donhangcuaban.html" class="nav-item nav-link active">Đơn hàng của bạn</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                                 <div class="dropdown-menu rounded-0 m-0">
@@ -109,8 +113,7 @@
                                     <a href="checkout.html" class="dropdown-item">Thanh toán</a>
                                 </div>
                             </div>
-                            <a href="donhangcuaban.html" class="nav-item nav-link active">Đơn hàng</a>
-                            <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
+                            <a href="contact.html" class="nav-item nav-link ">Liên hệ</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             <a href="login.html" class="nav-item nav-link">Đăng nhập</a>
@@ -121,14 +124,19 @@
             </div>
         </div>
     </div>
+    <!-- Navbar End -->
+
+    <!-- End - Phần dùng chung cho các trang dành cho user -->
+
+
     <!-- Page Header Start -->
     <div class="container-fluid bg-secondary mb-5">
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">Quản Lý Đơn Hàng</h1>
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Đơn hàng của bạn</h1>
             <div class="d-inline-flex">
                 <p class="m-0"><a href="index.html">Trang chủ</a></p>
                 <p class="m-0 px-2">-</p>
-                <p class="m-0">Quản Lý Đơn Hàng</p>
+                <p class="m-0">Đơn hàng của bạn</p>
             </div>
         </div>
     </div>
@@ -136,7 +144,7 @@
 
 
 
-    <!-- Cart Start -->
+    <!-- Đơn hàng của bạn Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
             <div class="col-lg-0 table-responsive mb-5">
@@ -153,47 +161,47 @@
                     </thead>
                     <tbody class="align-middle">
                         <tr>
-                            <td class="text-center">DH123</td>
+                            <td class="text-center">123</td>
                             <td class="align-middle">Đơn Sư tử </td>
                             <td class="align-middle">
                                 <p class="text-center">22-10-2023</p>
                             </td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary">Đang vận chuyển</button>
                             </td>
-                            <td>290.000 vnđ</td>
+                            <td>290.000 VNĐ</td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary"><i
                                         class="fa fa-times"></i></button></td>
                         </tr>
                         <tr>
-                            <td class="text-center">DH153</td>
+                            <td class="text-center">133</td>
                             <td class="align-middle">Đơn Rùa biển</td>
                             <td class="align-middle">
                                 <p class="text-center">13-11-2023</p>
                             </td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary">Đang vận chuyển</td>
-                            <td>100.000 vnđ</td>
+                            <td>100.000 VNĐ</td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary"><i
                                         class="fa fa-times"></i></button></td>
                         </tr>
                         <tr>
-                            <td class="text-center">DH012</td>
+                            <td class="text-center">012</td>
                             <td class="align-middle">Đơn Mèo con</td>
                             <td class="align-middle">
                                 <p class="text-center">2-11-2023</p>
                             </td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary">Đang vận chuyển</td>
-                            <td>45.000 vnđ</td>
+                            <td>45.000 VNĐ</td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary"><i
                                         class="fa fa-times"></i></button></td>
                         </tr>
                         <tr>
-                            <td class="text-center">DH980</td>
+                            <td class="text-center">980</td>
                             <td class="align-middle">Đơn Rái cá</td>
                             <td class="align-middle">
                                 <p class="text-center">4-11-2023</p>
                             </td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary">Bị Hủy</td>
-                            <td>23.000 vnđ</td>
+                            <td>23.000 VNĐ</td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary"><i
                                         class="fa fa-times"></i></button></td>
                         </tr>
@@ -204,7 +212,7 @@
 
         </div>
     </div>
-    <!-- Cart End -->
+    <!-- Đơn hàng của bạn End -->
 
 
     <!-- Footer Start -->
@@ -230,8 +238,8 @@
                                 chủ</a>
                             <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Của
                                 hàng</a>
-                            <a class="text-dark mb-2" href="albumnew.html"><i class="fa fa-angle-right mr-2"></i>Bộ sưu
-                                tập mới</a>
+                                <a class="text-dark mb-2" href="donhangcuaban.html"><i
+                                    class="fa fa-angle-right mr-2"></i>Đơn hàng của bạn</a>
                             <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Giỏ
                                 hàng</a>
                             <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Thanh
