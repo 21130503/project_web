@@ -28,6 +28,8 @@
 </head>
 
 <body>
+
+    <!-- Start - Phần dùng chung cho các trang dành cho user -->
     <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row align-items-center py-3 px-xl-5">
@@ -41,7 +43,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                         <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
+                            <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
                                 <i class="fa fa-search"></i>
                             </span>
                         </div>
@@ -49,11 +51,11 @@
                 </form>
             </div>
             <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
+                <a href="favourite.html" class="btn border" title="Yêu thích">
                     <i class="fas fa-heart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
-                <a href="" class="btn border">
+                <a href="cart.html" class="btn border" title="Giỏ hàng">
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
@@ -61,7 +63,6 @@
         </div>
     </div>
     <!-- Topbar End -->
-
 
     <!-- Navbar Start -->
     <div class="container-fluid">
@@ -100,7 +101,7 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="index.html" class="nav-item nav-link">Trang chủ</a>
                             <a href="shop.html" class="nav-item nav-link">Cửa hàng</a>
-                            <a href="albumnew.html" class="nav-item nav-link">Bộ sưu tập mới</a>
+                            <a href="donhangcuaban.html" class="nav-item nav-link">Đơn hàng của bạn</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                                 <div class="dropdown-menu rounded-0 m-0">
@@ -120,6 +121,7 @@
         </div>
     </div>
     <!-- Navbar End -->
+    <!-- End - Phần dùng chung cho các trang dành cho user -->
 
 
     <!-- Page Header Start -->
@@ -200,10 +202,8 @@
     <!-- Contact End -->
 
 
-    <!-- Footer Start -->
+    <!-- Footer chung cho các trang - Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
-
-        <!-- Footer chung cho các trang -->
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="" class="text-decoration-none">
@@ -223,10 +223,10 @@
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Trang
                                 chủ</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Của
+                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Cửa
                                 hàng</a>
-                            <a class="text-dark mb-2" href="albumnew.html"><i class="fa fa-angle-right mr-2"></i>Bộ sưu
-                                tập mới</a>
+                            <a class="text-dark mb-2" href="donhangcuaban.html"><i
+                                    class="fa fa-angle-right mr-2"></i>Đơn hàng của bạn</a>
                             <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Giỏ
                                 hàng</a>
                             <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Thanh
@@ -254,10 +254,8 @@
                 </div>
             </div>
         </div>
-        <!-- Footer chung cho các trang -->
-
     </div>
-    <!-- Footer End -->
+    <!-- Footer chung cho các trang - End -->
 
 
     <!-- Back to Top -->
