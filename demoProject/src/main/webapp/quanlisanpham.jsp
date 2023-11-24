@@ -1,9 +1,11 @@
 <!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>Quản lí chủ đề || Admin</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Quản lí sản phẩm || Admin</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -25,6 +27,8 @@
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/logo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js" integrity="sha512-b94Z6431JyXY14iSXwgzeZurHHRNkLt9d6bAHt7BZT38eqV+GyngIi/tVye4jBKPYQ2lBdRs0glww4fmpuLRwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </head>
 
 <body>
@@ -33,7 +37,7 @@
        
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <a href="./index.html" class="text-decoration-none">
+                <a href="index.jsp" class="text-decoration-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
             </div>
@@ -50,13 +54,13 @@
                 </form>
             </div>
             <div class="col-lg-3 col-6 text-right">
-                <a href="./quanlichude.html" class="btn border">
+                <a href="quanlichude.jsp" class="btn border">
                     <i class="fa-solid fa-boxes-stacked text-primary"></i>
                 </a>
-                <a href="./quanlidonhang.html" class="btn border">
+                <a href="quanlidonhang.jsp" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
                 </a>
-                <a href="./quanlinguoidung.html" class="btn border">
+                <a href="quanlinguoidung.jsp" class="btn border">
                     <i class="fa-regular fa-user text-primary"></i>
 
                 </a>
@@ -73,7 +77,7 @@
     <!-- Page Header Start -->
     <div class="container-fluid bg-secondary mb-5">
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">Quản lí chủ đề</h1>
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Quản lí sản phẩm</h1>
         </div>
     </div>
     <!-- Page Header End -->
@@ -82,102 +86,136 @@
     <!-- Cart Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
-            <div class="col-lg-8 table-responsive mb-5">
+            <div class="col-lg-0 table-responsive mb-5">
                 <table class="table table-bordered text-center mb-0">
                     <thead class="bg-secondary text-dark">
                         <tr>
-                            <th>ID</th>
-                            <th>Tên chủ đề</th>
-                            <th>Số sản phẩm</th>
+                            <th>Tên bộ sưu tập</th>
+                            <th>Giá</th>
+                            <th>Thuộc chủ đề</th>
+                            <th>Sửa</th>
                             <th>Xóa</th>
                         </tr>
                     </thead>
                     <tbody class="align-middle">
                         <tr>
-                            <td class="align-middle">1</td>
-                            <td class="text-left"><img src="img/flower.jpg" alt="" style="width: 50px;"> Hoa</td>
+                            <td class="text-left"><img src="img/flower.jpg" alt="" style="width: 50px;"> Hoa Anh Đào</td>
+                            <td class="align-middle">$150</td>
                             <td class="align-middle">
-                                    <p class="text-center">15</p>
+                                    <p class="text-center">Hoa</p>
                             </td>
+                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
                         </tr>
                         <tr>
-                            <td class="align-middle">2</td>
-                            <td class="text-left"><img src="img/car.avif" alt="" style="width: 50px;"> Xe</td>
+                            <td class="text-left"><img src="img/car.avif" alt="" style="width: 50px;"> Xe độ</td>
+                            <td class="align-middle">$150</td>
                             <td class="align-middle">
-                                    <p class="text-center">14</p>
+                                    <p class="text-center">Xe</p>
                             </td>
+                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
                         </tr>
                         <tr>
-                            <td class="align-middle">3</td>
                             <td class="text-left"><img src="img/animal.avif" alt="" style="width: 50px;"> Động vật</td>
+                            <td class="align-middle">$150</td>
                             <td class="align-middle">
-                                <p class="text-center">10</p>
+                                <p class="text-center">Động vật hoang dã</p>
                             </td>
+                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
                         </tr>
                         <tr>
-                            <td class="align-middle">4</td>
-                            <td class="text-left"><img src="img/pepole.avif" alt="" style="width: 50px;">Con người</td>
+                            <td class="text-left"><img src="img/pepole.avif" alt="" style="width: 50px;"> Hành trình khám phá</td>
+                            <td class="align-middle">$150</td>
                             <td class="align-middle">
-                                <p class="text-center">5</p>
+                                <p class="text-center">Con người</p>
                             </td>
+                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
                             <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
                         </tr>
-                       
+                        <tr>
+                            <td class="text-left"><img src="img/anime.avif" alt="" style="width: 50px;"> Siêu nhân</td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle">
+                                    <p class="text-center">Hoạt hình</p>
+                            </td>
+                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
+                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6 table-responsive mb-5">
                 <div class="card-header bg-secondary border-0">
-                    <h6 class="font-weight-semi-bold m-0">Thêm chủ đề</h6>
+                    <h6 class="font-weight-semi-bold m-0">Thêm album mới </h6>
                 </div>
-                <form class="mb-5  mt-4" action="">
+                <form class="mb-5  mt-4" action="" id="formAlbum" enctype="multipart/form-data" accept-charset="UTF-8">
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="text" id="idbts" class="form-control p-3" placeholder="Thuộc chủ đề">
+                    </div>
                     <div class="input-group d-flex justify-content-between mt-4">
-                        <input type="text" id="nameTopic" class="form-control p-3" placeholder="Tên chủ đề">
+                        <input type="text" id="name-album" class="form-control p-3" placeholder="Tên bộ sưu tập">
                     </div>
                     <div class="input-group d-flex justify-content-between mt-3">
-                        <input style="height: 100%;" type="file" accept="image/*" id="interfaceImage" class="form-control p-3" placeholder="Link ảnh đại diện">
+                        <input type="number" id="price-album" class="form-control p-3" placeholder="Giá">
                     </div>
-                    <img src="" class="show-image" alt="" style="width: 360px; height: auto;margin-top: 10px;">
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="number" id="discount-album" class="form-control p-3" placeholder="Giảm giá">
+                    </div>
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="text"  id="description-album" class="form-control p-3" placeholder="Mô tả sản phẩm">
+                    </div>
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="file" accept="image/*" multiple style="height: 100%;" id="upload-img" class="form-control p-3" placeholder="Tải ảnh lên">
+                    </div>
+                    <div id="show-upload-img" class="input-group d-flex  mt-3">
+
+                    </div>
                     <div class="input-group-append mt-4">
-                        <button class="btn btn-primary">Thêm</button>
+                        <button class="btn btn-primary">Đăng bán</button>
                     </div>
                 </form>
-                <!-- <div class="card border-secondary mb-5">
-                    <div class="card-header bg-secondary border-0">
-                        <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+            </div>
+            <div class="col-lg-6 table-responsive mb-5">
+                <div class="card-header bg-secondary border-0">
+                    <h6 class="font-weight-semi-bold m-0">Thêm ảnh lẻ mới</h6>
+                </div>
+                <form class="mb-5  mt-4"id="form-odd"  action=""  enctype="multipart/form-data" accept-charset="UTF-8">
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="text" id="idbts-odd" class="form-control p-3" placeholder="Thuộc chủ đề">
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-3 pt-1">
-                            <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium">$150</h6>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$10</h6>
-                        </div>
+                    <div class="input-group d-flex justify-content-between mt-4">
+                        <input type="text" id="name-odd" class="form-control p-3" placeholder="Tên ảnh">
                     </div>
-                    <div class="card-footer border-secondary bg-transparent">
-                        <div class="d-flex justify-content-between mt-2">
-                            <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold">$160</h5>
-                        </div>
-                        <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="number" id="price-odd" class="form-control p-3" placeholder="Giá">
                     </div>
-                </div> -->
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="number" id="discount-odd" class="form-control p-3" placeholder="Giảm giá">
+                    </div>
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="text" id="description-odd" class="form-control p-3" placeholder="Mô tả sản phẩm">
+                    </div>
+                    <div class="input-group d-flex justify-content-between mt-3">
+                        <input type="file" style="height: 100%;" id="oddImage" class="form-control p-3" placeholder="Tải ảnh lên"  accept="image/*">
+                    </div>
+                    <img src="" alt="" class="mt-4" id="show-image-odd" style="height: 400px;">
+                    <div class="input-group-append mt-4">
+                        <button class="btn btn-primary">Đăng bán</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
     <!-- Cart End -->
 
-
+    <script type="module" src="js/quanlisanpham.js"></script>
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                <a href="./index.html" class="text-decoration-none">
+                <a href="index.jsp" class="text-decoration-none">
                     <h1 class="logo" style="height: 60px; text-align: start; margin-top: -16px;">Nhóm 26</h1>
                 </a>
                 <p>Shop Nhóm 26 - Điểm đến đáng tin cậy cho các loại ảnh bản quyền, với sự đa dạng và phong phú trong
@@ -192,17 +230,17 @@
                     <div class="col-md-6 mb-5" style="padding-left: 70px;">
                         <h5 class="font-weight-bold text-dark mb-4">Di Chuyển Nhanh</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Trang
+                            <a class="text-dark mb-2" href="index.jsp"><i class="fa fa-angle-right mr-2"></i>Trang
                                 chủ</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Của
+                            <a class="text-dark mb-2" href="shop.jsp"><i class="fa fa-angle-right mr-2"></i>Của
                                 hàng</a>
                             <a class="text-dark mb-2" href="albumnew.html"><i class="fa fa-angle-right mr-2"></i>Bộ sưu
                                 tập mới</a>
-                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Giỏ
+                            <a class="text-dark mb-2" href="cart.jsp"><i class="fa fa-angle-right mr-2"></i>Giỏ
                                 hàng</a>
-                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Thanh
+                            <a class="text-dark mb-2" href="checkout.jsp"><i class="fa fa-angle-right mr-2"></i>Thanh
                                 toán</a>
-                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Liên hệ</a>
+                            <a class="text-dark" href="contact.jsp"><i class="fa fa-angle-right mr-2"></i>Liên hệ</a>
                         </div>
                     </div>
                     <div class="col-md-6 mb-5">
@@ -245,32 +283,6 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <script>
-        const nameTopic = document.querySelector('#nameTopic')
-        const interfaceImage = document.querySelector('#interfaceImage')
-        const showImg = document.querySelector('.show-image')
-        let base64 ;
-        interfaceImage.addEventListener('change', (e)=>{
-            const file = e.target.files[0]
-            let url = URL.createObjectURL(file)
-            showImg.src = url
-            imageToBase64(file, (base64Value)=>{
-                console.log(base64Value);
-            })
-        })
-        function imageToBase64(file, callback) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                base64= reader.result;
-                callback(base64)
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-        console.log(base64);
-    }
-    </script>
 </body>
 
 </html>
