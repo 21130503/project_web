@@ -135,11 +135,12 @@
                 </div>
                 <form class="mb-5  mt-4" action="">
                     <div class="input-group d-flex justify-content-between mt-4">
-                        <input type="text" id="idbts" class="form-control p-3" placeholder="Tên chủ đề">
+                        <input type="text" id="nameTopic" class="form-control p-3" placeholder="Tên chủ đề">
                     </div>
                     <div class="input-group d-flex justify-content-between mt-3">
-                        <input type="text" id="idbts" class="form-control p-3" placeholder="Link ảnh đại diện">
+                        <input style="height: 100%;" type="file" accept="image/*" id="interfaceImage" class="form-control p-3" placeholder="Link ảnh đại diện">
                     </div>
+                    <img src="" class="show-image" alt="" style="width: 360px; height: auto;margin-top: 10px;">
                     <div class="input-group-append mt-4">
                         <button class="btn btn-primary">Thêm</button>
                     </div>
@@ -244,6 +245,32 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+        const nameTopic = document.querySelector('#nameTopic')
+        const interfaceImage = document.querySelector('#interfaceImage')
+        const showImg = document.querySelector('.show-image')
+        let base64 ;
+        interfaceImage.addEventListener('change', (e)=>{
+            const file = e.target.files[0]
+            let url = URL.createObjectURL(file)
+            showImg.src = url
+            imageToBase64(file, (base64Value)=>{
+                console.log(base64Value);
+            })
+        })
+        function imageToBase64(file, callback) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                base64= reader.result;
+                callback(base64)
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+        console.log(base64);
+    }
+    </script>
 </body>
 
 </html>
