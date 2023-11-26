@@ -129,10 +129,10 @@
                                     <a href="cart.jsp" class="dropdown-item">Xác thực email của bạn</a>
                                     <%}%>
                                     <% if(user.isAdmin()){%>
-                                    <a href="quanlichude.jsp" class="dropdown-item">Quản lí chủ đề</a>
-                                    <a href="quanlisanpham.jsp" class="dropdown-item">Quản lí sản phẩm</a>
-                                    <a href="quanlidonhang.jsp" class="dropdown-item">Quản lí đơn hàng</a>
-                                    <a href="quanlinguoidung.jsp" class="dropdown-item">Quản lí người dùng</a>
+                                    <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
+                                    <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
+                                    <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                                    <a href="./user" class="dropdown-item">Quản lí người dùng</a>
                                     <%}%>
                                     <button class="dropdown-item" id="logout">Đăng xuất</button>
                                 </div>

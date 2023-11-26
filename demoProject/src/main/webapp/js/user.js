@@ -11,7 +11,7 @@ logout.addEventListener("click", async () => {
                 console.error("Logout request failed");
             }
         }
-    };git 
+    };git
 
     xhr.open("GET", "http://localhost:8080/demoProject_war/logout", true);
     xhr.send();
