@@ -16,7 +16,7 @@ public class LogoutController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
         if(session != null){
-            session.invalidate();
+            session.removeAttribute("user");
             System.out.println("Đã xóa");
         }
     }
