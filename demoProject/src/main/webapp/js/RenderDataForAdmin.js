@@ -39,7 +39,7 @@ function  getDataUser(array){
     if(array.length ==0){
         tbody.innerHTML =
             `
-            <tr>
+                    <tr>
                             <td class="text-center">Chưa có ai</td>
                             <td class="align-middle">Chưa có ai</td>
                             <td class="align-middle">

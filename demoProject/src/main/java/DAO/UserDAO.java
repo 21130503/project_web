@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserDAO {
     public boolean checkEmailExist(String email) {
@@ -103,5 +104,39 @@ public class UserDAO {
         }
         return null;
     }
+    public ArrayList<User> getAllUsers(){
+        Connection connection= null;
+        ArrayList<User> listUser = new ArrayList<>();
+        ArrayList<User> res = new ArrayList<User>();
+        try{
+            connection = Connect.getConnection();
+            String getAllUser = "select idUser, email,name, password, isVerifyEmail, isActive, isAdmin, createdAt from user";
+            PreparedStatement preparedStatementGetUser= connection.prepareStatement(getAllUser);
+            ResultSet resultSetGetUser = preparedStatementGetUser.executeQuery();
+            while (resultSetGetUser.next()) {
+                User user = new User();
+                user.setId(resultSetGetUser.getInt("idUser"));
+                user.setEmail(resultSetGetUser.getString("email"));
+                user.setUsername(resultSetGetUser.getString("name"));
+                user.setPasword(resultSetGetUser.getString("password"));
+                user.setVerifyEmail(resultSetGetUser.getBoolean("isVerifyEmail"));
+                user.setActive(resultSetGetUser.getBoolean("isActive"));
+                user.setAdmin(resultSetGetUser.getBoolean("isAdmin"));
+                user.setCreatedAt(resultSetGetUser.getDate("createdAt"));
+                listUser.add(user);
+            }
+            for (User user : listUser) {
+                if(!user.isAdmin()){
+                    res.add(user);
+                }
+            }
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return res;
+    }
 }
