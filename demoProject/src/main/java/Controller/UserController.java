@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.UserDAO;
 import nhom26.Topic;
 import nhom26.User;
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,72 +22,17 @@ public class UserController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
-        String idUser = req.getParameter("idUser"); // ok
-        System.out.println("-----USER[GET]");
-        System.out.println("idUser: " + idUser );
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/project", "root", "");
-
-            // Câu truy vấn kiểm tra quyền admin
-            String sql = "select isAdmin from user where idUser= ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, idUser);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            boolean isAdmin = false;
-            JSONObject jsonObject = new JSONObject();
-            if (resultSet.next()) {
-                isAdmin = resultSet.getBoolean("isAdmin");
-            }
-            else{
-
-                jsonObject.put("status", 500);
-            }
-            System.out.println("isAdmin :" + isAdmin);
-
-            // Kiểm tra quyền và chuyển hướng
-
-            if (isAdmin) {
-            // Câu truy vấn lấy dữ liệu topic
-            String getAllUser = "select idUser, email,name, password, isVerifyEmail, isActive, isAdmin, createdAt from user";
-            PreparedStatement preparedStatementGetUser= connection.prepareStatement(getAllUser);
-            ResultSet resultSetGetUser = preparedStatementGetUser.executeQuery();
-            ArrayList<User> listUser = new ArrayList<User>();
-            while (resultSetGetUser.next()) {
-                User user = new User();
-                user.setId(resultSetGetUser.getInt("idUser"));
-                user.setEmail(resultSetGetUser.getString("email"));
-                user.setUsername(resultSetGetUser.getString("name"));
-                user.setPasword(resultSetGetUser.getString("password"));
-                user.setVerifyEmail(resultSetGetUser.getBoolean("isVerifyEmail"));
-                user.setActive(resultSetGetUser.getBoolean("isActive"));
-                user.setAdmin(resultSetGetUser.getBoolean("isAdmin"));
-                user.setCreatedAt(resultSetGetUser.getDate("createdAt"));
-                listUser.add(user);
-            }
-            ArrayList<User> res = new ArrayList<User>();
-            for (User user : listUser) {
-                if(!user.isAdmin()){
-                    res.add(user);
-                }
-            }
-            jsonObject.put("status", 200);
-            jsonObject.put("listUser", res);
-            resp.setContentType("application/json");
-            resp.getWriter().write(jsonObject.toString());
-            } else {
-                jsonObject.put("status", 404);
-                resp.setContentType("application/json");
-                resp.getWriter().write(jsonObject.toString());
-            }
-
-        } catch (SQLException e) {
-            System.err.println("SQLException: " + e.getMessage());
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            System.err.println("ClassNotFoundException: " + e.getMessage());
-            throw new RuntimeException(e);
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if(user == null || !user.isAdmin()){
+            resp.sendRedirect("404.jsp");
         }
+        else{
+            UserDAO userDAO = new UserDAO();
+            req.setAttribute("listUser", userDAO.getAllUsers());
+            req.getRequestDispatcher("quanlinguoidung.jsp").forward(req,resp);
+        }
+
 
     }
 
