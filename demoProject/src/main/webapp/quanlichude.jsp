@@ -1,10 +1,10 @@
 <%@ page import="nhom26.User" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="nhom26.Topic" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <%--<%@page contentType="text/html" pageEncoding="UTF-8"%>--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
 <html lang="en">
 
 <head>
@@ -32,24 +32,48 @@
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/logo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<%--    Xử lí --%>
+    <%--    Xử lí --%>
     <script src="js/RenderDataForAdmin.js"></script>
     <script>
         <% User user = (User) session.getAttribute("user") == null ? null : (User) (session.getAttribute("user"));  %>
 
-        (async function getData(){
-         const data =  await  axios.get(`http://localhost:8080/demoProject_war/topic?idUser=<%= (user == null) ? null : user.getId() %>`)
-            if(data.data.status !=200){
-                window.onload =  window.location.href = 'http://localhost:8080/demoProject_war/404.jsp';
-            }
-            getDataTopic(data.data.listTopic)
-        })()
+        <%--(async function getData(){--%>
+        <%-- &lt;%&ndash;const data =  await  axios.get(`http://localhost:8080/demoProject_war/topic?idUser=<%= (user == null) ? null : user.getId() %>`)&ndash;%&gt;--%>
+        <%-- &lt;%&ndash;   if(data.data.status !=200){&ndash;%&gt;--%>
+        <%-- &lt;%&ndash;       window.onload =  window.location.href = 'http://localhost:8080/demoProject_war/404.jsp';&ndash;%&gt;--%>
+        <%-- &lt;%&ndash;   }&ndash;%&gt;--%>
+        <%-- &lt;%&ndash;   getDataTopic(data.data.listTopic)&ndash;%&gt;--%>
+        <%--    const userId = <%= (user == null) ? null : user.getId() %>;--%>
+        <%--    const url = `http://localhost:8080/demoProject_war/topic?idUser=${userId}`;--%>
 
-</script>
+        <%--    const xhr = new XMLHttpRequest();--%>
+        <%--    xhr.open('GET', url);--%>
+
+        <%--    xhr.onreadystatechange = function () {--%>
+        <%--        if (xhr.readyState === 4) {--%>
+        <%--            if (xhr.status === 200) {--%>
+        <%--                const data = JSON.parse(xhr.responseText);--%>
+
+        <%--                if (data.status === 404) {--%>
+        <%--                    window.onload = window.location.href = 'http://localhost:8080/demoProject_war/404.jsp';--%>
+        <%--                }--%>
+        <%--                --%>
+        <%--            } else {--%>
+        <%--                console.error('Error:', xhr.status);--%>
+        <%--            }--%>
+        <%--        }--%>
+        <%--    };--%>
+
+        <%--    xhr.send();--%>
+        <%--})()--%>
+
+    </script>
 </head>
 
 <body>
-<% ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() : (ArrayList<Topic>) request.getAttribute("listTopic");%>
+<%
+    List<Topic> listTopic = (List<Topic>) request.getAttribute("listTopic");
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
@@ -72,17 +96,17 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="./quanlichude.html" class="btn border">
+            <a href="/topic" class="btn border">
                 <i class="fa-solid fa-boxes-stacked text-primary"></i>
             </a>
-            <a href="./quanlidonhang.html" class="btn border">
+            <a href="/order" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
             </a>
-            <a href="./quanlinguoidung.html" class="btn border">
+            <a href="/user" class="btn border">
                 <i class="fa-regular fa-user text-primary"></i>
 
             </a>
-            <a href="./quanlisanpham.html" class="btn border">
+            <a href="/product/" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
             </a>
         </div>
@@ -116,31 +140,16 @@
                 </tr>
                 </thead>
                 <tbody class="align-middle" id="renderdata">
-                <%--                <tr>--%>
-<%--                    <td class="align-middle">2</td>--%>
-<%--                    <td class="text-left"><img src="img/car.avif" alt="" style="width: 50px;"> Xe</td>--%>
-<%--                    <td class="align-middle">--%>
-<%--                        <p class="text-center">14</p>--%>
-<%--                    </td>--%>
-<%--                    <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>--%>
-<%--                </tr>--%>
-<%--                <tr>--%>
-<%--                    <td class="align-middle">3</td>--%>
-<%--                    <td class="text-left"><img src="img/animal.avif" alt="" style="width: 50px;"> Động vật</td>--%>
-<%--                    <td class="align-middle">--%>
-<%--                        <p class="text-center">10</p>--%>
-<%--                    </td>--%>
-<%--                    <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>--%>
-<%--                </tr>--%>
-<%--                <tr>--%>
-<%--                    <td class="align-middle">4</td>--%>
-<%--                    <td class="text-left"><img src="img/pepole.avif" alt="" style="width: 50px;">Con người</td>--%>
-<%--                    <td class="align-middle">--%>
-<%--                        <p class="text-center">5</p>--%>
-<%--                    </td>--%>
-<%--                    <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>--%>
-<%--                </tr>--%>
-
+                <%for(Topic topic : listTopic){%>
+                <tr>
+                    <td class="align-middle"><%=topic.getIdTopic()%></td>
+                    <td class="text-left"><img src=<%=topic.getImageInterface()%> alt="" style="width: 50px; margin-right: 5px"><%=topic.getName()%></td>
+                    <td class="align-middle">
+                        <p class="text-center"><%=topic.getProduct()%></p>
+                    </td>
+                    <td class="align-middle"><a class="btn btn-sm btn-primary" data-id=<%=topic.getIdTopic()%> data-toggle="modal" data-target="#deleteTopic" ><i class="fa fa-times"></i></a></td>
+                </tr>
+                <%}%>>
                 </tbody>
             </table>
         </div>
@@ -162,28 +171,6 @@
                     <button class="btn btn-primary">Thêm</button>
                 </div>
             </form>
-            <!-- <div class="card border-secondary mb-5">
-                <div class="card-header bg-secondary border-0">
-                    <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3 pt-1">
-                        <h6 class="font-weight-medium">Subtotal</h6>
-                        <h6 class="font-weight-medium">$150</h6>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Shipping</h6>
-                        <h6 class="font-weight-medium">$10</h6>
-                    </div>
-                </div>
-                <div class="card-footer border-secondary bg-transparent">
-                    <div class="d-flex justify-content-between mt-2">
-                        <h5 class="font-weight-bold">Total</h5>
-                        <h5 class="font-weight-bold">$160</h5>
-                    </div>
-                    <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
-                </div>
-            </div> -->
         </div>
     </div>
 </div>
@@ -280,15 +267,35 @@
         const btnDelete = document.querySelector("#btn-delete-topic")
         console.log(btnDelete)
         btnDelete.addEventListener('click', async ()=>{
-            const {data} = await  axios.delete(`http://localhost:8080/demoProject_war/topic?idTopic=${idTopic}`)
-            console.log(`http://localhost:8080/demoProject_war/topic?idTopic=${idTopic}`)
-            if(data.status ===200){
-                alert(data.message)
-                location.reload()
+            <%--const {data} = await  axios.delete(`http://localhost:8080/demoProject_war/topic?idTopic=${idTopic}`)--%>
+            <%--console.log(data)--%>
+            <%--if(data.status ===200){--%>
+            <%--    alert(data.message)--%>
+            <%--    location.reload()--%>
+            <%--}--%>
+            <%--else  if (data.status ===500){--%>
+            <%--    alert(data.message)--%>
+            <%--}--%>
+            const xhr = new XMLHttpRequest();
+            const url =`http://localhost:8080/demoProject_war/topic?idTopic=${idTopic}`
+            xhr.open("DELETE", url)
+            xhr.onreadystatechange = ()=>{
+                if(xhr.readyState === 4){
+                    if(xhr.status === 200){
+                        const data = JSON.parse(xhr.responseText)
+                        if (data.status === 200) {
+                            alert(data.message);
+                            location.reload();
+                        } else if (data.status === 500) {
+                            alert(data.message);
+                        }
+                    }
+                }
+                else {
+                    console.error("err :" + xhr.status)
+                }
             }
-            else  if (data.status ===500){
-                alert(data.message)
-            }
+            xhr.send()
         })
     })
 </script>
