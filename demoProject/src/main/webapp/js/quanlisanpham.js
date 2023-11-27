@@ -95,7 +95,9 @@ uploadImg.addEventListener('change', () => {
 
 });
 const uploadAlbum= async (obj)=>{
-
+    const data = await  axios.post('http://localhost:8080/demoProject_war/product/addAlbum',obj)
+    console.log(data.data)
+    alert(data.data.message)
 }
 formAlbum.addEventListener('submit', (e)=>{
     e.preventDefault()
