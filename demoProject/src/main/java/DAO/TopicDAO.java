@@ -6,6 +6,7 @@ import nhom26.Topic;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class TopicDAO {
@@ -98,5 +99,22 @@ public class TopicDAO {
             Connect.closeConnection(connection);
         }
         return false;
+    }
+    public int getIdTopicByName(String nameTopic){
+        int res =0;
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idTopic from topic where name= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,nameTopic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getInt("idTopic");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return  res;
     }
 }
