@@ -1,4 +1,6 @@
 <%@ page import="nhom26.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="en">
@@ -32,21 +34,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js" integrity="sha512-b94Z6431JyXY14iSXwgzeZurHHRNkLt9d6bAHt7BZT38eqV+GyngIi/tVye4jBKPYQ2lBdRs0glww4fmpuLRwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="js/RenderDataForAdmin.js"></script>
 <%--    GET--%>
-    <script>
-        <% User user = (User) session.getAttribute("user") == null ? null : (User) (session.getAttribute("user"));  %>
+<%--    <script>--%>
+<%--        <% User user = (User) session.getAttribute("user") == null ? null : (User) (session.getAttribute("user"));  %>--%>
 
-        (async function getData(){
-            const data =await  axios.get(`http://localhost:8080/demoProject_war/user?idUser=<%= (user == null) ? null : user.getId() %>`)
-            if(data.data.status !=200){
-                window.onload =  window.location.href = 'http://localhost:8080/demoProject_war/404.jsp';
-            }
-            getDataUser(data.data.listUser)
-        })()
+<%--        (async function getData(){--%>
+<%--            const data =await  axios.get(`http://localhost:8080/demoProject_war/user?idUser=<%= (user == null) ? null : user.getId() %>`)--%>
+<%--            if(data.data.status !=200){--%>
+<%--                window.onload =  window.location.href = 'http://localhost:8080/demoProject_war/404.jsp';--%>
+<%--            }--%>
+<%--            getDataUser(data.data.listUser)--%>
+<%--        })()--%>
 
-    </script>
+<%--    </script>--%>
 </head>
 
 <body>
+<%List<User> users = (List<User>) request.getAttribute("listUser");%>
     <!-- Topbar Start -->
     <div class="container-fluid">
        
@@ -114,18 +117,18 @@
                         </tr>
                     </thead>
                     <tbody class="align-middle" id="renderdata-user">
-<%--                        <tr>--%>
-<%--                            <td class="text-center">KH01</td>--%>
-<%--                            <td class="align-middle">huuquy2003</td>--%>
-<%--                            <td class="align-middle">--%>
-<%--                                    <p class="text-center">huuquy</p>--%>
-<%--                            </td>--%>
-<%--                            <td class="align-middle"><button class="btn btn-sm btn-primary" >Đang sử dụng</button></td>--%>
-<%--                            <td class="align-middle"> <button class="btn btn-sm btn-primary" title="Chặn"><i class="fa-solid fa-ban"></i></button></td>--%>
-<%--                            <td class="align-middle"><button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#deleteUser" title="Xóa"><i class="fa fa-times"></i></button></td>--%>
-<%--                        </tr>--%>
-
-                        
+                    <%for(User user : users){%>
+                        <tr>
+                            <td class="text-center"><%=user.getId()%></td>
+                            <td class="align-middle"><%=user.getEmail()%></td>
+                            <td class="align-middle">
+                                <p class="text-center"><%=user.getUsername()%></p>
+                            </td>
+                            <td class="align-middle"><button class="btn btn-sm btn-primary" ><%=user.isActive() ? "Đang hoạt động" : "Bị chặn"%></button></td>
+                            <td class="align-middle"> <button id="btnBlock" data-id="<%=user.getId()%>" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#blockUser" title= <%= user.isActive() ? "Chặn" : "Mở chặn" %> ><i class="fa-solid fa-ban"></i></button></td>
+                            <td class="align-middle"><button data-id="<%=user.getId()%>" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#deleteUser" title="Xóa"><i class="fa fa-times"></i></button></td>
+                        </tr>
+                    <%}%>
                     </tbody>
                 </table>
             </div>
