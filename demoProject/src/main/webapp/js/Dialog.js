@@ -6,7 +6,7 @@ function Dialog(idForm, idBtn, where, attribute, type) {
         })
         const btnDelete = document.querySelector(idBtn)
         btnDelete.addEventListener('click', async () => {
-            
+
             const xhr = new XMLHttpRequest();
             const url = `http://localhost:8080/demoProject_war/${where}?${attribute}=${id}`;
 
