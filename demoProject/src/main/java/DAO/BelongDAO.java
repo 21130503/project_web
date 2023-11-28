@@ -30,4 +30,26 @@ public class BelongDAO {
             Connect.closeConnection(connection);
         }
     }
+    public boolean insertAlbumBelongTopic(int idTopic , int idAlbum){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "Insert into albumbelongtopic values (?,?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idTopic);
+            preparedStatement.setInt(2,idAlbum);
+            int check = preparedStatement.executeUpdate();
+            if(check >=0){
+                return  true;
+            }
+            else {
+                return  false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
 }
