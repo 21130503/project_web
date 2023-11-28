@@ -101,12 +101,12 @@ const uploadAlbum= async (obj)=>{
 }
 formAlbum.addEventListener('submit', (e)=>{
     e.preventDefault()
-    const obj = {
-        nameTopic : belongTopic.value,
-        nameAlbum:nameImg.value,
-        descriptionAlbum: descriptionImg.value,
-        price : priceImg.value,
-        discount: discountImg.value,
+    const data = {
+        nameTopic : albumBelongTopic.value,
+        nameAlbum:nameAlbum.value,
+        descriptionAlbum: descriptionAlbum.value,
+        price : priceAlbum.value,
+        discount: discountAlbum.value,
         source : listBase64
     }
     if(albumBelongTopic.value.length ===0
@@ -117,6 +117,6 @@ formAlbum.addEventListener('submit', (e)=>{
         alert("Vui lòng đầy đủ thông tin")
     }
     else{
-        uploadAlbum(obj)
+        uploadAlbum(data)
     }
 })
