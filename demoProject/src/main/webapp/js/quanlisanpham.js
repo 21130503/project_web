@@ -31,8 +31,8 @@ function imageToBase64(file, callback) {
 }
 const upload = async (obj)=>{
     const data = await  axios.post('http://localhost:8080/demoProject_war/product/addImg',obj)
-    console.log(data.data)
     alert(data.data.message)
+    location.reload()
 }
 formOdd.addEventListener('submit', (e)=>{
     e.preventDefault();
@@ -41,14 +41,13 @@ formOdd.addEventListener('submit', (e)=>{
         nameImg:nameImg.value,
         description: descriptionImg.value,
         price : priceImg.value,
-        discount: discountImg.value,
+        discount: discountImg.value !==0 ? discountImg.value : 0,
         source : base64
     }
     if(belongTopic.value.length ===0
         || nameImg.value.length ===0
         || descriptionImg.value.length ===0
         || priceImg.value.length ===0
-        || discountImg.value.length ===0
     ){
         alert("Vui lòng điền đầy đủ thông tin")
     }
@@ -96,8 +95,8 @@ uploadImg.addEventListener('change', () => {
 });
 const uploadAlbum= async (obj)=>{
     const data = await  axios.post('http://localhost:8080/demoProject_war/product/addAlbum',obj)
-    console.log(data.data)
     alert(data.data.message)
+    location.reload()
 }
 formAlbum.addEventListener('submit', (e)=>{
     e.preventDefault()
@@ -106,14 +105,13 @@ formAlbum.addEventListener('submit', (e)=>{
         nameAlbum:nameAlbum.value,
         descriptionAlbum: descriptionAlbum.value,
         price : priceAlbum.value,
-        discount: discountAlbum.value,
+        discount: discountAlbum.value !==0 ? discountAlbum.value : 0,
         source : listBase64
     }
     if(albumBelongTopic.value.length ===0
         || nameAlbum.value.length ===0
         || descriptionAlbum.value.length ===0
-        || priceAlbum.value.length ===0
-        || discountAlbum.value.length ===0){
+        || priceAlbum.value.length ===0){
         alert("Vui lòng đầy đủ thông tin")
     }
     else{
