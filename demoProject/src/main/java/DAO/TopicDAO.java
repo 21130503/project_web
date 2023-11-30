@@ -117,4 +117,25 @@ public class TopicDAO {
         }
         return  res;
     }
+    public String getNameTopicById(int idTopic){
+        Connection connection = null;
+        String res = "";
+        try{
+            connection = Connect.getConnection();
+            String sql = "select name from topic where idTopic = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idTopic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("name");
+                return  res;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  res;
+    }
 }

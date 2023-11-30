@@ -1,3 +1,6 @@
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="nhom26.OddImage" %>
+<%@ page import="nhom26.Album" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,6 +31,7 @@
 </head>
 
 <body>
+
     <!-- Topbar Start -->
     <div class="container-fluid">
        
@@ -95,6 +99,7 @@
                         </tr>
                     </thead>
                     <tbody class="align-middle">
+
                         <tr>
                             <td class="text-center">1</td>
                             <td class="align-middle">Hữu Qúy</td>
