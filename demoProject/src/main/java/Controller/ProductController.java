@@ -27,19 +27,20 @@ public class ProductController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
-        // Kiểm tra quyền và chuyển hướng
-        TopicDAO topicDAO = new TopicDAO();
-        if(user == null || !user.isAdmin() ) {
-            System.out.println("redirect");
-            resp.sendRedirect( "404.jsp");
-            return;
-        }
-        else if (user.isAdmin()) {
-            System.out.println("GET");
-            req.setAttribute("listTopic", topicDAO.getAllTopics());
+//        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
+//        // Kiểm tra quyền và chuyển hướng
+        ProductDAO productDAO = new ProductDAO();
+//        if(user == null || !user.isAdmin() ) {
+//            System.out.println("redirect");
+//            resp.sendRedirect( "404.jsp");
+//            return;
+//        }
+//        else if (user.isAdmin()) {
+//            System.out.println("GET");
+            req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            req.setAttribute("listOddImage", productDAO.getAllOddImage());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req,resp);
-        }
+//        }
 
     }
 
@@ -125,5 +126,46 @@ public class ProductController extends HttpServlet {
         }
         resp.setContentType("application/json");
         resp.getWriter().write(jsonObjectResults.toString());
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html;charset=UTF-8");
+        String path = req.getPathInfo();
+        System.out.println(path);
+        ProductDAO productDAO = new ProductDAO();
+        JSONObject jsonObjectResults = new JSONObject();
+        if(path.equals("/deleteOddImage")){
+            int idOddImage = Integer.parseInt(req.getParameter("idOddImage"));
+            if(productDAO.deleteOddImage(idOddImage)){
+                jsonObjectResults.put("status", 200);
+                jsonObjectResults.put("message", "Đã xóa ảnh thành công");
+
+            }
+            else{
+                jsonObjectResults.put("status", 500);
+                jsonObjectResults.put("message", "Xóa ảnh thất bại");
+            }
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObjectResults.toString());
+
+        }
+        if(path.equals("/deleteAlbum")){
+            int idAlbum = Integer.parseInt(req.getParameter("idAlbum"));
+            System.out.println(idAlbum);
+            if(productDAO.deleteAlbum(idAlbum)){
+                jsonObjectResults.put("status", 200);
+                jsonObjectResults.put("message", "Đã xóa album thành công");
+
+            }
+            else{
+                jsonObjectResults.put("status", 500);
+                jsonObjectResults.put("message", "Xóa album thất bại");
+            }
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObjectResults.toString());
+        }
     }
 }
