@@ -7,7 +7,7 @@ public class OddImage {
     int discount;
     String image;
     String belongTopic;
-
+    String description;
     public OddImage() {
     }
 
@@ -57,5 +57,13 @@ public class OddImage {
 
     public void setBelongTopic(String belongTopic) {
         this.belongTopic = belongTopic;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -54,6 +54,29 @@ public class BelongDAO {
             Connect.closeConnection(connection);
         }
     }
+    public  int getIdTopicFromIdAlbum(int idAlbum){
+        Connection connection = null;
+        int i=0;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idTopic from AlbumBelongTopic where  idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idAlbum);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                i = resultSet.getInt("idTopic");
+                return i;
+            }
+            else {
+                return  i;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
     public boolean insertAlbumBelongTopic(int idTopic , int idAlbum){
         Connection connection = null;
         try{

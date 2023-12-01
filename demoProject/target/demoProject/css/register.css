@@ -171,6 +171,13 @@ a.athoner-register span{
     color: #333;
     font-weight: 500;
 }
+.show-message{
+    margin-top: 6px;
+    margin-left: 12px;
+    display: block;
+    font-size: 14px;
+    color: red;
+}
 @media (max-width : 569px) {
     .inner {
         height: 100vh;
