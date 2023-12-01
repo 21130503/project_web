@@ -212,6 +212,9 @@ public class ProductDAO {
                 album.setPrice(resultSet.getInt("price"));
                 album.setDiscount(resultSet.getInt("discount"));
                 album.setListImage(imageDAO.getAllImageByIdAlbum(id));
+                int idTopic = belongDAO.getIdTopicFromIdAlbum(id);
+                String nameTopic = topicDAO.getNameTopicById(idTopic);
+                album.setBelongTopic(nameTopic);
                 listAlbum.add(album);
             }
         } catch (SQLException e) {
@@ -263,5 +266,66 @@ public class ProductDAO {
         finally {
             Connect.closeConnection(connection);
         }
+    }
+//    get 1 sản phẩm
+//    sd trong trang chi tiết
+    public OddImage getOddImageById(int idOddImage){
+        Connection connection = null;
+        OddImage oddImage = new OddImage();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idOddImage, name , price, discount, source from OddImage where idOddImage = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idOddImage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
+                oddImage.setName(resultSet.getString("name"));
+                oddImage.setPrice(resultSet.getInt("price"));
+                oddImage.setDiscount(resultSet.getInt("discount"));
+                oddImage.setImage(resultSet.getString("source"));
+                int idTopicFromIdOdd = belongDAO.getIdTopicFromIdOdd(idOddImage);
+                String topicName = topicDAO.getNameTopicById(idTopicFromIdOdd);
+                oddImage.setBelongTopic(topicName);
+                String description = descriptionDAO.getDescriptionByOddImage(idOddImage);
+                oddImage.setDescription(description);
+                return  oddImage;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  oddImage;
+    }
+    public  Album getAlbumById(int idAlbum){
+        Connection connection = null;
+        Album album= new Album();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idAlbum, name , price, discount from Album where idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idAlbum);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                album.setIdAlbum(resultSet.getInt("idAlbum"));
+                album.setName(resultSet.getString("name"));
+                album.setPrice(resultSet.getInt("price"));
+                album.setDiscount(resultSet.getInt("discount"));
+                album.setListImage(imageDAO.getAllImageByIdAlbum(idAlbum));
+                String description = descriptionDAO.getDescriptionByAlbum(idAlbum);
+                int idTopic = belongDAO.getIdTopicFromIdAlbum(idAlbum);
+                String topicName = topicDAO.getNameTopicById(idTopic);
+                album.setBelongTopic(topicName);
+                return  album;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  album;
     }
 }
