@@ -14,45 +14,59 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "RegisterController", value = "/register")
 public class RegisterController extends HttpServlet {
+    private static final String EMAIL_REGEX =
+            "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+    public static boolean validateEmail(String email) {
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Đặt encoding cho request và response
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html");
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-
-        bufferedReader.close();
-        JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-        String fullname = jsonObject.getString("fullname");
-        String email = jsonObject.getString("email");
-        String password = jsonObject.getString("password");
-        Connection connection = null;
-
+        String email = req.getParameter("email");
+        String username =  req.getParameter("username");
+        String password =  req.getParameter("password");
+        String confimPassword =  req.getParameter("password_confirmation");
+        System.out.println(req.getParameter("email"));
         UserDAO userDAO = new UserDAO();
-        boolean checkResgisterSuccess = userDAO.resgisterWithEmail(email,fullname,password);
-        JSONObject jsonObjectResults = new JSONObject();
-        if (checkResgisterSuccess) {
-            jsonObjectResults.put("status", 200);
-            jsonObjectResults.put("message", "Đăng kí thành công");
-            resp.setContentType("application/json");
-            resp.getWriter().write(jsonObjectResults.toString());
-        } else {
-            jsonObjectResults.put("status", 500);
-            jsonObjectResults.put("message", "Đăng kí không thành công");
-            resp.setContentType("application/json");
-            resp.getWriter().write(jsonObjectResults.toString());
-
+//        early return
+        if(!validateEmail(email)){
+            req.setAttribute("invalidateEmail", "Trường này phải là email");
+            req.getRequestDispatcher("register.jsp").forward(req,resp);
+        }
+        if(email.length()==0){
+            req.setAttribute("invalidateEmail", "Vui lòng nhập trường này");
+            req.getRequestDispatcher("register.jsp").forward(req,resp);
+        }
+        if(userDAO.checkEmailExist(email)){
+            req.setAttribute("invalidateEmail","Email đã được đăng kí");
+            req.getRequestDispatcher("register.jsp").forward(req,resp);
+        }
+        if(username.length() < 6){
+            req.setAttribute("invalidateUserName","Tên người dùng phải lớn hơn 6");
+            req.getRequestDispatcher("register.jsp").forward(req,resp);
+        }
+        if(password.length() <6){
+            req.setAttribute("invalidatePassword","Mật khẩu phải nhiều hơn 6 kí tự");
+            req.getRequestDispatcher("register.jsp").forward(req,resp);
+        }
+        if(!confimPassword.equals(password)){
+            req.setAttribute("invalidateConfimPassword","Mật khẩu không khớp");
+            req.getRequestDispatcher("register.jsp").forward(req,resp);
         }
 
+        if(userDAO.resgisterWithEmail(email,username,password)){
+            resp.sendRedirect("login.jsp");
+        }
+        
     }
 }

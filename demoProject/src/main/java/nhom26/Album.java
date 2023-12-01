@@ -8,6 +8,8 @@ public class Album {
     int price;
     int discount;
     ArrayList<String> listImage;
+    String description;
+    String belongTopic;
     public int getIdAlbum() {
         return idAlbum;
     }
@@ -46,5 +48,21 @@ public class Album {
 
     public void setListImage(ArrayList<String> listImage) {
         this.listImage = listImage;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getBelongTopic() {
+        return belongTopic;
+    }
+
+    public void setBelongTopic(String belongTopic) {
+        this.belongTopic = belongTopic;
     }
 }
