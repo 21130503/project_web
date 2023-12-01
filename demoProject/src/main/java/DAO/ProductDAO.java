@@ -1,6 +1,9 @@
 package DAO;
 
 import Services.Connect;
+import com.mysql.cj.exceptions.ConnectionIsClosedException;
+import nhom26.Album;
+import nhom26.OddImage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -162,5 +165,103 @@ public class ProductDAO {
             Connect.closeConnection(connection);
         }
         return res;
+    }
+    public ArrayList<OddImage> getAllOddImage(){
+        Connection connection = null;
+        ArrayList<OddImage> listOddImage = new ArrayList<OddImage>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "Select idOddImage, name, source, price, discount from oddImage";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                OddImage oddImage = new OddImage();
+                oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
+                oddImage.setName(resultSet.getString("name"));
+                oddImage.setImage(resultSet.getString("source"));
+                oddImage.setPrice(resultSet.getInt("price"));
+                oddImage.setDiscount(resultSet.getInt("discount"));
+                int idTopic = belongDAO.getIdTopicFromIdOdd(resultSet.getInt("idOddImage"));
+                String nameTopic = topicDAO.getNameTopicById(idTopic);
+                oddImage.setBelongTopic(nameTopic);
+                listOddImage.add(oddImage);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  listOddImage;
+    }
+
+    public ArrayList<Album> getAllAlbum(){
+        Connection connection = null;
+        ArrayList<Album> listAlbum = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idAlbum, name, price, discount from album";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt("idAlbum");
+                Album album = new Album();
+                album.setIdAlbum(id);
+                album.setName(resultSet.getString("name"));
+                album.setPrice(resultSet.getInt("price"));
+                album.setDiscount(resultSet.getInt("discount"));
+                album.setListImage(imageDAO.getAllImageByIdAlbum(id));
+                listAlbum.add(album);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return listAlbum;
+    }
+    public boolean deleteOddImage(int idOddImage){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "Delete from OddImage where idOddImage = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idOddImage);
+            int check = preparedStatement.executeUpdate();
+            if(check >0 && belongDAO.deleteOddImage(idOddImage) && descriptionDAO.deleteDescriptionOddImage(idOddImage)){
+                return true;
+            }
+            else{
+                return  false;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
+    public  boolean deleteAlbum(int idAlbum){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "delete from album where idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idAlbum);
+            int check = preparedStatement.executeUpdate();
+            if(check >0 && belongDAO.deleteAlbum(idAlbum) && imageDAO.deleteImageBelongAblum(idAlbum) && descriptionDAO.deleteDescriptionAlbum(idAlbum)){
+                return  true;
+            }
+            else{
+                return  false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
     }
 }

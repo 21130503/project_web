@@ -1,3 +1,9 @@
+<%@ page import="nhom26.OddImage" %>
+<%@ page import="nhom26.Album" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.text.DecimalFormat" %>
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="en">
@@ -32,6 +38,14 @@
 </head>
 
 <body>
+<%ArrayList<OddImage> listOddImage = (ArrayList<OddImage>) request.getAttribute("listOddImage");
+    ArrayList<Album> listAlbum = (ArrayList<Album>) request.getAttribute("listAlbum");
+    Locale vnLocal = new Locale("vi", "VN");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+%>
+<%String albumStr  =listAlbum.size() > 0? "Danh sách album" : null;
+    String oddStr =listOddImage.size() > 0? "Danh sách ảnh lẻ" : null;
+%>
     <!-- Topbar Start -->
     <div class="container-fluid">
        
@@ -87,62 +101,68 @@
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
             <div class="col-lg-0 table-responsive mb-5">
+                <h2 class="text-center mb-5 text-uppercase"><%=albumStr%></h2>
                 <table class="table table-bordered text-center mb-0">
                     <thead class="bg-secondary text-dark">
                         <tr>
                             <th>Tên bộ sưu tập</th>
                             <th>Giá</th>
+                            <th>Giảm giá</th>
                             <th>Thuộc chủ đề</th>
                             <th>Sửa</th>
                             <th>Xóa</th>
                         </tr>
                     </thead>
                     <tbody class="align-middle">
-                        <tr>
-                            <td class="text-left"><img src="img/flower.jpg" alt="" style="width: 50px;"> Hoa Anh Đào</td>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle">
-                                    <p class="text-center">Hoa</p>
-                            </td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td class="text-left"><img src="img/car.avif" alt="" style="width: 50px;"> Xe độ</td>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle">
-                                    <p class="text-center">Xe</p>
-                            </td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td class="text-left"><img src="img/animal.avif" alt="" style="width: 50px;"> Động vật</td>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle">
-                                <p class="text-center">Động vật hoang dã</p>
-                            </td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td class="text-left"><img src="img/pepole.avif" alt="" style="width: 50px;"> Hành trình khám phá</td>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle">
-                                <p class="text-center">Con người</p>
-                            </td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td class="text-left"><img src="img/anime.avif" alt="" style="width: 50px;"> Siêu nhân</td>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle">
-                                    <p class="text-center">Hoạt hình</p>
-                            </td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
-                        </tr>
+                    <%if( listAlbum == null || listAlbum.size() == 0){%>
+                        <tr>Chưa có nội dung</tr>
+                    <%}else{%>
+                        <%for (Album album : listAlbum){%>
+                    <tr>
+                        <td class="text-left"><img class="mr-5" src=<%=album.getListImage().get(album.getListImage().size()-1)%> alt="" style="width: 50px;"> <%=album.getName()%></td>
+                        <td class="align-middle"><%=vndFormat.format(album.getPrice())%></td>
+                        <td class="align-middle"><%=vndFormat.format(album.getDiscount())%></td>
+                        <td class="align-middle">
+                            <p class="text-center">Hoa</p>
+                        </td>
+                        <td class="align-middle"><button data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
+                        <td class="align-middle"><button data-id="<%=album.getIdAlbum()%>" data-target="#deleteAlbum" data-toggle="modal" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
+                    </tr>
+                        <%}%>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-0 table-responsive mb-5">
+                <h2 class="text-center mb-5 text-uppercase"><%=oddStr%></h2>
+                <table class="table table-bordered text-center mb-0">
+                    <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th>Tên ảnh</th>
+                        <th>Giá</th>
+                        <th>Giảm giá</th>
+                        <th>Thuộc chủ đề</th>
+                        <th>Sửa</th>
+                        <th>Xóa</th>
+                    </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                    <%if( listAlbum == null || listAlbum.size() == 0){%>
+                    <tr>Chưa có nội dung</tr>
+                    <%}else{%>
+                    <%for (OddImage odd : listOddImage){%>
+                    <tr>
+                        <td class="text-left"><img class="mr-5" src=<%=odd.getImage()%> alt="" style="width: 50px;"> <%=odd.getName()%></td>
+                        <td class="align-middle"><%=vndFormat.format(odd.getPrice())%></td>
+                        <td class="align-middle"><%=vndFormat.format(odd.getDiscount())%></td>
+                        <td class="align-middle">
+                            <p class="text-center"><%=odd.getBelongTopic()%></p>
+                        </td>
+                        <td class="align-middle"><button data-id ="<%=odd.getIdOddImage()%>" data-toggle="modal" data-target="#myModalOdd" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button></td>
+                        <td class="align-middle"><button  data-id ="<%=odd.getIdOddImage()%>" data-toggle="modal" data-target="#deleteOdd" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
+                    </tr>
+                    <%}%>
+                    <%}%>
                     </tbody>
                 </table>
             </div>
@@ -270,7 +290,99 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
+<%--Modal để sửa--%>
+<div class="modal" id="myModalOdd">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Sửa thông tin</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Đặt nội dung form ở đây -->
+                <form>
+                    <div class="form-group">
+                        <label for="name">Tên ảnh</label>
+                        <input type="email" class="form-control" id="name" placeholder="Tên ảnh">
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Ảnh</label>
+                        <input class="form-control" id="image"  accept="image/*"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="priceOdd">Giá</label>
+                        <input type="file" class="form-control" id="priceOdd"  accept="image/*"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="discountOdd">Giảm giá</label>
+                        <input class="form-control" id="discountOdd"  accept="image/*"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="descriptionOdd">Mô tả sản phẩm</label>
+                        <input class="form-control" id="descriptionOdd"  accept="image/*"/>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Lưu</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<%--Delete--%>
+<div id="deleteOdd" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xóa ảnh</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn ảnh này không ? </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-odd-image" type="button" class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%--Delete album--%>
+<div id="deleteAlbum" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xóa album</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn album này không ? </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-album" type="button" class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./js/Dialog.js"></script>
+<script>
+    Dialog("#deleteOdd",'#btn-delete-odd-image',"/product/deleteOddImage",'idOddImage', 'delete')
+    Dialog("#deleteAlbum",'#btn-delete-album',"/product/deleteAlbum",'idAlbum', 'delete')
+</script>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
