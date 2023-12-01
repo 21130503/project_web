@@ -4,6 +4,7 @@ import Services.Connect;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DescriptionDAO {
@@ -87,6 +88,51 @@ public class DescriptionDAO {
             }
 
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
+//    get
+    public String getDescriptionByOddImage(int idOddImage){
+        String res= "";
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select description from ct_oddImage where idOddImage= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("description");
+                return res;
+            }
+            else{
+                return  res;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
+    public String getDescriptionByAlbum(int idAlbum){
+        String res= "";
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select description from ct_album where idAlbum= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("description");
+                return res;
+            }
+            else{
+                return  res;
+            }
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         finally {

@@ -19,30 +19,32 @@
 </head>
 
 <body>
-<%String err = (String) request.getAttribute("err") == null ? "" : (String) request.getAttribute("err");%>
+<%
+    String invalidateEmail = (String) request.getAttribute("invalidateEmail") == null ? "" : (String) request.getAttribute("invalidateEmail");
+    String invalidateUserName = (String) request.getAttribute("invalidateUsername") == null ? "" : (String) request.getAttribute("invalidateUserName");
+    String invalidatePassword = (String) request.getAttribute("invalidatePassword") == null ? "" : (String) request.getAttribute("invalidatePassword");
+    String invalidateConfimPassword = (String) request.getAttribute("invalidateConfimPassword") == null ? "" : (String) request.getAttribute("invalidateConfimPassword");
+%>
 <div class="inner">
     <h1 class="logo">Nhóm 26</h1>
     <h3 class="title">Đăng kí</h3>
-    <p style="text-align: center; color: red; font-weight: bold;"><%=err%>
-    </p>
-    <form accept-charset="UTF-8" action="http://localhost:8080/demoProject_war/register" method="post" class="form"
-          id="form" enctype="multipart/form-data">
+    <form action="./register" method="post" class="form" id="form">
         <div class="form-group">
-            <input type="email" id="email" placeholder="Email" class="caret" name="email">
-            <span class="show-message"></span>
+            <input type="email" placeholder="Email" class="caret" name="email">
+            <span class="show-message"><%=invalidateEmail%></span>
         </div>
         <div class="form-group">
-            <input type="text" placeholder="Tên người dùng" class="caret" id="fullname" name="fullname">
-            <span class="show-message"></span>
+            <input type="text" placeholder="Tên người dùng" class="caret" name="username">
+            <span class="show-message"><%=invalidateUserName%></span>
         </div>
         <div class="form-group">
-            <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" class="caret">
-            <span class="show-message"></span>
+            <input name="password" type="password" placeholder="Nhập mật khẩu" class="caret">
+            <span class="show-message"><%=invalidatePassword%></span>
         </div>
         <div class="form-group">
-            <input type="password" placeholder="Nhập lại mật khẩu" class="caret" id="password_confirmation"
+            <input type="password" placeholder="Nhập lại mật khẩu" class="caret"
                    name="password_confirmation">
-            <span class="show-message"></span>
+            <span class="show-message"><%=invalidateConfimPassword%></span>
         </div>
         <div class="bt_sign_up">
             <button type="submit">Đăng kí</button>
@@ -64,52 +66,52 @@
         <a href="login.jsp" class="none_decorate">Đăng nhập</a>
     </div>
 
-    <script src="./js/formValidation.js"></script>
-    <script>
-        const onSubmit = async (dataSub) => {
+    <%--    <script src="./js/formValidation.js"></script>--%>
+    <%--    <script>--%>
+    <%--        const onSubmit = async (dataSub) => {--%>
 
-            // const data =  await  axios.post("http://localhost:8080/demoProject_war/register", dataSub)
-            //   console.log(dataSub)
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:8080/demoProject_war/register")
-            xhr.setRequestHeader("Content-Type", "application/json")
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        const respone = JSON.parse(xhr.responseText);
-                        if (respone.status == 200) {
-                            window.onload = window.location.href = "http://localhost:8080/demoProject_war/login.jsp"
-                        } else {
-                            alert(respone.message)
-                        }
-                    } else {
-                        // alert("Thất bại !")
-                    }
-                }
-            }
-            xhr.send(JSON.stringify(dataSub))
-        }
-        Validator({
-            form: '#form',
-            errorSelector: '.show-message',
-            rules: [
-                Validator.isRequired('#fullname', 'Vui lòng nhập trường này'),
-                Validator.isRequired('#email', 'Vui lòng nhập trường này'),
-                Validator.isEmail('#email', 'Trường này phải là email'),
-                Validator.isRequired('#password', 'Vui lòng nhập trường này'),
-                Validator.minLength('#password', 6),
-                Validator.isRequired('#password_confirmation', 'Vui lòng nhập trường này'),
-                Validator.isConfirmed('#password_confirmation', function () {
-                    return document.querySelector('#form #password').value;
-                }, 'Mật khẩu nhập lại không chính xác')
+    <%--            // const data =  await  axios.post("http://localhost:8080/demoProject_war/register", dataSub)--%>
+    <%--            //   console.log(dataSub)--%>
+    <%--            const xhr = new XMLHttpRequest();--%>
+    <%--            xhr.open("POST", "http://localhost:8080/demoProject_war/register")--%>
+    <%--            xhr.setRequestHeader("Content-Type", "application/json")--%>
+    <%--            xhr.onreadystatechange = () => {--%>
+    <%--                if (xhr.readyState === XMLHttpRequest.DONE) {--%>
+    <%--                    if (xhr.status === 200) {--%>
+    <%--                        const respone = JSON.parse(xhr.responseText);--%>
+    <%--                        if (respone.status == 200) {--%>
+    <%--                            window.onload = window.location.href = "http://localhost:8080/demoProject_war/login.jsp"--%>
+    <%--                        } else {--%>
+    <%--                            alert(respone.message)--%>
+    <%--                        }--%>
+    <%--                    } else {--%>
+    <%--                        // alert("Thất bại !")--%>
+    <%--                    }--%>
+    <%--                }--%>
+    <%--            }--%>
+    <%--            xhr.send(JSON.stringify(dataSub))--%>
+    <%--        }--%>
+    <%--        Validator({--%>
+    <%--            form: '#form',--%>
+    <%--            errorSelector: '.show-message',--%>
+    <%--            rules: [--%>
+    <%--                Validator.isRequired('#fullname', 'Vui lòng nhập trường này'),--%>
+    <%--                Validator.isRequired('#email', 'Vui lòng nhập trường này'),--%>
+    <%--                Validator.isEmail('#email', 'Trường này phải là email'),--%>
+    <%--                Validator.isRequired('#password', 'Vui lòng nhập trường này'),--%>
+    <%--                Validator.minLength('#password', 6),--%>
+    <%--                Validator.isRequired('#password_confirmation', 'Vui lòng nhập trường này'),--%>
+    <%--                Validator.isConfirmed('#password_confirmation', function () {--%>
+    <%--                    return document.querySelector('#form #password').value;--%>
+    <%--                }, 'Mật khẩu nhập lại không chính xác')--%>
 
-            ],
-            onSubmit: (data) => {
-                console.log(data);
-                onSubmit(data)
-            }
-        })
-    </script>
+    <%--            ],--%>
+    <%--            onSubmit: (data) => {--%>
+    <%--                console.log(data);--%>
+    <%--                onSubmit(data)--%>
+    <%--            }--%>
+    <%--        })--%>
+    <%--    </script>--%>
 </body>
 
 </html>
