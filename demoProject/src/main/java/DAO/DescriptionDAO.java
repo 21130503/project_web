@@ -102,6 +102,7 @@ public class DescriptionDAO {
             connection = Connect.getConnection();
             String sql = "select description from ct_oddImage where idOddImage= ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idOddImage);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 res = resultSet.getString("description");
@@ -124,6 +125,7 @@ public class DescriptionDAO {
             connection = Connect.getConnection();
             String sql = "select description from ct_album where idAlbum= ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idAlbum);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 res = resultSet.getString("description");
