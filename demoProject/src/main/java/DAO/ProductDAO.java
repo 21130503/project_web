@@ -318,6 +318,7 @@ public class ProductDAO {
                 int idTopic = belongDAO.getIdTopicFromIdAlbum(idAlbum);
                 String topicName = topicDAO.getNameTopicById(idTopic);
                 album.setBelongTopic(topicName);
+                album.setDescription(description);
                 return  album;
             }
         } catch (SQLException e) {
