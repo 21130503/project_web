@@ -139,4 +139,25 @@ public class UserDAO {
         }
         return res;
     }
+    public  String getUsernameById(int idUser){
+        Connection connection = null;
+        String username = "";
+        try{
+            connection = Connect.getConnection();
+            String sql = "select name from user where idUser= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idUser);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                username = resultSet.getString("name");
+                return  username;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return username;
+    }
 }
