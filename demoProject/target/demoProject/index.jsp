@@ -1,4 +1,6 @@
 <%@ page import="nhom26.User" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="nhom26.Topic" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -34,7 +36,9 @@
 </head>
 
 <body>
-<% User user = (User) session.getAttribute("user");%>
+<% User user = (User) session.getAttribute("user");
+    ArrayList<Topic> listTopic = request.getAttribute("listTopic") ==null? new ArrayList<>() : (ArrayList<Topic>) request.getAttribute("listTopic");
+%>
     <!-- Topbar Start -->
     <div class="container-fluid">
        
@@ -80,16 +84,14 @@
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
                 <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
-                    <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                        <a href="" class="nav-item nav-link">Con người</a>
-                        <a href="" class="nav-item nav-link">Thiên nhiên</a>
-                        <a href="" class="nav-item nav-link">Động vật</a>
-                        <a href="" class="nav-item nav-link">Chó</a>
-                        <a href="" class="nav-item nav-link">Mèo</a>
-                        <a href="" class="nav-item nav-link">Xe</a>
-                        <a href="" class="nav-item nav-link">Vũ trụ</a>
-                        <a href="" class="nav-item nav-link">Hoạt hình</a>
-                        <a href="" class="nav-item nav-link">Hoa</a>
+                    <div class="navbar-nav w-100 overflow" style="height: 410px">
+                        <%if(listTopic.size() == 0){%>
+                            <p>Chưa có topic nào</p>
+                        <%}else {%>
+                            <%for(Topic topic : listTopic){%>
+                                <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%></a>
+                            <%}%>
+                        <%}%>
                     </div>
                 </nav>
             </div>
@@ -126,7 +128,7 @@
                                 <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%></p>
                                 <div class="dropdown-menu rounded-0 m-0">
                                     <%if(!user.isVerifyEmail()){%>
-                                    <a href="cart.jsp" class="dropdown-item">Xác thực email của bạn</a>
+                                    <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
                                     <%}%>
                                     <% if(user.isAdmin()){%>
                                     <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>

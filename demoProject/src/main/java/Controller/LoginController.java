@@ -26,7 +26,7 @@ public class LoginController extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("user", user);
             session.setMaxInactiveInterval(10 * 60);
-            resp.sendRedirect("index.jsp");
+            resp.sendRedirect("index");
         }
         else{
             req.setAttribute("err", "Email hoặc mật khẩu không đúng");

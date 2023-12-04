@@ -160,4 +160,26 @@ public class UserDAO {
         }
         return username;
     }
+    public boolean verifyEmail(String email){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update user SET isVerifyEmail = ? where email = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "true");
+            preparedStatement.setString(2, email);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0 ){
+                return  true;
+            }
+            else{
+                return  false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
 }

@@ -6,6 +6,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.awt.*" %>
 <%@ page import="nhom26.Feedback" %>
+<%@ page import="nhom26.User" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -37,6 +38,7 @@
 </head>
 
 <body>
+<% User user = (User) session.getAttribute("user");%>
 <% String type = (String) request.getAttribute("type");
     String name = null, description = null, sourceImage = null;
     int price = 0, discount =0, tottalImage = 1,id= 0;
@@ -154,10 +156,29 @@
                         </div>
                         <a href="contact.jsp" class="nav-item nav-link active">Liên hệ</a>
                     </div>
+                    <%if(user == null) {%>
                     <div class="navbar-nav ml-auto py-0">
                         <a href="login.jsp" class="nav-item nav-link">Đăng nhập</a>
                         <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
                     </div>
+
+                    <%} else { %>
+                    <div class="navbar-nav ml-auto py-0 position-relative">
+                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%></p>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <%if(!user.isVerifyEmail()){%>
+                            <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
+                            <%}%>
+                            <% if(user.isAdmin()){%>
+                            <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
+                            <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
+                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <%}%>
+                            <button class="dropdown-item" id="logout">Đăng xuất</button>
+                        </div>
+                    </div>
+                    <%}%>
                 </div>
             </nav>
         </div>
@@ -221,7 +242,7 @@
         <div class="col">
             <div class="nav nav-tabs justify-content-center border-secondary mb-4">
                 <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Mô tả</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đánh giá (1)</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đánh giá (<%=listFeedback.size()%>)</a>
             </div>
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="tab-pane-1">
@@ -231,7 +252,7 @@
                 <div class="tab-pane fade" id="tab-pane-3">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4 class="mb-4">1 đánh giá cho "<%=name%>"</h4>
+                            <h4 class="mb-4"><%=listFeedback.size()%> đánh giá cho "<%=name%>"</h4>
                             <%if(listFeedback.size() == 0){ %>
                                 <p>Chưa có bình luận nào</p>
                             <%}else{%>
