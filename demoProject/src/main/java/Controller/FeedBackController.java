@@ -49,5 +49,6 @@ public class FeedBackController extends HttpServlet {
         } else if (type.equals("odd")) {
             feedbackDAO.insertFeedbackForOddImage(id, user.getId(), content);
         }
+        resp.sendRedirect("http://localhost:8080/demoProject_war/detail?type="+type+"&id="+ id);
     }
 }

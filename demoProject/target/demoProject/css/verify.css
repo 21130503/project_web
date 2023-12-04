@@ -1,0 +1,27 @@
+.inner-verify{
+    border-radius: 10px;
+    padding: 15px 30px 30px;
+    background-color: #fff;
+}
+.title{
+    font-size: 16px;
+    margin-top: 10px;
+}
+.code{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+.code-content{
+    letter-spacing: 7px;
+    font-size: 30px;
+    font-weight: bold;
+    background: url(../img/verify.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
