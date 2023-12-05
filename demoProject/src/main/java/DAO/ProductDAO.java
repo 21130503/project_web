@@ -299,6 +299,7 @@ public class ProductDAO {
         }
         return  oddImage;
     }
+//    cho trang detail
     public  Album getAlbumById(int idAlbum){
         Connection connection = null;
         Album album= new Album();
@@ -328,5 +329,60 @@ public class ProductDAO {
             Connect.closeConnection(connection);
         }
         return  album;
+    }
+//    tìm kiesm sản phẩm
+    public ArrayList<Album> searchAlbumWithParam(String name){
+        Connection connection = null;
+        ArrayList<Album> listAlbum = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idAlbum , name, price, discount from album where name LIKE ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%" + name + "%");
+            ResultSet resultSet= preparedStatement.executeQuery();
+            while (resultSet.next()){
+//                chỉ cần báy nhiêu dữ liệu thôi
+                Album album = new Album();
+                album.setIdAlbum(resultSet.getInt("idAlbum"));
+                album.setName(resultSet.getString("name"));
+                album.setPrice(resultSet.getInt("price"));
+                album.setDiscount(resultSet.getInt("discount"));
+                album.setListImage(imageDAO.getAllImageByIdAlbum(resultSet.getInt("idAlbum")));
+                listAlbum.add(album);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  listAlbum;
+    }
+    public ArrayList<OddImage> searchOddImageWithParam(String name){
+        Connection connection = null;
+        ArrayList<OddImage> listOddImage= new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idOddImage, name, price, discount, source from oddImage where name LIKE ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%" + name + "%");
+            ResultSet resultSet= preparedStatement.executeQuery();
+            while (resultSet.next()){
+//                chỉ cần báy nhiêu dữ liệu thôi
+                OddImage oddImage = new OddImage();
+                oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
+                oddImage.setName(resultSet.getString("name"));
+                oddImage.setPrice(resultSet.getInt("price"));
+                oddImage.setDiscount(resultSet.getInt("discount"));
+                oddImage.setImage(resultSet.getString("source"));
+                listOddImage.add(oddImage);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  listOddImage;
     }
 }
