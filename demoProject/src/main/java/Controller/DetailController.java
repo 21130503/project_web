@@ -27,12 +27,15 @@ public class DetailController extends HttpServlet {
             req.setAttribute("detail", album);
             req.setAttribute("type", "album");
             req.setAttribute("feedback", feedbackDAO.getAllFeedbackForAlbumById(id));
+            req.setAttribute("totalStar", feedbackDAO.countRatingAlbum(id));
+            req.setAttribute("avgStar", feedbackDAO.AvgRatingAlbum(id));
         } else if (type.equals("odd")) {
             OddImage oddImage = productDAO.getOddImageById(id);
             req.setAttribute("detail", oddImage);
             req.setAttribute("type", "odd");
             req.setAttribute("feedback", feedbackDAO.getAllFeedbackForOddImageById(id));
-
+            req.setAttribute("totalStar", feedbackDAO.countRatingOddImage(id));
+            req.setAttribute("avgStar", feedbackDAO.AvgRatingOddImage(id));
 
         }
         req.getRequestDispatcher("detail.jsp").forward(req, resp);

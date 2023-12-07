@@ -48,7 +48,7 @@ public class TopicDAO {
         try{
             connection = Connect.getConnection();
             // Câu truy vấn lấy dữ liệu topic
-            String getAllTopic = "select idTopic , name, interfaceImage from topic";
+            String getAllTopic = "select idTopic , name, interfaceImage, isShow from topic";
             PreparedStatement preparedStatementGetTopic = connection.prepareStatement(getAllTopic);
             ResultSet resultSetGetTopic = preparedStatementGetTopic.executeQuery();
             while (resultSetGetTopic.next()) {
@@ -57,6 +57,7 @@ public class TopicDAO {
                 topic.setName(resultSetGetTopic.getString("name"));
                 topic.setImageInterface(resultSetGetTopic.getString("interfaceImage"));
                 topic.setProduct(0);
+                topic.setShow(resultSetGetTopic.getBoolean("isShow"));
                 listTopic.add(topic);
             }
         } catch (Exception e) {

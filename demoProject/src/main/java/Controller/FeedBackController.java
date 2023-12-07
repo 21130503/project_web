@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.FeedbackDAO;
+import Services.Connect;
 import nhom26.User;
 
 import javax.servlet.ServletException;
@@ -10,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 @WebServlet(name = "FeedbackController", value = "/feedback")
 public class FeedBackController extends HttpServlet {
@@ -20,7 +24,8 @@ public class FeedBackController extends HttpServlet {
         resp.setContentType("text/html; charset= UTF-8");
         String type = req.getParameter("type");
         int id = Integer.parseInt(req.getParameter("id"));
-        String content = req.getParameter("content");
+        String content = req.getParameter("content").trim();
+        String star = req.getParameter("star");
         System.out.println(type + id + content);
         FeedbackDAO feedbackDAO = new FeedbackDAO();
         HttpSession session = req.getSession();
@@ -32,8 +37,9 @@ public class FeedBackController extends HttpServlet {
             resp.sendRedirect("login.jsp");
             return;
         }
+
 //        Xử lí value rỗng
-        if (content.length() == 0) {
+        if (content.trim().length() == 0 && star == null) {
             req.setAttribute("err", "Vui lòng nhập trường này");
             HttpSession session1 = req.getSession();
             session1.setAttribute("errMess", "Vui lòng nhập trường này");
@@ -41,14 +47,31 @@ public class FeedBackController extends HttpServlet {
             resp.sendRedirect(URL);
             return;
         }
+
 //        Chưa xử lí mua hàng rồi mới được bình luận
 //        thỏa điều kiện thì mới cho insert
+//
         if (type.equals("album")) {
-            feedbackDAO.insertFeedbackForAlbum(id, user.getId(), content);
+            if(!feedbackDAO.checkUserFeedbackForAlbum(user.getId(),id)){
 
+                feedbackDAO.insertFeedbackForAlbum(id, user.getId(), content.trim(), star);
+            }
+            if(content.trim().length() == 0){
+                feedbackDAO.updateStarForAlbum(star, user.getId(),id);
+            }
+            feedbackDAO.updateAlbumFeedback(user.getId(), id,star, content);
         } else if (type.equals("odd")) {
-            feedbackDAO.insertFeedbackForOddImage(id, user.getId(), content);
+            if(!feedbackDAO.checkUserFeedbackForOddImage(user.getId(), id)){
+
+                feedbackDAO.insertFeedbackForOddImage(id, user.getId(), content.trim(),star);
+            }
+            if(content.trim().length() == 0){
+                feedbackDAO.updateStarForOddImage(star,user.getId(), id);
+                System.out.println("ex");
+            }
+            feedbackDAO.updateOddImageFeedback(user.getId(),id,star,content);
         }
         resp.sendRedirect("http://localhost:8080/demoProject_war/detail?type="+type+"&id="+ id);
     }
+
 }
