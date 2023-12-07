@@ -21,7 +21,7 @@
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-
+    <link rel="stylesheet" href="./css/detail.css">
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
@@ -41,11 +41,13 @@
 <% User user = (User) session.getAttribute("user");%>
 <% String type = (String) request.getAttribute("type");
     String name = null, description = null, sourceImage = null;
-    int price = 0, discount =0, tottalImage = 1,id= 0;
+    int price = 0, discount =0, tottalImage = 1,id= 0 ;
     OddImage oddImage = null;
     Album album = null;
     List<String>  list = new ArrayList<>();
     ArrayList<Feedback> listFeedback = request.getAttribute("feedback") == null ? new ArrayList<>() :(ArrayList<Feedback>) request.getAttribute("feedback");
+    int totalFeedbackStar = request.getAttribute("totalStar") == null ? 0 : (int) request.getAttribute("totalStar");
+    double avgFeedbackStar = request.getAttribute("avgStar")== null ? 0 : (double) request.getAttribute("avgStar");
     if (type.equals("album")) {
         album = (Album) request.getAttribute("detail");
         name = album.getName();
@@ -212,14 +214,15 @@
             <h3 class="font-weight-semi-bold"><%=name%>
             </h3>
             <div class="d-flex mb-3">
-                <div class="text-primary mr-2">
-                    <small class="fas fa-star"></small>
-                    <small class="fas fa-star"></small>
-                    <small class="fas fa-star"></small>
-                    <small class="fas fa-star-half-alt"></small>
-                    <small class="far fa-star"></small>
-                </div>
-                <small class="pt-1">(50 Đánh giá)</small>
+<%--                <div class="text-primary mr-2">--%>
+<%--                    <small class="fas fa-star"></small>--%>
+<%--                    <small class="fas fa-star"></small>--%>
+<%--                    <small class="fas fa-star"></small>--%>
+<%--                    <small class="fas fa-star-half-alt"></small>--%>
+<%--                    <small class="far fa-star"></small>--%>
+<%--                </div>--%>
+                <h4 class="text-primary mr-2"><%=avgFeedbackStar%> <small class="fas fa-star"></small></h4>
+                <small class="pt-2">(<%=totalFeedbackStar%> Đánh giá)</small>
             </div>
             <h3 class="font-weight-semi-bold mb-4">
                <%=vndFormat.format(price-discount)%>
@@ -277,22 +280,34 @@
                         </div>
                         <div class="col-md-6">
                             <h4 class="mb-4">Viết phản hồi của bạn</h4>
-                            <!-- <small>Your email address will not be published. Required fields are marked *</small>
-                            <div class="d-flex my-3">
-                                <p class="mb-0 mr-2">Your Rating * :</p>
-                                <div class="text-primary">
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                            </div> -->
                             <form action="/demoProject_war/feedback" method="post">
                                 <p class="text-danger"><%=err%></p>
                                 <div class="form-group">
                                     <label for="message">Đánh giá của bạn: </label>
                                     <textarea name="content" id="message" cols="30" rows="5" class="form-control"></textarea>
+                                </div>
+                                <div class="d-flex my-3">
+                                    <p class="mb-0 mr-2 d-flex align-items-center">Đánh giá dạng sao * :</p>
+                                    <label class="feedback-star">
+                                        <input type="radio" name="star" value="1" class="star-radio" />
+                                        <small class="far fa-star"></small>
+                                    </label>
+                                    <label class="feedback-star">
+                                        <input type="radio" name="star" value="2" class="star-radio" />
+                                        <small class="far fa-star"></small>
+                                    </label>
+                                    <label class="feedback-star">
+                                        <input type="radio" name="star" value="3" class="star-radio" />
+                                        <small class="far fa-star"></small>
+                                    </label>
+                                    <label class="feedback-star">
+                                        <input type="radio" name="star" value="4" class="star-radio" />
+                                        <small class="far fa-star"></small>
+                                    </label>
+                                    <label class="feedback-star">
+                                        <input type="radio" name="star" value="5" class="star-radio" />
+                                        <small class="far fa-star"></small>
+                                    </label>
                                 </div>
                                 <div class="form-group">
                                     <input type="hidden" name="type" value="<%=type%>" class="">
@@ -501,6 +516,7 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
+<script src="./js/user.js"></script>
 </body>
 
 </html>
