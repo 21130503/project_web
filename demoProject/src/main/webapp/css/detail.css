@@ -1,0 +1,14 @@
+
+.star-radio {
+    display: none;
+    margin-right: 5px;
+}
+
+
+.star-radio:checked + small {
+    color: gold;
+}
+.feedback-star{
+    font-size: 28px;
+    margin-right: 8px;
+}

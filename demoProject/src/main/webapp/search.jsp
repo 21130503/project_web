@@ -225,7 +225,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 pb-1"><h4 class="text-center text-primary font-weight-bold"><%=listAlbum.size()%> kết quả cho album</h4></div>
+                <div class="col-12 pb-1 bg-secondary"><h4 class="text-center text-primary font-weight-bold"><%=listAlbum.size()%> kết quả cho album</h4></div>
                 <%for (Album album : listAlbum) {%>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
@@ -253,7 +253,7 @@
                     </div>
                 </div>
                 <%}%>
-                <div class="col-12 pb-1"><h4 class="text-center text-primary font-weight-bold"><%=listOdd.size()%> kết cho ảnh lẻ</h4>
+                <div class="col-12 pb-1 bg-secondary"><h4 class="text-center text-primary font-weight-bold"><%=listOdd.size()%> kết cho ảnh lẻ</h4>
                 </div>
                 <%for (OddImage oddImage : listOdd) {%>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
