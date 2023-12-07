@@ -136,6 +136,7 @@
                     <th>ID</th>
                     <th>Tên chủ đề</th>
                     <th>Số sản phẩm</th>
+                    <th>Ẩn</th>
                     <th>Xóa</th>
                 </tr>
                 </thead>
@@ -147,6 +148,7 @@
                     <td class="align-middle">
                         <p class="text-center"><%=topic.getProduct()%></p>
                     </td>
+                    <td class="align-middle"><%=topic.isShow() ? "Đang bán" : "Đã ngừng bán"%></td>
                     <td class="align-middle"><a class="btn btn-sm btn-primary" data-id=<%=topic.getIdTopic()%> data-toggle="modal" data-target="#deleteTopic" ><i class="fa fa-times"></i></a></td>
                 </tr>
                 <%}%>>
