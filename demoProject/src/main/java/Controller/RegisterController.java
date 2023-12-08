@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.UserDAO;
 import Properties.DBProperties;
+import Regex.Regex;
 import Services.Connect;
 import org.json.JSONObject;
 
@@ -19,14 +20,7 @@ import java.util.regex.Pattern;
 
 @WebServlet(name = "RegisterController", value = "/register")
 public class RegisterController extends HttpServlet {
-    private static final String EMAIL_REGEX =
-            "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-
-    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
-    public static boolean validateEmail(String email) {
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
+     Regex regex = new Regex();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Đặt encoding cho request và response
@@ -39,7 +33,7 @@ public class RegisterController extends HttpServlet {
         System.out.println(req.getParameter("email"));
         UserDAO userDAO = new UserDAO();
 //        early return
-        if(!validateEmail(email)){
+        if(!regex.validateEmail(email)){
             req.setAttribute("invalidateEmail", "Trường này phải là email");
             req.getRequestDispatcher("register.jsp").forward(req,resp);
         }

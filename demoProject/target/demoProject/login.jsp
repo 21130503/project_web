@@ -40,7 +40,7 @@
             
         </div>
        <p class="redirect"> <span>Bạn chưa có tài khoản?</span> <a href="register.jsp">Đăng kí</a> </p>
-       <a href="forgotPassword.jsp" class="fogot db"> Quên mật khẩu</a>
+       <a href="findEmail.jsp" class="fogot db"> Quên mật khẩu</a>
     </div>
 </div>
 </body>
