@@ -182,4 +182,27 @@ public class UserDAO {
             Connect.closeConnection(connection);
         }
     }
+    public boolean updatePasswordByEmail(String email, String pass){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "UPDATE user set password = ? where email = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, pass);
+            preparedStatement.setString(2, email);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0){
+                return  true;
+            }
+            else {
+                return  false;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
 }

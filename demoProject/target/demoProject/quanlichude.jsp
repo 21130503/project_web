@@ -72,7 +72,7 @@
 
 <body>
 <%
-    List<Topic> listTopic = (List<Topic>) request.getAttribute("listTopic");
+    List<Topic> listTopic = (List<Topic>) request.getAttribute("listTopic") == null ? new ArrayList<Topic>() :  (List<Topic>) request.getAttribute("listTopic") ;
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -159,7 +159,7 @@
             <div class="card-header bg-secondary border-0">
                 <h6 class="font-weight-semi-bold m-0">Thêm chủ đề</h6>
             </div>
-            <form class="mb-5  mt-4" action="" id="formTopic" enctype="multipart/form-data" accept-charset="UTF-8">
+            <form class="mb-5  mt-4" action="./topic" method="post" id="formTopic" enctype="multipart/form-data">
                 <div class="input-group d-flex justify-content-between mt-4">
                     <input type="text" id="nameTopic" class="form-control p-3" placeholder="Tên chủ đề" name="nameTopic">
                     <span class="show-message"></span>
