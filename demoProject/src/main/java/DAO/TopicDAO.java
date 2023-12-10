@@ -67,6 +67,30 @@ public class TopicDAO {
         }
         return listTopic;
     }
+    public ArrayList<Topic> getAllTopicsForClient(){
+        Connection connection = null;
+        ArrayList<Topic> listTopic = new ArrayList<Topic>();
+        try{
+            connection = Connect.getConnection();
+            // Câu truy vấn lấy dữ liệu topic
+            String getAllTopicForClient = "select idTopic , name, interfaceImage, isShow from topic where  isShow= ?";
+            PreparedStatement preparedStatementGetTopic = connection.prepareStatement(getAllTopicForClient);
+            preparedStatementGetTopic.setString(1, "true");
+            ResultSet resultSetGetTopic = preparedStatementGetTopic.executeQuery();
+            while (resultSetGetTopic.next()) {
+                Topic topic = new Topic();
+                topic.setIdTopic(resultSetGetTopic.getInt("idTopic"));
+                topic.setName(resultSetGetTopic.getString("name"));
+                topic.setImageInterface(URL.URL + resultSetGetTopic.getString("interfaceImage"));
+                topic.setProduct(0);
+                topic.setShow(resultSetGetTopic.getBoolean("isShow"));
+                listTopic.add(topic);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return listTopic;
+    }
     public boolean checkNameTopicExist(String nameTopic) {
         Connection connection = null;
         try {
