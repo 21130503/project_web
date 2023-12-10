@@ -2,6 +2,8 @@ package Controller;
 
 import DAO.TopicDAO;
 import DAO.UserDAO;
+import Properties.URL;
+import Upload.UploadFile;
 import com.mysql.cj.Constants;
 import nhom26.Topic;
 import nhom26.User;
@@ -13,6 +15,7 @@ import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.BufferedReader;
@@ -25,9 +28,12 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 50, // 50MB
+        maxRequestSize = 1024 * 1024 * 50) // 50MB)
 @WebServlet(name = "TopicController", value = "/topic")
 public class TopicController extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
@@ -54,66 +60,46 @@ public class TopicController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF8");
         resp.setCharacterEncoding("UTF-8");
-        String name = null;
-        String filename = null;
+        String name = req.getParameter("nameTopic");
+        String fileName = null;
         TopicDAO topicDAO = new TopicDAO();
-
-        try {
-            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(req);
-            // Lấy đường dẫn thực tế của thư mục /images trong ứng dụng
-            String realPath = req.getServletContext().getRealPath("/images");
-            // Kiểm tra xem thư mục có tồn tại không, nếu không thì tạo mới
-            File imagesDirectory = new File(realPath);
-            if (!imagesDirectory.exists()) {
-                imagesDirectory.mkdirs(); // Tạo thư mục nếu chưa tồn tại
-            }
-            for (FileItem item : items) {
-                if (item.isFormField() && "nameTopic".equals(item.getFieldName())) {
-                    name = item.getString("utf-8");
-                    if (topicDAO.checkNameTopicExist(name)) {
-                        req.setAttribute("Exist", "Tên chủ đề đã tồn tại");
-                        req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
-                        return;
-                    }
-                    if (name.trim().length() == 0) {
-                        req.setAttribute("ErrNameTopic", "*Vui lòng nhập trường này");
-                        req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
-                    }
-
-                } else if (!item.isFormField() && "interfaceImage".equals(item.getFieldName())) {
-                    if(item.getSize() >0 ){
-//                        String originalFileName = item.getName();
-//                        int index = originalFileName.lastIndexOf(".");
-//                        String ext = originalFileName.substring(index +1);
-//                        String fileName = System.currentTimeMillis() + "." +ext;
-//                        File file = new File()
-                    filename = Paths.get(item.getName()).getFileName().toString();
-                    }
-
-                    // Lưu tệp ảnh vào thư mục /images
-                    File uploadedFile = new File(realPath, filename);
-                    item.write(uploadedFile);
-                }
-            }
-            if (filename == null) {
-                req.setAttribute("errImage", "Vui lòng nhập ảnh bìa");
-                req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
-            }
-            if (topicDAO.insertTopic(name, "/images/" + filename)) {
-                req.setAttribute("success", "Thêm chủ đề thành công");
-                req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
-            }
-
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-            req.setAttribute("error", "Lỗi khi xử lý upload file");
+        UploadFile uploadFile = new UploadFile();
+        if(topicDAO.checkNameTopicExist(name)){
+            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("exist", "Tên chủ đề đã tồn tại");
             req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
-        } catch (Exception e) {
-            e.printStackTrace();
-            req.setAttribute("error", "Lỗi xử lý không xác định");
+            return;
+        }
+        if (name == null || name.trim().isEmpty()) {
+            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("errName", "Vui lòng nhập tên chủ đề");
             req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+            return;
         }
 
+        for (Part part : req.getParts()) {
+             fileName = uploadFile.extractFileName(part);
+            // refines the fileName in case it is an absolute path
+            fileName = new File(fileName).getName();
+            try {
+                part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if(fileName == null ||fileName.trim().isEmpty()){
+            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("errImage", "Vui lòng nhập trường này");
+            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+            return;
+        }
+        if(topicDAO.insertTopic(name, "/images/" + fileName)){
+            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("success", "Vui lòng nhập trường này");
+            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+            return;
+        }
     }
 
     @Override
