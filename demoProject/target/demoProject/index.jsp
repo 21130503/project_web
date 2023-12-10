@@ -183,87 +183,17 @@
     <!-- Categories Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5 pb-3">
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/flower.jpg" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Hoa</h5>
+            <%for (Topic topic : listTopic){%>
+                <div class="col-lg-4 col-md-6 pb-1">
+                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px; height: 358px;">
+                        <p class="text-right"><%=topic.getProduct()%> sản phẩm</p>
+                        <a href="./topic?q=<%=topic.getName()%>" class="cat-img position-relative overflow-hidden mb-3">
+                            <img class="img-fluid w-100" src=<%=topic.getImageInterface()%> alt="">
+                        </a>
+                        <h5 class="font-weight-semi-bold m-0"><%=topic.getName()%></h5>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/pepole.avif" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Con người</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/natural.avif" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Thiên nhiên</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/dog.avif" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Chó</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/cat.avif" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Mèo</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/galaxy.avif" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Vũ trụ</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/animal.avif" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Động vật</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/car.avif" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Xe</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/anime.avif" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Hoạt hình</h5>
-                </div>
-            </div>
+            <%}%>
         </div>
     </div>
     <!-- Categories End -->
