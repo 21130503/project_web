@@ -14,48 +14,48 @@ uploadImgOdd.addEventListener("change", (e) => {
     const file = e.target.files[0]
     const url = URL.createObjectURL(file)
     showImgOdd.src = url;
-    imageToBase64(file, (base64Value) => {
-        base64 = base64Value;
-    })
+    // imageToBase64(file, (base64Value) => {
+    //     base64 = base64Value;
+    // })
 })
+//
+// function imageToBase64(file, callback) {
+//     return new Promise((resolve, reject) => {
+//         const reader = new FileReader();
+//         reader.onloadend = () => {
+//             const result = reader.result;
+//             callback(result)
+//         };
+//         reader.onerror = reject;
+//         reader.readAsDataURL(file);
+//     })
+// }
 
-function imageToBase64(file, callback) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const result = reader.result;
-            callback(result)
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    })
-}
-
-const upload = async (obj) => {
-    const data = await axios.post('http://localhost:8080/demoProject_war/product/addImg', obj)
-    alert(data.data.message)
-    location.reload()
-}
-formOdd.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const obj = {
-        nameTopic: belongTopic.value,
-        nameImg: nameImg.value,
-        description: descriptionImg.value,
-        price: priceImg.value,
-        discount: discountImg.value !== 0 ? discountImg.value : 0,
-        source: base64
-    }
-    if (belongTopic.value.length === 0
-        || nameImg.value.length === 0
-        || descriptionImg.value.length === 0
-        || priceImg.value.length === 0
-    ) {
-        alert("Vui lòng điền đầy đủ thông tin")
-    } else {
-        upload(obj)
-    }
-})
+// const upload = async (obj) => {
+//     const data = await axios.post('http://localhost:8080/demoProject_war/product/addImg', obj)
+//     alert(data.data.message)
+//     location.reload()
+// }
+// formOdd.addEventListener('submit', (e) => {
+//     e.preventDefault();
+//     const obj = {
+//         nameTopic: belongTopic.value,
+//         nameImg: nameImg.value,
+//         description: descriptionImg.value,
+//         price: priceImg.value,
+//         discount: discountImg.value !== 0 ? discountImg.value : 0,
+//         source: base64
+//     }
+//     if (belongTopic.value.length === 0
+//         || nameImg.value.length === 0
+//         || descriptionImg.value.length === 0
+//         || priceImg.value.length === 0
+//     ) {
+//         alert("Vui lòng điền đầy đủ thông tin")
+//     } else {
+//         upload(obj)
+//     }
+// })
 
 
 // Bán album
@@ -86,33 +86,33 @@ uploadImg.addEventListener('change', () => {
         img.style.marginTop = '10px'
         showImgs.append(img)
         //     Tạo mảng base64
-        imageToBase64(arrFiles[index], (res) => {
-            listBase64.push(res)
-        })
+        // imageToBase64(arrFiles[index], (res) => {
+        //     listBase64.push(res)
+        // })
     })
 
 });
-const uploadAlbum = async (obj) => {
-    const data = await axios.post('http://localhost:8080/demoProject_war/product/addAlbum', obj)
-    alert(data.data.message)
-    location.reload()
-}
-formAlbum.addEventListener('submit', (e) => {
-    e.preventDefault()
-    const data = {
-        nameTopic: albumBelongTopic.value,
-        nameAlbum: nameAlbum.value,
-        descriptionAlbum: descriptionAlbum.value,
-        price: priceAlbum.value,
-        discount: discountAlbum.value !== 0 ? discountAlbum.value : 0,
-        source: listBase64
-    }
-    if (albumBelongTopic.value.length === 0
-        || nameAlbum.value.length === 0
-        || descriptionAlbum.value.length === 0
-        || priceAlbum.value.length === 0) {
-        alert("Vui lòng đầy đủ thông tin")
-    } else {
-        uploadAlbum(data)
-    }
-})
+// const uploadAlbum = async (obj) => {
+//     const data = await axios.post('http://localhost:8080/demoProject_war/product/addAlbum', obj)
+//     alert(data.data.message)
+//     location.reload()
+// }
+// formAlbum.addEventListener('submit', (e) => {
+//     e.preventDefault()
+//     const data = {
+//         nameTopic: albumBelongTopic.value,
+//         nameAlbum: nameAlbum.value,
+//         descriptionAlbum: descriptionAlbum.value,
+//         price: priceAlbum.value,
+//         discount: discountAlbum.value !== 0 ? discountAlbum.value : 0,
+//         source: listBase64
+//     }
+//     if (albumBelongTopic.value.length === 0
+//         || nameAlbum.value.length === 0
+//         || descriptionAlbum.value.length === 0
+//         || priceAlbum.value.length === 0) {
+//         alert("Vui lòng đầy đủ thông tin")
+//     } else {
+//         uploadAlbum(data)
+//     }
+// })

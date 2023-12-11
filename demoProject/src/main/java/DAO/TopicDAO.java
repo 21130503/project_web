@@ -91,6 +91,24 @@ public class TopicDAO {
         }
         return listTopic;
     }
+    public ArrayList<String> getAllNamesTopic(){
+        Connection connection = null;
+        ArrayList<String> listNamesTopic = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            // Câu truy vấn lấy dữ liệu topic
+            String sql = "select name from topic";
+            PreparedStatement preparedStatementGetTopic = connection.prepareStatement(sql);
+            ResultSet resultSetGetTopic = preparedStatementGetTopic.executeQuery();
+            while (resultSetGetTopic.next()) {
+
+                listNamesTopic.add(resultSetGetTopic.getString("name"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return listNamesTopic;
+    }
     public boolean checkNameTopicExist(String nameTopic) {
         Connection connection = null;
         try {
@@ -155,6 +173,27 @@ public class TopicDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 res = resultSet.getString("name");
+                return  res;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  res;
+    }
+    public String checkTopicShow(String nameTopic){
+        Connection connection = null;
+        String res = "";
+        try{
+            connection = Connect.getConnection();
+            String sql = "select isShow from topic where name = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nameTopic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("isShowzxc");
                 return  res;
             }
         } catch (SQLException e) {

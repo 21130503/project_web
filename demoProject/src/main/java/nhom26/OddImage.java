@@ -8,6 +8,7 @@ public class OddImage {
     String image;
     String belongTopic;
     String description;
+    boolean isShow;
     public OddImage() {
     }
 
@@ -65,5 +66,13 @@ public class OddImage {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isShow() {
+        return isShow;
+    }
+
+    public void setShow(boolean show) {
+        isShow = show;
     }
 }

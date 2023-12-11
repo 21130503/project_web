@@ -44,14 +44,29 @@
 
 <body>
 <%
+    String errNameTopic = request.getAttribute("errNameTopic") == null ? "" : (String) request.getAttribute("errNameTopic");
+    String errNameImg = request.getAttribute("errNameImg") == null ? "" : (String) request.getAttribute("errNameImg");
+    String errPrice = request.getAttribute("errPrice") == null ? "" : (String) request.getAttribute("errPrice");
+    String errDescription = request.getAttribute("errDescription") == null ? "" : (String) request.getAttribute("errDescription");
+    String errImg = request.getAttribute("errImg") == null ? "" : (String) request.getAttribute("errImg");
+//    Invalidate album
+    String errNameTopic_Album = request.getAttribute("errNameTopic_Album") == null ? "" : (String) request.getAttribute("errNameTopic_Album");
+    String errNameAlbum = request.getAttribute("errNameAlbum") == null ? "" : (String) request.getAttribute("errNameAlbum");
+    String errDiscountAlbum = request.getAttribute("errDiscountAlbum") == null ? "" : (String) request.getAttribute("errDiscountAlbum");
+    String errPriceAlbum = request.getAttribute("errPriceAlbum") == null ? "" : (String) request.getAttribute("errPriceAlbum");
+    String errDescriptionAlbum = request.getAttribute("errDescriptionAlbum") == null ? "" : (String) request.getAttribute("errDescriptionAlbum");
+    String errImageForAlbum = request.getAttribute("errImageForAlbum") == null ? "" : (String) request.getAttribute("errImageForAlbum");
+
+
+    ArrayList<String> listNamesTopic = request.getAttribute("listNamesTopic") == null ? new ArrayList<>() :(ArrayList<String>) request.getAttribute("listNamesTopic");
     ArrayList<OddImage> listOddImage = (ArrayList<OddImage>) request.getAttribute("listOddImage");
     ArrayList<Album> listAlbum = (ArrayList<Album>) request.getAttribute("listAlbum");
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VND");
 %>
 <%
-    String albumStr = listAlbum.size() > 0 ? "Danh sách album" : null;
-    String oddStr = listOddImage.size() > 0 ? "Danh sách ảnh lẻ" : null;
+    String albumStr  ="Danh sách album" ;
+    String oddStr =  "Danh sách ảnh lẻ";
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -201,25 +216,49 @@
             <div class="card-header bg-secondary border-0">
                 <h6 class="font-weight-semi-bold m-0">Thêm album mới </h6>
             </div>
-            <form class="mb-5  mt-4" action="" id="formAlbum" enctype="multipart/form-data" accept-charset="UTF-8">
+            <form class="mb-5  mt-4" action="./album"  method="post" id="formAlbum" enctype="multipart/form-data" accept-charset="UTF-8">
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="text" id="idbts" class="form-control p-3" placeholder="Thuộc chủ đề">
+                    <select class="form-control p-3 h-100 w-100" name="nameTopic">
+                        <option value="">Vui lòng chọn chủ đề</option>
+                        <%for (String nameTopic :  listNamesTopic){%>
+                        <option value="<%=nameTopic%>"><%=nameTopic%></option>
+                        <%}%>
+                    </select>
+                    <p class="show-message text-danger mt-2">
+                        <%= errNameTopic_Album%>
+
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-4">
-                    <input type="text" id="name-album" class="form-control p-3" placeholder="Tên bộ sưu tập">
+                    <input name="nameAlbum" type="text" id="name-album" class="form-control p-3 w-100" placeholder="Tên bộ sưu tập">
+                    <p class="show-message text-danger mt-2">
+                       <%= errNameAlbum%>
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="number" id="price-album" class="form-control p-3" placeholder="Giá">
+                    <input name="price" type="number" id="price-album" class="form-control p-3 w-100" placeholder="Giá">
+                    <p class="show-message text-danger mt-2">
+                       <%= errPriceAlbum%>
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="number" id="discount-album" class="form-control p-3" placeholder="Giảm giá">
+                    <input name="discount" type="number" id="discount-album" class="form-control p-3 w-100" placeholder="Giảm giá">
+                    <p class="show-message text-danger mt-2">
+                        <%= errDiscountAlbum%>
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="text" id="description-album" class="form-control p-3" placeholder="Mô tả sản phẩm">
+                    <textarea name="description" cols="30" rows="5" class="form-control w-100" placeholder="Mô tả sản phẩm"></textarea>
+                    <p class="show-message text-danger mt-2">
+                        <%= errDescriptionAlbum%>
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
                     <input type="file" accept="image/*" multiple style="height: 100%;" id="upload-img"
-                           class="form-control p-3" placeholder="Tải ảnh lên">
+                           class="form-control p-3 w-100" placeholder="Tải ảnh lên" name="listImg">
+                    <p class="show-message text-danger mt-2">
+                        <%= errImageForAlbum%>
+                    </p>
                 </div>
                 <div id="show-upload-img" class="input-group d-flex  mt-3">
 
@@ -233,25 +272,50 @@
             <div class="card-header bg-secondary border-0">
                 <h6 class="font-weight-semi-bold m-0">Thêm ảnh lẻ mới</h6>
             </div>
-            <form class="mb-5  mt-4" id="form-odd" action="" enctype="multipart/form-data" accept-charset="UTF-8">
+            <form class="mb-5  mt-4" id="form-odd" method="post" action="./oddImage"  enctype="multipart/form-data">
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="text" id="idbts-odd" class="form-control p-3" placeholder="Thuộc chủ đề">
+<%--                    <input type="text" id="idbts-odd" class="form-control p-3" placeholder="Thuộc chủ đề">--%>
+                    <select class="form-control p-3 h-100 w-100" name="nameTopic" id="">
+                        <option value="">Vui lòng chọn chủ đề</option>
+                        <%for (String nameTopic :  listNamesTopic){%>
+                            <option value="<%=nameTopic%>"><%=nameTopic%></option>
+                        <%}%>
+                    </select>
+                    <p class="show-message text-danger mt-2">
+                        <%= errNameTopic%>
+
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-4">
-                    <input type="text" id="name-odd" class="form-control p-3" placeholder="Tên ảnh">
+                    <input name="nameImg" type="text" id="name-odd" class="form-control p-3 w-100" placeholder="Tên ảnh">
+                    <p class="show-message text-danger mt-2">
+                        <%= errNameImg%>
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="number" id="price-odd" class="form-control p-3" placeholder="Giá">
+                    <input name="price" type="number" id="price-odd" class="form-control p-3 w-100" placeholder="Giá">
+                    <p class="show-message text-danger mt-2">
+                        <%= errPrice%>
+                    </p>
+
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="number" id="discount-odd" class="form-control p-3" placeholder="Giảm giá">
+                    <input name="discount" value="0" type="number" id="discount-odd" class="form-control p-3 w-100" placeholder="Giảm giá">
+                    <p class="show-message text-danger mt-2">
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="text" id="description-odd" class="form-control p-3" placeholder="Mô tả sản phẩm">
+                    <textarea name="description" id="message" cols="30" rows="5" class="form-control w-100" placeholder="Mô tả sản phẩm"></textarea>
+                    <p class="show-message text-danger mt-2">
+                        <%= errDescription%>
+                    </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="file" style="height: 100%;" id="oddImage" class="form-control p-3"
-                           placeholder="Tải ảnh lên" accept="image/*">
+                    <input type="file" style="height: 100%;" id="oddImage" class="form-control p-3 w-100"
+                           placeholder="Tải ảnh lên" accept="image/*" name="oddImage">
+                    <p class="show-message text-danger mt-2">
+                        <%= errImg%>
+                    </p>
                 </div>
                 <img src="" alt="" class="mt-4" id="show-image-odd" style="height: 400px;">
                 <div class="input-group-append mt-4">
