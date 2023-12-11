@@ -95,9 +95,7 @@ public class TopicController extends HttpServlet {
             return;
         }
         if(topicDAO.insertTopic(name, "/images/" + fileName)){
-            req.setAttribute("listTopic", topicDAO.getAllTopics());
-            req.setAttribute("success", "Vui lòng nhập trường này");
-            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+            resp.sendRedirect("topic");
             return;
         }
     }

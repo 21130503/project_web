@@ -169,7 +169,7 @@
             </div>
             <form class="mb-5  mt-4" action="./topic" method="post" id="formTopic" enctype="multipart/form-data">
                 <div class="input-group mt-4">
-                    <input sty type="text" id="nameTopic" class="form-control p-3 w-100" placeholder="Tên chủ đề" name="nameTopic">
+                    <input  type="text" id="nameTopic" class="form-control p-3 w-100" placeholder="Tên chủ đề" name="nameTopic">
                     <p class="show-message text-danger mt-2">
                         <%= errName%>
                     </p>
