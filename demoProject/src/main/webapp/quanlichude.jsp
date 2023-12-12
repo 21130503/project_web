@@ -72,7 +72,13 @@
 
 <body>
 <%
-    List<Topic> listTopic = (List<Topic>) request.getAttribute("listTopic");
+    List<Topic> listTopic = (List<Topic>) request.getAttribute("listTopic") == null ? new ArrayList<Topic>() :  (List<Topic>) request.getAttribute("listTopic") ;
+    String exist = request.getAttribute("exist") == null ? "" :(String) request.getAttribute("exist");
+    String errName = request.getAttribute("errName") == null ? "" :(String) request.getAttribute("errName");
+    String errImage = request.getAttribute("errImage") == null ? "" :(String) request.getAttribute("errImage");
+    String failure = request.getAttribute("error") == null ? "" :(String) request.getAttribute("error");
+    String success =  request.getAttribute("Exist") == null ? "" :(String) request.getAttribute("Exist");
+
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -136,6 +142,7 @@
                     <th>ID</th>
                     <th>Tên chủ đề</th>
                     <th>Số sản phẩm</th>
+                    <th>Ẩn</th>
                     <th>Xóa</th>
                 </tr>
                 </thead>
@@ -147,6 +154,7 @@
                     <td class="align-middle">
                         <p class="text-center"><%=topic.getProduct()%></p>
                     </td>
+                    <td class="align-middle"><%=topic.isShow() ? "Đang bán" : "Đã ngừng bán"%></td>
                     <td class="align-middle"><a class="btn btn-sm btn-primary" data-id=<%=topic.getIdTopic()%> data-toggle="modal" data-target="#deleteTopic" ><i class="fa fa-times"></i></a></td>
                 </tr>
                 <%}%>>
@@ -156,15 +164,24 @@
         <div class="col-lg-4">
             <div class="card-header bg-secondary border-0">
                 <h6 class="font-weight-semi-bold m-0">Thêm chủ đề</h6>
+                <p><%=success%></p>
+                <p><%=failure%></p>
             </div>
-            <form class="mb-5  mt-4" action="" id="formTopic" enctype="multipart/form-data" accept-charset="UTF-8">
-                <div class="input-group d-flex justify-content-between mt-4">
-                    <input type="text" id="nameTopic" class="form-control p-3" placeholder="Tên chủ đề" name="nameTopic">
-                    <span class="show-message"></span>
+            <form class="mb-5  mt-4" action="./topic" method="post" id="formTopic" enctype="multipart/form-data">
+                <div class="input-group mt-4">
+                    <input sty type="text" id="nameTopic" class="form-control p-3 w-100" placeholder="Tên chủ đề" name="nameTopic">
+                    <p class="show-message text-danger mt-2">
+                        <%= errName%>
+                    </p>
+                    <p class="show-message text-danger mt-2">
+                        <%=exist%>
+
+                    </p>
                 </div>
-                <div class="input-group d-flex justify-content-between mt-3">
-                    <input style="height: 100%;" type="file" accept="image/*" id="interfaceImage" class="form-control p-3" placeholder="Link ảnh đại diện" name="interfaceImage">
-                    <span class="show-message"></span>
+
+                <div class="input-group  mt-3">
+                    <input style="height: 100%;" type="file" accept="image/*" id="interfaceImage" class="form-control p-3 w-100" placeholder="Link ảnh đại diện" name="interfaceImage">
+                    <p class="show-message mt-2 text-danger"><%=errImage%></p>
                 </div>
                 <img src="" class="show-image" alt="" style="width: 360px; height: auto; margin-top: 10px;">
                 <div class="input-group-append mt-4">

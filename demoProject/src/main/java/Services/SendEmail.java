@@ -25,7 +25,7 @@ public class SendEmail {
 
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username)); // Thay thế bằng địa chỉ email của bạn
+            message.setFrom(new InternetAddress(username)); //
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); // Thay thế bằng địa chỉ email của người nhận
             message.setSubject(subject);
             message.setText(content);
