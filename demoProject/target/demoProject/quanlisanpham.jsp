@@ -49,6 +49,8 @@
     String errPrice = request.getAttribute("errPrice") == null ? "" : (String) request.getAttribute("errPrice");
     String errDescription = request.getAttribute("errDescription") == null ? "" : (String) request.getAttribute("errDescription");
     String errImg = request.getAttribute("errImg") == null ? "" : (String) request.getAttribute("errImg");
+    String errDiscount = request.getAttribute("errDiscount") == null ? "" : (String) request.getAttribute("errDiscount");
+    String errNameOddExist = request.getAttribute("errNameOddExist") == null ? "" : (String) request.getAttribute("errNameOddExist");
 //    Invalidate album
     String errNameTopic_Album = request.getAttribute("errNameTopic_Album") == null ? "" : (String) request.getAttribute("errNameTopic_Album");
     String errNameAlbum = request.getAttribute("errNameAlbum") == null ? "" : (String) request.getAttribute("errNameAlbum");
@@ -56,11 +58,19 @@
     String errPriceAlbum = request.getAttribute("errPriceAlbum") == null ? "" : (String) request.getAttribute("errPriceAlbum");
     String errDescriptionAlbum = request.getAttribute("errDescriptionAlbum") == null ? "" : (String) request.getAttribute("errDescriptionAlbum");
     String errImageForAlbum = request.getAttribute("errImageForAlbum") == null ? "" : (String) request.getAttribute("errImageForAlbum");
-
+    String errNameExist =  request.getAttribute("errNameExist") == null ? "" : (String) request.getAttribute("errNameExist");
 
     ArrayList<String> listNamesTopic = request.getAttribute("listNamesTopic") == null ? new ArrayList<>() :(ArrayList<String>) request.getAttribute("listNamesTopic");
     ArrayList<OddImage> listOddImage = (ArrayList<OddImage>) request.getAttribute("listOddImage");
-    ArrayList<Album> listAlbum = (ArrayList<Album>) request.getAttribute("listAlbum");
+    ArrayList<Album> listAlbum = null;
+    Object attribute = request.getAttribute("listAlbum");
+
+    if (attribute != null && attribute instanceof ArrayList<?>) {
+        listAlbum = (ArrayList<Album>) attribute;
+    } else {
+        listAlbum = new ArrayList<Album>();
+    }
+
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VND");
 %>
@@ -136,13 +146,15 @@
                 </tr>
                 </thead>
                 <tbody class="align-middle">
-                <%if (listAlbum == null || listAlbum.size() == 0) {%>
-                <tr>Chưa có nội dung</tr>
+                <%if (listAlbum.size() == 0) {%>
+                    <tr>
+                        <td>Chưa có album nào</td>
+                    </tr>
                 <%} else {%>
                 <%for (Album album : listAlbum) {%>
                 <tr>
                     <td class="text-left"><img class="mr-5"
-                                               src=<%=album.getListImage().get(album.getListImage().size()-1)%> alt=""
+                                               src=<%=album.getListImage().get(album.getListImage().size()-1) ==null ? "" :album.getListImage().get(album.getListImage().size()-1) %> alt=""
                                                style="width: 50px;"> <%=album.getName()%>
                     </td>
                     <td class="align-middle"><%=vndFormat.format(album.getPrice())%>
@@ -183,7 +195,7 @@
                 </thead>
                 <tbody class="align-middle">
                 <%if (listAlbum == null || listAlbum.size() == 0) {%>
-                <tr>Chưa có nội dung</tr>
+                <tr> <td>Chưa có ảnh lẻ nào</td></tr>
                 <%} else {%>
                 <%for (OddImage odd : listOddImage) {%>
                 <tr>
@@ -233,6 +245,7 @@
                     <input name="nameAlbum" type="text" id="name-album" class="form-control p-3 w-100" placeholder="Tên bộ sưu tập">
                     <p class="show-message text-danger mt-2">
                        <%= errNameAlbum%>
+                        <%=errNameExist%>
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
@@ -242,7 +255,7 @@
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input name="discount" type="number" id="discount-album" class="form-control p-3 w-100" placeholder="Giảm giá">
+                    <input name="discount" value="0" type="number" id="discount-album" class="form-control p-3 w-100" placeholder="Giảm giá">
                     <p class="show-message text-danger mt-2">
                         <%= errDiscountAlbum%>
                     </p>
@@ -290,6 +303,7 @@
                     <input name="nameImg" type="text" id="name-odd" class="form-control p-3 w-100" placeholder="Tên ảnh">
                     <p class="show-message text-danger mt-2">
                         <%= errNameImg%>
+                        <%=errNameOddExist%>
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
@@ -302,6 +316,7 @@
                 <div class="input-group d-flex justify-content-between mt-3">
                     <input name="discount" value="0" type="number" id="discount-odd" class="form-control p-3 w-100" placeholder="Giảm giá">
                     <p class="show-message text-danger mt-2">
+                        <%=errDiscount%>
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">

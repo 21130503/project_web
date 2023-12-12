@@ -34,7 +34,7 @@ public class AlbumController extends HttpServlet {
         String price = req.getParameter("price");
         String discount = req.getParameter("discount");
         String description = req.getParameter("description");
-        List<String> listFileNames = new ArrayList<>();
+        ArrayList<String> listFileNames = new ArrayList<>();
         if (nameTopic == null || nameTopic.trim().isEmpty()) {
             req.setAttribute("errNameTopic_Album", "Vui lòng chọn chủ đề");
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
@@ -45,6 +45,14 @@ public class AlbumController extends HttpServlet {
         }
         if (nameAlbum == null || nameAlbum.trim().isEmpty()) {
             req.setAttribute("errNameAlbum", "Vui lòng nhập tên sản phẩm");
+            req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+            return;
+        }
+        if (productDAO.checkNameAlbumExist(nameAlbum)) {
+            req.setAttribute("errNameExist", "Tên album đã tồn tại");
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
             req.setAttribute("listOddImage", productDAO.getAllOddImage());
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
@@ -79,14 +87,17 @@ public class AlbumController extends HttpServlet {
             String fileName = uploadFile.extractFileName(part);
             // refines the fileName in case it is an absolute path
             fileName = new File(fileName).getName();
-
+            listFileNames.add(fileName);
             try {
                 part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
-                listFileNames.add(fileName);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+        }
+        for(String file : listFileNames){
+            System.out.println("ảnh" + file);
         }
         if(listFileNames.size() ==0){
             req.setAttribute("errImageForAlbum", "Vui lòng thêm ảnh cho album");
@@ -94,6 +105,9 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listOddImage", productDAO.getAllOddImage());
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+        }
+        if(productDAO.insertAlbum(nameTopic,nameAlbum,description,Integer.parseInt(price),Integer.parseInt(discount),topicDAO.checkTopicShow(nameTopic),listFileNames)){
+            resp.sendRedirect("product");
         }
     }
 }
