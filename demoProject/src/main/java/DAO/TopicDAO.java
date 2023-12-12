@@ -193,7 +193,7 @@ public class TopicDAO {
             preparedStatement.setString(1, nameTopic);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
-                res = resultSet.getString("isShowzxc");
+                res = resultSet.getString("isShow");
                 return  res;
             }
         } catch (SQLException e) {

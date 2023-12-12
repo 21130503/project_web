@@ -22,7 +22,7 @@ import java.util.List;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 50, // 50MB
         maxRequestSize = 1024 * 1024 * 50) // 50MB)
-@WebServlet(name = "ProductController",value = "/product")
+@WebServlet(name = "ProductController",value = "/product/*")
 public class ProductController extends HttpServlet {
     TopicDAO topicDAO = new TopicDAO();
     ProductDAO productDAO = new ProductDAO();
@@ -41,6 +41,8 @@ public class ProductController extends HttpServlet {
 //        }
 //        else if (user.isAdmin()) {
 //            System.out.println("GET");
+        System.out.println("list Album :"  + productDAO.getAllAlbum());
+        System.out.println("list odd : "+ productDAO.getAllOddImage());
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
             req.setAttribute("listOddImage", productDAO.getAllOddImage());
             req.setAttribute("listNamesTopic",topicDAO.getAllNamesTopic() );

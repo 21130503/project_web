@@ -91,22 +91,19 @@ public class ProductDAO {
     }
 
     //    Album
-    public boolean insertAlbum(String nameTopic, String nameAlbum, String description, int price, int discount, ArrayList<String> images) {
+    public boolean insertAlbum(String nameTopic, String nameAlbum, String description, int price, int discount, String isShow, ArrayList<String> images) {
         Connection connection = null;
         try {
             connection = Connect.getConnection();
-//            Nếu tên album đã tồn tại thì trả về false
-            if (checkNameAlbumExist(nameAlbum)) {
-                return false;
-            }
 //            Tiến hành insert
-            else {
-                String sql = "Insert into album(name,price, discount,createdAt) values (?,?,?,?)";
+
+                String sql = "Insert into album(name,price, discount,isShow,createdAt) values (?,?,?,?,?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, nameAlbum);
                 preparedStatement.setInt(2, price);
                 preparedStatement.setInt(3, discount);
-                preparedStatement.setDate(4, sqlDate);
+                preparedStatement.setString(4, isShow);
+                preparedStatement.setDate(5, sqlDate);
                 int check = preparedStatement.executeUpdate();
                 if (check > 0 && belongDAO.insertAlbumBelongTopic(topicDAO.getIdTopicByName(nameTopic), getIdAlbumByName(nameAlbum))
                         && descriptionDAO.insertDescriptionAlbum(getIdAlbumByName(nameAlbum), description)
@@ -114,7 +111,7 @@ public class ProductDAO {
                 ) {
                     return true;
                 }
-            }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -200,7 +197,7 @@ public class ProductDAO {
         ArrayList<Album> listAlbum = new ArrayList<>();
         try {
             connection = Connect.getConnection();
-            String sql = "select idAlbum, name, price, discount from album";
+            String sql = "select idAlbum, name, price, discount ,isShow from album";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -210,6 +207,7 @@ public class ProductDAO {
                 album.setName(resultSet.getString("name"));
                 album.setPrice(resultSet.getInt("price"));
                 album.setDiscount(resultSet.getInt("discount"));
+                album.setShow(resultSet.getBoolean("isShow"));
                 album.setListImage(imageDAO.getAllImageByIdAlbum(id));
                 int idTopic = belongDAO.getIdTopicFromIdAlbum(id);
                 String nameTopic = topicDAO.getNameTopicById(idTopic);

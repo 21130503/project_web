@@ -29,22 +29,11 @@ public class OddImageController extends HttpServlet {
         String nameTopic = req.getParameter("nameTopic");
         String nameImg = req.getParameter("nameImg");
         String price = req.getParameter("price");
-        int discount = Integer.parseInt(req.getParameter("discount"));
+        String discount =req.getParameter("discount");
         String description = req.getParameter("description");
         String fileName = null;
 
-        for (Part part : req.getParts()) {
-            fileName = uploadFile.extractFileName(part);
-            // refines the fileName in case it is an absolute path
-            fileName = new File(fileName).getName();
-            try {
-                part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-        }
-        System.out.println(nameTopic + " " + nameImg + " " + price + " " + discount + " " + description);
 //            invalidate
         if (nameTopic == null || nameTopic.trim().isEmpty()) {
             req.setAttribute("errNameTopic", "Vui lòng chọn chủ đề");
@@ -62,8 +51,24 @@ public class OddImageController extends HttpServlet {
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
+        if(productDAO.checkOddNameExist(nameImg)){
+            req.setAttribute("errNameOddExist", "Tên sản phẩm đã tồn tại");
+            req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+            return;
+        }
         if (price == null || price.trim().isEmpty()) {
             req.setAttribute("errPrice", "Vui lòng nhập giá sản phẩm");
+            req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+            return;
+        }
+        if(discount == null || discount.trim().isEmpty()){
+            req.setAttribute("errDiscount", "Vui lòng nhập mô tả cho sản phẩm sản phẩm");
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
             req.setAttribute("listOddImage", productDAO.getAllOddImage());
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
@@ -78,6 +83,17 @@ public class OddImageController extends HttpServlet {
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
+        for (Part part : req.getParts()) {
+            fileName = uploadFile.extractFileName(part);
+            // refines the fileName in case it is an absolute path
+            fileName = new File(fileName).getName();
+            try {
+                part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
         if (fileName == null || fileName.trim().isEmpty()) {
             req.setAttribute("errImg", "Vui lòng chọn ảnh");
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
@@ -86,7 +102,7 @@ public class OddImageController extends HttpServlet {
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
-        if (productDAO.insertOddImage(nameTopic, nameImg, "/images/" + fileName, description, Integer.parseInt(price), discount, topicDAO.checkTopicShow(nameTopic))) {
+        if (productDAO.insertOddImage(nameTopic, nameImg, "/images/" + fileName, description, Integer.parseInt(price), Integer.parseInt(discount), topicDAO.checkTopicShow(nameTopic))) {
             resp.sendRedirect("product");
             return;
         }
