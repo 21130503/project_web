@@ -3,3 +3,4 @@ css/style.min.css
 lib/
 /demoProject/target/
 /demoProject/WEB-INF/target/
+/demoProject/.idea/modules.xml
