@@ -1,5 +1,6 @@
 package DAO;
 
+import Properties.URL;
 import Services.Connect;
 import nhom26.Topic;
 
@@ -19,11 +20,12 @@ public class TopicDAO {
                     if (resultSet.next()) {
                         // Kiểm tra giá trị NULL trước khi sử dụng
                         int maxIdTopic = (resultSet.getObject(1) != null) ? resultSet.getInt(1) : 0;
-                        String sqlInsert = "Insert into topic values (?,?,?)";
+                        String sqlInsert = "Insert into topic values (?,?,?,?)";
                         PreparedStatement preparedStatementInsert = connection.prepareStatement(sqlInsert);
                         preparedStatementInsert.setInt(1, maxIdTopic + 1);
                         preparedStatementInsert.setString(2, nameTopic);
-                        preparedStatementInsert.setString(3, interfaceImage);
+                        preparedStatementInsert.setString(3, "true");
+                        preparedStatementInsert.setString(4, interfaceImage);
                         int check = preparedStatementInsert.executeUpdate();
                         if (check > 0) {
                             return true;
@@ -48,15 +50,16 @@ public class TopicDAO {
         try{
             connection = Connect.getConnection();
             // Câu truy vấn lấy dữ liệu topic
-            String getAllTopic = "select idTopic , name, interfaceImage from topic";
+            String getAllTopic = "select idTopic , name, interfaceImage, isShow from topic";
             PreparedStatement preparedStatementGetTopic = connection.prepareStatement(getAllTopic);
             ResultSet resultSetGetTopic = preparedStatementGetTopic.executeQuery();
             while (resultSetGetTopic.next()) {
                 Topic topic = new Topic();
                 topic.setIdTopic(resultSetGetTopic.getInt("idTopic"));
                 topic.setName(resultSetGetTopic.getString("name"));
-                topic.setImageInterface(resultSetGetTopic.getString("interfaceImage"));
+                topic.setImageInterface(URL.URL + resultSetGetTopic.getString("interfaceImage"));
                 topic.setProduct(0);
+                topic.setShow(resultSetGetTopic.getBoolean("isShow"));
                 listTopic.add(topic);
             }
         } catch (Exception e) {

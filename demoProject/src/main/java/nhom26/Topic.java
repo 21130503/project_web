@@ -5,7 +5,7 @@ public class Topic {
     private  String imageInterface;
     private  String name;
     private  int product;
-
+    private boolean isShow;
     public Topic() {
 
     }
@@ -40,5 +40,13 @@ public class Topic {
 
     public void setProduct(int product) {
         this.product = product;
+    }
+
+    public boolean isShow() {
+        return isShow;
+    }
+
+    public void setShow(boolean show) {
+        isShow = show;
     }
 }

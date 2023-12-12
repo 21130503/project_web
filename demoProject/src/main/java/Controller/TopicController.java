@@ -2,42 +2,54 @@ package Controller;
 
 import DAO.TopicDAO;
 import DAO.UserDAO;
+import Properties.URL;
+import Upload.UploadFile;
+import com.mysql.cj.Constants;
 import nhom26.Topic;
 import nhom26.User;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
-
+import java.util.List;
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 50, // 50MB
+        maxRequestSize = 1024 * 1024 * 50) // 50MB)
 @WebServlet(name = "TopicController", value = "/topic")
 public class TopicController extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
-        // Kiểm tra quyền và chuyển hướng
+//        // Kiểm tra quyền và chuyển hướng
         TopicDAO topicDAO = new TopicDAO();
-        if(user == null || !user.isAdmin() ) {
+        if (user == null || !user.isAdmin()) {
             System.out.println("redirect");
-            resp.sendRedirect( "404.jsp");
+            resp.sendRedirect("404.jsp");
             return;
-        }
-        else if (user.isAdmin()) {
-            System.out.println("GET");
+        } else if (user.isAdmin()) {
+//            System.out.println("GET");
             req.setAttribute("listTopic", topicDAO.getAllTopics());
-            req.getRequestDispatcher("quanlichude.jsp").forward(req,resp);
+            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
         }
 
 
@@ -48,39 +60,45 @@ public class TopicController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF8");
         resp.setCharacterEncoding("UTF-8");
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-        bufferedReader.close();
-        JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-        String nameTopic = jsonObject.getString("nameTopic");
-        String interfaceImage = jsonObject.getString("interfaceImage");
-        JSONObject jsonObject1 = new JSONObject();
+        String name = req.getParameter("nameTopic");
+        String fileName = null;
         TopicDAO topicDAO = new TopicDAO();
-//            Kiểm tra xem topic này đã tồn tại chưa
-        if (topicDAO.checkNameTopicExist(nameTopic)) {
-            jsonObject1.put("status", 500);
-            jsonObject1.put("message", "Tên chủ đề đã tồn tại");
-            resp.setContentType("application/json");
-            resp.getWriter().write(jsonObject1.toString());
-            System.out.println("Chủ đề đã tồn tại");
+        UploadFile uploadFile = new UploadFile();
+        if(topicDAO.checkNameTopicExist(name)){
+            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("exist", "Tên chủ đề đã tồn tại");
+            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+            return;
         }
-//                    Insert data
-        else {
-            if (topicDAO.insertTopic(nameTopic, interfaceImage)) {
-                jsonObject1.put("status", 200);
-                jsonObject1.put("message", "Đã thêm thành công chủ đề");
-                resp.setContentType("application/json");
-                resp.getWriter().write(jsonObject1.toString());
-            } else {
-                jsonObject1.put("status", 500);
-                jsonObject1.put("message", "Đã thêm thành công chủ đề");
-                resp.setContentType("application/json");
-                resp.getWriter().write(jsonObject1.toString());
+        if (name == null || name.trim().isEmpty()) {
+            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("errName", "Vui lòng nhập tên chủ đề");
+            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+            return;
+        }
+
+        for (Part part : req.getParts()) {
+             fileName = uploadFile.extractFileName(part);
+            // refines the fileName in case it is an absolute path
+            fileName = new File(fileName).getName();
+            try {
+                part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+        }
+        if(fileName == null ||fileName.trim().isEmpty()){
+            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("errImage", "Vui lòng nhập trường này");
+            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+            return;
+        }
+        if(topicDAO.insertTopic(name, "/images/" + fileName)){
+            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("success", "Vui lòng nhập trường này");
+            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+            return;
         }
     }
 
