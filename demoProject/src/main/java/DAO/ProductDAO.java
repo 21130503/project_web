@@ -383,4 +383,84 @@ public class ProductDAO {
         }
         return listOddImage;
     }
+    public boolean updateShowOddImage(int idOddImage, String status){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "update oddImage set isShow = ? where idOddImage= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, status);
+            preparedStatement.setInt(2, idOddImage);
+            int check = preparedStatement.executeUpdate();
+            if (check > 0){
+                return  true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  false;
+    }
+    public boolean updateShowAlbum(int idAlbum, String status){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "update album set isShow = ? where idAlbum= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, status);
+            preparedStatement.setInt(2, idAlbum);
+            int check = preparedStatement.executeUpdate();
+            if (check > 0){
+                return  true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  false;
+    }
+    public boolean checkOddImageExist(int idOddImage){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idOddImage from oddImage where  idOddImage = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idOddImage);
+           ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                return  true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  false;
+
+    }
+    public boolean checkAlbumExist(int idAlbum){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idAlbum from album where  idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idAlbum);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                return  true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  false;
+
+    }
 }
