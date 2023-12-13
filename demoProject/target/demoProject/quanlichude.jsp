@@ -148,13 +148,18 @@
                 </thead>
                 <tbody class="align-middle" id="renderdata">
                 <%for(Topic topic : listTopic){%>
+                <%
+                    boolean showTopic = topic.isShow();
+                    String eyeIconClass = showTopic ? "fa-regular fa-eye" : "fa-regular fa-eye-slash";
+                    String title = showTopic ? "Ẩn" : "Bán lại";
+                 %>
                 <tr>
                     <td class="align-middle"><%=topic.getIdTopic()%></td>
                     <td class="text-left"><img src=<%=topic.getImageInterface()%> alt="" style="width: 50px; margin-right: 5px"><%=topic.getName()%></td>
                     <td class="align-middle">
                         <p class="text-center"><%=topic.getProduct()%></p>
                     </td>
-                    <td class="align-middle"><%=topic.isShow() ? "Đang bán" : "Đã ngừng bán"%></td>
+                    <td class="align-middle"><a title="<%=title%>" class="btn btn-sm btn-primary" data-id=<%=topic.getIdTopic()%> data-toggle="modal" data-target="#showTopic" ><i class="<%= eyeIconClass %>"></i></a></td>
                     <td class="align-middle"><a class="btn btn-sm btn-primary" data-id=<%=topic.getIdTopic()%> data-toggle="modal" data-target="#deleteTopic" ><i class="fa fa-times"></i></a></td>
                 </tr>
                 <%}%>>
@@ -273,6 +278,29 @@
         </div>
     </div>
 </div>
+<div id="showTopic" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ẩn chủ đề</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn thay đổi tùy chỉnh ? </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-hidden-topic" type="button" class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./js/Dialog.js"></script>
+<script>
+    Dialog("#showTopic", "#btn-hidden-topic","topic","idTopic", "put")
+</script>
 <script>
 
     document.addEventListener("DOMContentLoaded", ()=>{

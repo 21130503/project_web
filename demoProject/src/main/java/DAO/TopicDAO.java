@@ -204,4 +204,45 @@ public class TopicDAO {
         }
         return  res;
     }
+    public String checkTopicShowById(String idTopic){
+        Connection connection = null;
+        String res = "";
+        try{
+            connection = Connect.getConnection();
+            String sql = "select isShow from topic where idTopic = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, idTopic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("isShow");
+                return  res;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  res;
+    }
+    public boolean updateShowTopic(String idTopic, String status) {
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "Update  Topic set isShow = ? where  idTopic = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, status);
+            preparedStatement.setString(2, idTopic);
+            int check = preparedStatement.executeUpdate();
+            if (check > 0) {
+                return true;
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return false;
+    }
 }

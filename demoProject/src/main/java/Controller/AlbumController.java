@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 50, // 50MB
@@ -75,6 +75,14 @@ public class AlbumController extends HttpServlet {
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
+        if (Integer.parseInt(discount) > Integer.parseInt(price)) {
+            req.setAttribute("errPriceAlbum", "Giá giảm không được vượt quá giá sản phẩm");
+            req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+            return;
+        }
         if (description == null || description.trim().isEmpty()) {
             req.setAttribute("errDescriptionAlbum", "Vui lòng nhập mô tả cho sản phẩm sản phẩm");
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
@@ -85,19 +93,27 @@ public class AlbumController extends HttpServlet {
         }
         for (Part part : req.getParts()) {
             String fileName = uploadFile.extractFileName(part);
-            // refines the fileName in case it is an absolute path
-            fileName = new File(fileName).getName();
-            listFileNames.add(fileName);
-            try {
-                part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+            // Tạo một tên tệp duy nhất
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+
+            listFileNames.add(uniqueFileName);
+
+            try (InputStream input = part.getInputStream();
+                 OutputStream output = new FileOutputStream(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + uniqueFileName)) {
+
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = input.read(buffer)) != -1) {
+                    output.write(buffer, 0, bytesRead);
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-        for(String file : listFileNames){
-            System.out.println("ảnh" + file);
+
+        for (String file : listFileNames) {
+            System.out.println("Ảnh: " + file);
         }
         if(listFileNames.size() ==0){
             req.setAttribute("errImageForAlbum", "Vui lòng thêm ảnh cho album");
