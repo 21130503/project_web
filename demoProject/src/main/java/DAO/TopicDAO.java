@@ -67,6 +67,48 @@ public class TopicDAO {
         }
         return listTopic;
     }
+    public ArrayList<Topic> getAllTopicsForClient(){
+        Connection connection = null;
+        ArrayList<Topic> listTopic = new ArrayList<Topic>();
+        try{
+            connection = Connect.getConnection();
+            // Câu truy vấn lấy dữ liệu topic
+            String getAllTopicForClient = "select idTopic , name, interfaceImage, isShow from topic where  isShow= ?";
+            PreparedStatement preparedStatementGetTopic = connection.prepareStatement(getAllTopicForClient);
+            preparedStatementGetTopic.setString(1, "true");
+            ResultSet resultSetGetTopic = preparedStatementGetTopic.executeQuery();
+            while (resultSetGetTopic.next()) {
+                Topic topic = new Topic();
+                topic.setIdTopic(resultSetGetTopic.getInt("idTopic"));
+                topic.setName(resultSetGetTopic.getString("name"));
+                topic.setImageInterface(URL.URL + resultSetGetTopic.getString("interfaceImage"));
+                topic.setProduct(0);
+                topic.setShow(resultSetGetTopic.getBoolean("isShow"));
+                listTopic.add(topic);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return listTopic;
+    }
+    public ArrayList<String> getAllNamesTopic(){
+        Connection connection = null;
+        ArrayList<String> listNamesTopic = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            // Câu truy vấn lấy dữ liệu topic
+            String sql = "select name from topic";
+            PreparedStatement preparedStatementGetTopic = connection.prepareStatement(sql);
+            ResultSet resultSetGetTopic = preparedStatementGetTopic.executeQuery();
+            while (resultSetGetTopic.next()) {
+
+                listNamesTopic.add(resultSetGetTopic.getString("name"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return listNamesTopic;
+    }
     public boolean checkNameTopicExist(String nameTopic) {
         Connection connection = null;
         try {
@@ -140,5 +182,67 @@ public class TopicDAO {
             Connect.closeConnection(connection);
         }
         return  res;
+    }
+    public String checkTopicShow(String nameTopic){
+        Connection connection = null;
+        String res = "";
+        try{
+            connection = Connect.getConnection();
+            String sql = "select isShow from topic where name = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nameTopic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("isShow");
+                return  res;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  res;
+    }
+    public String checkTopicShowById(String idTopic){
+        Connection connection = null;
+        String res = "";
+        try{
+            connection = Connect.getConnection();
+            String sql = "select isShow from topic where idTopic = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, idTopic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("isShow");
+                return  res;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  res;
+    }
+    public boolean updateShowTopic(String idTopic, String status) {
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "Update  Topic set isShow = ? where  idTopic = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, status);
+            preparedStatement.setString(2, idTopic);
+            int check = preparedStatement.executeUpdate();
+            if (check > 0) {
+                return true;
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return false;
     }
 }

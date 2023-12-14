@@ -18,7 +18,7 @@ public class HomeController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
-        req.setAttribute("listTopic", topicDAO.getAllTopics());
+        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.setAttribute("listAlbumNew", topicDAO.getAllTopics());
         req.setAttribute("listOddNew", topicDAO.getAllTopics());
 

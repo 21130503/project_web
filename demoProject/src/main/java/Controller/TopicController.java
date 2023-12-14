@@ -1,5 +1,7 @@
 package Controller;
 
+import DAO.BelongDAO;
+import DAO.ProductDAO;
 import DAO.TopicDAO;
 import DAO.UserDAO;
 import Properties.URL;
@@ -28,6 +30,7 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 50, // 50MB
         maxRequestSize = 1024 * 1024 * 50) // 50MB)
@@ -64,7 +67,7 @@ public class TopicController extends HttpServlet {
         String fileName = null;
         TopicDAO topicDAO = new TopicDAO();
         UploadFile uploadFile = new UploadFile();
-        if(topicDAO.checkNameTopicExist(name)){
+        if (topicDAO.checkNameTopicExist(name)) {
             req.setAttribute("listTopic", topicDAO.getAllTopics());
             req.setAttribute("exist", "Tên chủ đề đã tồn tại");
             req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
@@ -78,7 +81,7 @@ public class TopicController extends HttpServlet {
         }
 
         for (Part part : req.getParts()) {
-             fileName = uploadFile.extractFileName(part);
+            fileName = uploadFile.extractFileName(part);
             // refines the fileName in case it is an absolute path
             fileName = new File(fileName).getName();
             try {
@@ -88,18 +91,61 @@ public class TopicController extends HttpServlet {
             }
 
         }
-        if(fileName == null ||fileName.trim().isEmpty()){
+        if (fileName == null || fileName.trim().isEmpty()) {
             req.setAttribute("listTopic", topicDAO.getAllTopics());
             req.setAttribute("errImage", "Vui lòng nhập trường này");
             req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
             return;
         }
-        if(topicDAO.insertTopic(name, "/images/" + fileName)){
-            req.setAttribute("listTopic", topicDAO.getAllTopics());
-            req.setAttribute("success", "Vui lòng nhập trường này");
-            req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
+        if (topicDAO.insertTopic(name, "/images/" + fileName)) {
+            resp.sendRedirect("topic");
             return;
         }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        JSONObject jsonObject = new JSONObject();
+        String idTopic = req.getParameter("idTopic");
+        System.out.println("doPut topic" + idTopic);
+        TopicDAO topicDAO = new TopicDAO();
+        String status = "true";
+        if (topicDAO.checkTopicShowById(idTopic).equals("true")) {
+            status = "false";
+        }
+        ProductDAO productDAO = new ProductDAO();
+        BelongDAO belongDAO= new BelongDAO();
+        ArrayList<Integer> listOddImage = belongDAO.listIdOddImageBelongTopic(idTopic);
+        ArrayList<Integer> listAlbum = belongDAO.listIdAlbumBelongTopic(idTopic);
+        for (int id : listOddImage){
+            if(!productDAO.checkOddImageExist(id)){
+                continue;
+            }
+            productDAO.updateShowOddImage(id, status);
+        }
+        for (int id : listAlbum){
+            if(!productDAO.checkAlbumExist(id)){
+                continue;
+            }
+            productDAO.updateShowAlbum(id, status);
+        }
+        if (topicDAO.updateShowTopic(idTopic, status)) {
+            jsonObject.put("status", 200);
+            jsonObject.put("message", "Cập nhật thành công");
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObject.toString());
+            System.out.println("update thành công");
+        } else {
+            jsonObject.put("status", 500);
+            jsonObject.put("message", "Cập nhật thất bại thất bại. Vui lòng thử lại");
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObject.toString());
+
+        }
+
+
     }
 
     @Override

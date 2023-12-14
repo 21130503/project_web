@@ -1,5 +1,6 @@
 package DAO;
 
+import Properties.URL;
 import Services.Connect;
 
 import java.sql.Connection;
@@ -17,7 +18,7 @@ public class ImageDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for(int i=0; i< sources.size(); i++){
                 preparedStatement.setInt(1, idAlbum);
-                preparedStatement.setString(2,sources.get(i));
+                preparedStatement.setString(2, "/images/" + sources.get(i));
                 int check = preparedStatement.executeUpdate();
                 if(check < 0){
                     return false;
@@ -41,7 +42,7 @@ public class ImageDAO {
             preparedStatement.setInt(1,idAlbum);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                 listImage.add(resultSet.getString("source"));
+                 listImage.add(URL.URL+ resultSet.getString("source"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
