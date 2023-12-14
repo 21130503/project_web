@@ -7,6 +7,7 @@ public class Album {
     String name;
     int price;
     int discount;
+    boolean isShow;
     ArrayList<String> listImage;
     String description;
     String belongTopic;
@@ -64,5 +65,13 @@ public class Album {
 
     public void setBelongTopic(String belongTopic) {
         this.belongTopic = belongTopic;
+    }
+
+    public boolean isShow() {
+        return isShow;
+    }
+
+    public void setShow(boolean show) {
+        isShow = show;
     }
 }
