@@ -143,6 +143,7 @@
                     <th>Tên chủ đề</th>
                     <th>Số sản phẩm</th>
                     <th>Ẩn</th>
+                    <th>Sửa</th>
                     <th>Xóa</th>
                 </tr>
                 </thead>
@@ -160,6 +161,10 @@
                         <p class="text-center"><%=topic.getProduct()%></p>
                     </td>
                     <td class="align-middle"><a title="<%=title%>" class="btn btn-sm btn-primary" data-id=<%=topic.getIdTopic()%> data-toggle="modal" data-target="#showTopic" ><i class="<%= eyeIconClass %>"></i></a></td>
+                    <td class="align-middle">
+                        <a href="./editTopic?q=<%=topic.getIdTopic()%>/edit"  class="btn btn-sm btn-primary"><i
+                                class="fa-solid fa-pen"></i></a>
+                    </td>
                     <td class="align-middle"><a class="btn btn-sm btn-primary" data-id=<%=topic.getIdTopic()%> data-toggle="modal" data-target="#deleteTopic" ><i class="fa fa-times"></i></a></td>
                 </tr>
                 <%}%>>

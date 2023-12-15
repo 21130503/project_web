@@ -127,6 +127,26 @@ public class TopicDAO {
         }
         return false;
     }
+    public boolean checkNameTopicExistForUpdate(String idTopic,String nameTopic) {
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "select count(name) as total from topic where name = ? and idTopic <> ?";
+            PreparedStatement preparedStatementCheckNameTopic = connection.prepareStatement(sql);
+            preparedStatementCheckNameTopic.setString(1, nameTopic);
+            preparedStatementCheckNameTopic.setString(2, idTopic);
+            ResultSet res = preparedStatementCheckNameTopic.executeQuery();
+            if (res.next()) {
+                int count = res.getInt("total");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return false;
+    }
     public boolean deleteTopic(String idTopic) {
         Connection connection = null;
         try {
@@ -241,6 +261,73 @@ public class TopicDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
+            Connect.closeConnection(connection);
+        }
+        return false;
+    }
+    public Topic getTopicById(String id){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql  = "select idTopic ,name , isShow, interfaceImage from topic where idTopic =?";
+            PreparedStatement preparedStatement= connection.prepareStatement(sql);
+            preparedStatement.setString(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()){
+                Topic topic = new Topic();
+                topic.setIdTopic(resultSet.getInt("idTopic"));
+                topic.setName(resultSet.getString("name"));
+                topic.setShow(resultSet.getBoolean("isShow"));
+                topic.setImageInterface(URL.URL+ resultSet.getString("interfaceImage"));
+                return  topic;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+
+    return  null;
+    }
+    public String getInterfaceImage(String idTopic){
+        Connection connection = null;
+        String res = "";
+        try{
+            connection = Connect.getConnection();
+            String sql = "select interfaceImage from topic where idTopic = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, idTopic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("interfaceImage");
+                return  res;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  res;
+    }
+    public  boolean updateTopic(String idTopic, String nameTopic, String interfaceImage){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "Update Topic set name = ?, interfaceImage = ? where idTopic = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nameTopic);
+            preparedStatement.setString(2, interfaceImage);
+            preparedStatement.setString(3, idTopic);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0 ){
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
             Connect.closeConnection(connection);
         }
         return false;
