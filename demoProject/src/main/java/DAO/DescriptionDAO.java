@@ -141,4 +141,48 @@ public class DescriptionDAO {
             Connect.closeConnection(connection);
         }
     }
+    public boolean updateDescriptionOddImage(String idOddImage,String description){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update ct_oddImage set description = ? where  idOddImage = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,description);
+            preparedStatement.setString(2, idOddImage);
+            int check = preparedStatement.executeUpdate();
+           if(check > 0){
+               return  true;
+           }
+           else {
+            return  false;
+           }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
+    public boolean updateDescriptionAlbum(String idAlbum,String description){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update ct_Album set description = ? where  idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,description);
+            preparedStatement.setString(2, idAlbum);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0){
+                return  true;
+            }
+            else {
+                return  false;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
 }

@@ -166,8 +166,8 @@
                         </p>
                     </td>
                     <td class="align-middle">
-                        <button data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-primary"><i
-                                class="fa-solid fa-pen"></i></button>
+                        <a href="album?q=<%=album%>/edit" class="btn btn-sm btn-primary"><i
+                                class="fa-solid fa-pen"></i></a>
                     </td>
                     <td class="align-middle">
                         <button data-id="<%=album.getIdAlbum()%>" data-target="#deleteAlbum" data-toggle="modal"
@@ -211,7 +211,7 @@
                         </p>
                     </td>
                     <td class="align-middle">
-                        <button data-id="<%=odd.getIdOddImage()%>" data-toggle="modal" data-target="#myModalOdd"
+                        <a href="oddImage?q=<%=odd.getIdOddImage()%>/edit"
                                 class="btn btn-sm btn-primary" id="btn-change"><i class="fa-solid fa-pen"></i></button>
                     </td>
                     <td class="align-middle">
