@@ -21,19 +21,26 @@ public class EditTopicController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
-//        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
 //        // Kiểm tra quyền và chuyển hướng
         TopicDAO topicDAO = new TopicDAO();
-        String id = req.getParameter("q").substring(0, 1);
-//        if (user == null || !user.isAdmin()) {
-//            System.out.println("redirect");
-//            resp.sendRedirect("404.jsp");
-//            return;
-//        } else if (user.isAdmin()) {
+        String param = req.getParameter("q");
+        String[] path =  param.split("/");
+        String id = path[0];
+        String type = path[1];
+        if (user == null || !user.isAdmin()) {
+            System.out.println("redirect");
+            resp.sendRedirect("404.jsp");
+            return;
+        } else if (user.isAdmin()) {
 //            System.out.println("GET");
-        req.setAttribute("topic", topicDAO.getTopicById(id));
-        req.getRequestDispatcher("EditTopic.jsp").forward(req, resp);
-//        }
+            if("edit".equals(type)){
+                req.setAttribute("topic", topicDAO.getTopicById(id));
+                req.getRequestDispatcher("EditTopic.jsp").forward(req, resp);
+                return;
+            }
+            resp.sendRedirect("product");
+        }
 
 
     }

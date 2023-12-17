@@ -32,3 +32,10 @@ body{
   a{
     text-decoration: none;
   }
+
+  .select-topic {
+      max-height: 200px!important;
+  }
+  .select-topic > option {
+      padding: 5px 0 5px;
+  }
