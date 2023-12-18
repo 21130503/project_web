@@ -141,6 +141,7 @@
                     <th>Giá</th>
                     <th>Giảm giá</th>
                     <th>Thuộc chủ đề</th>
+                    <th>Ẩn</th>
                     <th>Sửa</th>
                     <th>Xóa</th>
                 </tr>
@@ -152,6 +153,9 @@
                     </tr>
                 <%} else {%>
                 <%for (Album album : listAlbum) {%>
+                <%boolean showAlbum = album.isShow();
+                    String eyeIconClass = showAlbum ? "fa-regular fa-eye" : "fa-regular fa-eye-slash";
+                    String title = showAlbum ? "Ẩn" : "Bán lại";%>
                 <tr>
                     <td class="text-left"><img class="mr-5"
                                                src=<%=album.getListImage().get(album.getListImage().size()-1) ==null ? "" :album.getListImage().get(album.getListImage().size()-1) %> alt=""
@@ -165,6 +169,8 @@
                         <p class="text-center"><%=album.getBelongTopic()%>
                         </p>
                     </td>
+                    <td class="align-middle"><a title="<%=title%>" class="btn btn-sm btn-primary" data-id=<%=album.getIdAlbum()%> data-toggle="modal" data-target="#showAlbum" ><i class="<%= eyeIconClass %>"></i></a></td>
+
                     <td class="align-middle">
                         <a href="album?q=<%=album%>/edit" class="btn btn-sm btn-primary"><i
                                 class="fa-solid fa-pen"></i></a>
@@ -189,6 +195,7 @@
                     <th>Giá</th>
                     <th>Giảm giá</th>
                     <th>Thuộc chủ đề</th>
+                    <th>Ẩn</th>
                     <th>Sửa</th>
                     <th>Xóa</th>
                 </tr>
@@ -198,6 +205,11 @@
                 <tr> <td>Chưa có ảnh lẻ nào</td></tr>
                 <%} else {%>
                 <%for (OddImage odd : listOddImage) {%>
+                <%
+                    boolean showOdd = odd.isShow();
+                    String eyeIconClass = showOdd ? "fa-regular fa-eye" : "fa-regular fa-eye-slash";
+                    String title = showOdd ? "Ẩn" : "Bán lại";
+                %>
                 <tr>
                     <td class="text-left"><img class="mr-5" src=<%=odd.getImage()%> alt=""
                                                style="width: 50px;"> <%=odd.getName()%>
@@ -210,9 +222,10 @@
                         <p class="text-center"><%=odd.getBelongTopic()%>
                         </p>
                     </td>
+                    <td class="align-middle"><a title="<%=title%>" class="btn btn-sm btn-primary" data-id=<%=odd.getIdOddImage()%> data-toggle="modal" data-target="#showOddImage" ><i class="<%= eyeIconClass %>"></i></a></td>
                     <td class="align-middle">
                         <a href="oddImage?q=<%=odd.getIdOddImage()%>/edit"
-                                class="btn btn-sm btn-primary" id="btn-change"><i class="fa-solid fa-pen"></i></button>
+                                class="btn btn-sm btn-primary" id="btn-change"><i class="fa-solid fa-pen"></i></a>
                     </td>
                     <td class="align-middle">
                         <button data-id="<%=odd.getIdOddImage()%>" data-toggle="modal" data-target="#deleteOdd"
@@ -403,54 +416,6 @@
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-<%--Modal để sửa--%>
-<div class="modal" id="myModalOdd">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Sửa thông tin</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <!-- Đặt nội dung form ở đây -->
-                <form>
-                    <div class="form-group">
-                        <label for="nameOddChange">Tên ảnh</label>
-                        <input type="email" class="form-control" id="nameOddChange" placeholder="Tên ảnh">
-                    </div>
-                    <div class="form-group">
-                        <label for="imageOddChange">Ảnh</label>
-                        <input accept="image/*" type="file" class="form-control" id="imageOddChange" accept="image/*"/>
-                        <img src="" class="mt-2" style="width: 200px;" alt="" id="sourceChange">
-                    </div>
-                    <div class="form-group">
-                        <label for="priceOddChange">Giá</label>
-                        <input class="form-control" id="priceOddChange"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="discountOddChange">Giảm giá</label>
-                        <input class="form-control" id="discountOddChange"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="descriptionOddChange">Mô tả sản phẩm</label>
-                        <input class="form-control" id="descriptionOddChange" accept="image/*"/>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="submit" id="btnOddChange" class="btn btn-primary">Lưu</button>
-            </div>
-
-        </div>
-    </div>
-</div>
 <%--Delete--%>
 <div id="deleteOdd" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -492,63 +457,50 @@
         </div>
     </div>
 </div>
-<script>
-   document.addEventListener("DOMContentLoaded", ()=>{
-       var id;
-       $('#myModalOdd').on('shown.bs.modal', (event) => {
-           var button = $(event.relatedTarget)
-           id = button.data('id')
-           const btnSubmit = document.querySelector("#btnOddChange")
-           const nameOddChange = document.querySelector('#nameOddChange')
-           const img = document.querySelector('#imageOddChange')
-           const imgshow = document.querySelector('#sourceChange')
-           const priceOddChange = document.querySelector('#priceOddChange')
-           const discountOddChange = document.querySelector('#discountOddChange')
-           const description = document.querySelector('#descriptionOddChange')
-           var source;
-           // image
-           img.addEventListener('change',(e)=>{
-               const file = e.target.files[0]
-               const url = URL.createObjectURL(file)
-               imgshow.src = url
-               imageToBase64(file, (value)=>{
-                   source = value;
-               })
-           })
-           function imageToBase64(file, callback) {
-               return new Promise((resolve, reject) => {
-                   const reader = new FileReader();
-                   reader.onloadend = () => {
-                       const result = reader.result;
-                       callback(result)
-                   };
-                   reader.onerror = reject;
-                   reader.readAsDataURL(file);
-               })
-           }
-           // submit
-           btnSubmit.addEventListener('click',()=>{
-               if(!nameOddChange.value && !priceOddChange.value && !discountOddChange.value && !source &&!description.value){
-                   alert("Không có trường nào thay đổi thông tin")
-
-               }
-               const obj = {
-                   id : id,
-                   name : nameOddChange.value ? nameOddChange.value : '',
-                   price: priceOddChange.value ? priceOddChange.value:0,
-                   discount: discountOddChange.value ?  discountOddChange.value : 0,
-                   source:  source ? source: '',
-                   description: description.value ? description.value: ''
-               }
-               console.log(obj)
-           })
-       })
-   })
-</script>
+<div id="showOddImage" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ẩn chủ đề</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn thay đổi tùy chỉnh ? </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-hidden-odd" type="button" class="btn btn-danger">Cập nhật</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="showAlbum" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ẩn chủ đề</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn thay đổi tùy chỉnh ? </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-hidden-album" type="button" class="btn btn-danger">Cập nhật</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="./js/Dialog.js"></script>
 <script>
     Dialog("#deleteOdd", '#btn-delete-odd-image', "/product/deleteOddImage", 'idOddImage', 'delete')
     Dialog("#deleteAlbum", '#btn-delete-album', "/product/deleteAlbum", 'idAlbum', 'delete')
+    Dialog("#showOddImage","#btn-hidden-odd","/product/editShowOddImage", "idOddImage", "put")
+    Dialog("#showAlbum","#btn-hidden-album","/product/editShowAlbum", "idAlbum", "put")
 </script>
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

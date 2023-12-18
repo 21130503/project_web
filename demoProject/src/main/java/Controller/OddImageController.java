@@ -22,7 +22,7 @@ public class OddImageController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding(("UTF-8"));
         HttpSession session = req.getSession();
-//        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
 //        // Kiểm tra quyền và chuyển hướng
         ProductDAO productDAO = new ProductDAO();
         TopicDAO topicDAO = new TopicDAO();
@@ -30,12 +30,12 @@ public class OddImageController extends HttpServlet {
         String[] path =  param.split("/");
         String id = path[0];
         String type = path[1];
-//        if (user == null || !user.isAdmin()) {
-//            System.out.println("redirect");
-//            resp.sendRedirect("404.jsp");
-//            return;
-//        } else if (user.isAdmin()) {
-//            System.out.println("GET");
+        if (user == null || !user.isAdmin()) {
+            System.out.println("redirect");
+            resp.sendRedirect("404.jsp");
+            return;
+        } else if (user.isAdmin()) {
+            System.out.println("GET");
         if("edit".equals(type)){
             req.setAttribute("listNameTopic", topicDAO.getAllNamesTopic());
             req.setAttribute("oddImage",productDAO.getOddImageByIdForAdminUpdate(Integer.parseInt(id)));
@@ -44,7 +44,7 @@ public class OddImageController extends HttpServlet {
         }
         resp.sendRedirect("index");
         return;
-//        }
+        }
 
     }
 
@@ -135,7 +135,6 @@ public class OddImageController extends HttpServlet {
             resp.sendRedirect("product");
             return;
         }
-
 
     }
 }
