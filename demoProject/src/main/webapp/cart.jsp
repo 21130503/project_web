@@ -1,3 +1,6 @@
+<%@ page import="nhom26.User" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="nhom26.Topic" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -33,8 +36,13 @@
 </head>
 
 <body>
-<!-- Start - Phần dùng chung cho các trang dành cho user -->
 
+<% User user = (User) session.getAttribute("user");
+    ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
+            (ArrayList<Topic>) request.getAttribute("listTopic");
+%>
+
+<!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
@@ -83,15 +91,14 @@
             <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
                  id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
                 <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                    <a href="" class="nav-item nav-link">Con người</a>
-                    <a href="" class="nav-item nav-link">Thiên nhiên</a>
-                    <a href="" class="nav-item nav-link">Động vật</a>
-                    <a href="" class="nav-item nav-link">Chó</a>
-                    <a href="" class="nav-item nav-link">Mèo</a>
-                    <a href="" class="nav-item nav-link">Xe</a>
-                    <a href="" class="nav-item nav-link">Vũ trụ</a>
-                    <a href="" class="nav-item nav-link">Hoạt hình</a>
-                    <a href="" class="nav-item nav-link">Hoa</a>
+                    <%if (listTopic.size() == 0) {%>
+                    <p>Chưa có topic nào</p>
+                    <%} else {%>
+                    <%for (Topic topic : listTopic) {%>
+                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
+                    </a>
+                    <%}%>
+                    <%}%>
                 </div>
             </nav>
         </div>
@@ -105,22 +112,44 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index.jsp" class="nav-item nav-link">Trang chủ</a>
-                        <a href="shop.jsp" class="nav-item nav-link">Cửa hàng</a>
-                        <a href="donhangcuaban.jsp" class="nav-item nav-link">Đơn hàng của bạn</a>
+                        <a href="index" class="nav-item nav-link">Trang chủ</a>
+                        <a href="shop" class="nav-item nav-link">Cửa hàng</a>
+                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="cart.html" class="dropdown-item active">Giỏ hàng</a>
-                                <a href="checkout.jsp" class="dropdown-item">Thanh toán</a>
+                                <a href="cart" class="dropdown-item active">Giỏ hàng</a>
+                                <a href="checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="contact.jsp" class="nav-item nav-link ">Liên hệ</a>
+                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
                     </div>
+
+                    <%--Phần login--%>
+                    <%if (user == null) {%>
                     <div class="navbar-nav ml-auto py-0">
                         <a href="login.jsp" class="nav-item nav-link">Đăng nhập</a>
                         <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
                     </div>
+                    <%} else { %>
+                    <div class="navbar-nav ml-auto py-0 position-relative">
+                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
+                        </p>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <%if (!user.isVerifyEmail()) {%>
+                            <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
+                            <%}%>
+                            <% if (user.isAdmin()) {%>
+                            <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
+                            <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
+                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <%}%>
+                            <button class="dropdown-item" id="logout">Đăng xuất</button>
+                        </div>
+                    </div>
+                    <%}%>
+
                 </div>
             </nav>
         </div>
@@ -154,8 +183,6 @@
                 <tr>
                     <th>Sản Phẩm</th>
                     <th>Giá</th>
-                    <!-- <th>Số Lượng</th> -->
-                    <!-- <th>Tổng</th> -->
                     <th>Mua</th>
                     <th>Xóa</th>
                 </tr>
@@ -165,23 +192,6 @@
                     <td class="align-middle"><img src="img/flower.jpg" alt="" style="width: 50px;"> Ảnh bông hoa
                     </td>
                     <td class="align-middle">50.000 VNĐ</td>
-                    <!-- <td class="align-middle">
-                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control form-control-sm bg-secondary text-center"
-                                value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </td> -->
-                    <!-- <td class="align-middle">50.000 VNĐ</td> -->
                     <td class="align-middle">
                         <i class="fa fa-check"></i>
                     </td>
@@ -194,23 +204,6 @@
                     <td class="align-middle"><img src="img/dog.avif" alt="" style="width: 50px;"> Ảnh chú chó
                     </td>
                     <td class="align-middle">70.000 VNĐ</td>
-                    <!-- <td class="align-middle">
-                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control form-control-sm bg-secondary text-center"
-                                value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="align-middle">70.000 VNĐ</td> -->
                     <td class="align-middle">
                         <i class="fa fa-check"></i>
                     </td>
@@ -223,23 +216,6 @@
                     <td class="align-middle"><img src="img/cat.avif" alt="" style="width: 50px;"> Ảnh chú mèo
                     </td>
                     <td class="align-middle">100.000 VNĐ</td>
-                    <!-- <td class="align-middle">
-                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control form-control-sm bg-secondary text-center"
-                                value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="align-middle">100.000 VNĐ</td> -->
                     <td class="align-middle">
                         <i class="fa fa-check"></i>
                     </td>
@@ -252,23 +228,6 @@
                     <td class="align-middle"><img src="img/car.avif" alt="" style="width: 50px;"> Ảnh xe oto
                     </td>
                     <td class="align-middle">70.000 VNĐ</td>
-                    <!-- <td class="align-middle">
-                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control form-control-sm bg-secondary text-center"
-                                value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="align-middle">70.000 VNĐ</td> -->
                     <td class="align-middle">
                         <i class="fa fa-check"></i>
                     </td>
@@ -281,23 +240,6 @@
                     <td class="align-middle"><img src="img/anime.avif" alt="" style="width: 50px;"> Ảnh anime
                     </td>
                     <td class="align-middle">80.000 VNĐ</td>
-                    <!-- <td class="align-middle">
-                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control form-control-sm bg-secondary text-center"
-                                value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="align-middle">80.000 VNĐ</td> -->
                     <td class="align-middle">
                         <i class="fa fa-check"></i>
                     </td>
@@ -309,6 +251,7 @@
                 </tbody>
             </table>
         </div>
+
         <div class="col-lg-4">
             <form class="mb-5" action="">
                 <div class="input-group">
