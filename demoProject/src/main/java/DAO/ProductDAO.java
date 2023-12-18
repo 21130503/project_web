@@ -2,7 +2,6 @@ package DAO;
 
 import Properties.URL;
 import Services.Connect;
-import com.mysql.cj.exceptions.ConnectionIsClosedException;
 import nhom26.Album;
 import nhom26.OddImage;
 
@@ -536,5 +535,48 @@ public class ProductDAO {
         }
         return  false;
 
+    }
+//    get String show
+public String getShowOddImage(String idOddImage){
+    Connection connection = null;
+    String res ="";
+    try {
+        connection = Connect.getConnection();
+        String sql = "select isShow from oddImage where  idOddImage = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, idOddImage);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()){
+            res = resultSet.getString("isShow");
+            return  res;
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+    finally {
+        Connect.closeConnection(connection);
+    }
+    return  res;
+}
+    public String getShowAlbum(String idAlbum){
+        Connection connection = null;
+        String res ="";
+        try {
+            connection = Connect.getConnection();
+            String sql = "select isShow from album where  idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, idAlbum);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("isShow");
+                return  res;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  res;
     }
 }
