@@ -75,4 +75,18 @@ public class OddImage {
     public void setShow(boolean show) {
         isShow = show;
     }
+
+    @Override
+    public String toString() {
+        return "OddImage{" +
+                "idOddImage=" + idOddImage +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", discount=" + discount +
+                ", image='" + image + '\'' +
+                ", belongTopic='" + belongTopic + '\'' +
+                ", description='" + description + '\'' +
+                ", isShow=" + isShow +
+                '}';
+    }
 }

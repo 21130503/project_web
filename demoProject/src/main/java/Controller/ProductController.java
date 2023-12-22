@@ -19,13 +19,15 @@ import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 50, // 50MB
         maxRequestSize = 1024 * 1024 * 50) // 50MB)
-@WebServlet(name = "ProductController",value = "/product/*")
+@WebServlet(name = "ProductController", value = "/product/*")
 public class ProductController extends HttpServlet {
     TopicDAO topicDAO = new TopicDAO();
     ProductDAO productDAO = new ProductDAO();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -41,12 +43,12 @@ public class ProductController extends HttpServlet {
 //        }
 //        else if (user.isAdmin()) {
 //            System.out.println("GET");
-        System.out.println("list Album :"  + productDAO.getAllAlbum());
-        System.out.println("list odd : "+ productDAO.getAllOddImage());
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
-            req.setAttribute("listNamesTopic",topicDAO.getAllNamesTopic() );
-            req.getRequestDispatcher("quanlisanpham.jsp").forward(req,resp);
+        System.out.println("list Album :" + productDAO.getAllAlbum());
+        System.out.println("list odd : " + productDAO.getAllOddImage());
+        req.setAttribute("listAlbum", productDAO.getAllAlbum());
+        req.setAttribute("listOddImage", productDAO.getAllOddImage());
+        req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+        req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
 //        }
 
     }
@@ -64,6 +66,7 @@ public class ProductController extends HttpServlet {
         } else if (type.equals("/addAlbum")) {
         }
     }
+
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
@@ -73,14 +76,13 @@ public class ProductController extends HttpServlet {
         System.out.println(path);
         ProductDAO productDAO = new ProductDAO();
         JSONObject jsonObjectResults = new JSONObject();
-        if(path.equals("/deleteOddImage")){
+        if (path.equals("/deleteOddImage")) {
             int idOddImage = Integer.parseInt(req.getParameter("idOddImage"));
-            if(productDAO.deleteOddImage(idOddImage)){
+            if (productDAO.deleteOddImage(idOddImage)) {
                 jsonObjectResults.put("status", 200);
                 jsonObjectResults.put("message", "Đã xóa ảnh thành công");
 
-            }
-            else{
+            } else {
                 jsonObjectResults.put("status", 500);
                 jsonObjectResults.put("message", "Xóa ảnh thất bại");
             }
@@ -88,20 +90,72 @@ public class ProductController extends HttpServlet {
             resp.getWriter().write(jsonObjectResults.toString());
 
         }
-        if(path.equals("/deleteAlbum")){
+        if (path.equals("/deleteAlbum")) {
             int idAlbum = Integer.parseInt(req.getParameter("idAlbum"));
             System.out.println(idAlbum);
-            if(productDAO.deleteAlbum(idAlbum)){
+            if (productDAO.deleteAlbum(idAlbum)) {
                 jsonObjectResults.put("status", 200);
                 jsonObjectResults.put("message", "Đã xóa album thành công");
 
-            }
-            else{
+            } else {
                 jsonObjectResults.put("status", 500);
                 jsonObjectResults.put("message", "Xóa album thất bại");
             }
             resp.setContentType("application/json");
             resp.getWriter().write(jsonObjectResults.toString());
         }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html;charset=UTF-8");
+        String path = req.getPathInfo();
+        System.out.println(path);
+        ProductDAO productDAO = new ProductDAO();
+        JSONObject jsonObject = new JSONObject();
+        String status = "false";
+        if ("/editShowOddImage".equals(path)) {
+            String idOddImage = req.getParameter("idOddImage");
+            String beforeChange = String.valueOf(productDAO.getShowOddImage(idOddImage));
+            if ("false".equals(beforeChange)) {
+                status = "true";
+            }
+            if (productDAO.updateShowOddImage(Integer.parseInt(idOddImage), status)) {
+                jsonObject.put("status", 200);
+                jsonObject.put("message", "Cập nhật thành công");
+                resp.setContentType("application/json");
+                resp.getWriter().write(jsonObject.toString());
+                System.out.println("update thành công");
+            } else {
+                jsonObject.put("status", 500);
+                jsonObject.put("message", "Cập nhật thất bại thất bại. Vui lòng thử lại");
+                resp.setContentType("application/json");
+                resp.getWriter().write(jsonObject.toString());
+
+            }
+        }
+        if ("/editShowAlbum".equals(path)) {
+            String idAlbum = req.getParameter("idAlbum");
+            String beforeChange = String.valueOf(productDAO.getShowAlbum(idAlbum));
+            if ("false".equals(beforeChange)) {
+                status = "true";
+            }
+            if (productDAO.updateShowAlbum(Integer.parseInt(idAlbum), status)) {
+                jsonObject.put("status", 200);
+                jsonObject.put("message", "Cập nhật thành công");
+                resp.setContentType("application/json");
+                resp.getWriter().write(jsonObject.toString());
+                System.out.println("update thành công");
+            } else {
+                jsonObject.put("status", 500);
+                jsonObject.put("message", "Cập nhật thất bại thất bại. Vui lòng thử lại");
+                resp.setContentType("application/json");
+                resp.getWriter().write(jsonObject.toString());
+
+            }
+        }
+
     }
 }

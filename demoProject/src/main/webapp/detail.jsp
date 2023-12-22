@@ -1,12 +1,9 @@
-<%@ page import="nhom26.Album" %>
-<%@ page import="nhom26.OddImage" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.awt.*" %>
-<%@ page import="nhom26.Feedback" %>
-<%@ page import="nhom26.User" %>
+<%@ page import="nhom26.*" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -38,7 +35,9 @@
 </head>
 
 <body>
-<% User user = (User) session.getAttribute("user");%>
+<% User user = (User) session.getAttribute("user");
+    ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() : (ArrayList<Topic>) request.getAttribute("listTopic");
+%>
 <% String type = (String) request.getAttribute("type");
     String name = null, description = null, sourceImage = null;
     int price = 0, discount =0, tottalImage = 1,id= 0 ;
@@ -71,22 +70,31 @@
 %>
 <%
     Locale vnLocal = new Locale("vi", "VN");
-    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
-<%String err = session.getAttribute("errMess") ==null ? "": (String) session.getAttribute("errMess"); %>
+<%
+    String err = session.getAttribute("errMess") ==null ? "": (String) session.getAttribute("errMess");
+    String errTotal = session.getAttribute("errTotal") ==null ? "": (String) session.getAttribute("errTotal");
+    String errAddress = session.getAttribute("errAddress") ==null ? "": (String) session.getAttribute("errAddress");
+%>
+
+
+<script>
+    const idUser= <%= (session.getAttribute("user") != null) ? ((User) session.getAttribute("user")).getId() : "null" %>
+</script>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="index.jsp" class="text-decoration-none">
+            <a href="./index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
                             <span class="input-group-text bg-transparent text-primary">
                                 <i class="fa fa-search"></i>
@@ -112,41 +120,39 @@
 
 <!-- Navbar Start -->
 
-<div class="container-fluid">
+<div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
             <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
-               data-toggle="collapse" href="#navbar-vertical"
-               style="height: 65px; margin-top: -1px; padding: 0 30px;">
+               data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
                 <h6 class="m-0">Danh mục</h6>
                 <i class="fa fa-angle-down text-dark"></i>
             </a>
-            <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
-                 id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                    <a href="" class="nav-item nav-link">Con người</a>
-                    <a href="" class="nav-item nav-link">Thiên nhiên</a>
-                    <a href="" class="nav-item nav-link">Động vật</a>
-                    <a href="" class="nav-item nav-link">Chó</a>
-                    <a href="" class="nav-item nav-link">Mèo</a>
-                    <a href="" class="nav-item nav-link">Xe</a>
-                    <a href="" class="nav-item nav-link">Vũ trụ</a>
-                    <a href="" class="nav-item nav-link">Hoạt hình</a>
-                    <a href="" class="nav-item nav-link">Hoa</a>
+            <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
+                 id="navbar-vertical">
+                <div class="navbar-nav w-100 overflow" style="height: 410px">
+                    <%if (listTopic.size() == 0) {%>
+                    <p>Chưa có topic nào</p>
+                    <%} else {%>
+                    <%for (Topic topic : listTopic) {%>
+                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
+                    </a>
+                    <%}%>
+                    <%}%>
                 </div>
             </nav>
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                 <a href="" class="text-decoration-none d-block d-lg-none">
-                    <h1 class="logo">Nhóm 26</h1>
+                    <h1 class="logo" style="font-size: 34px;">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index.jsp" class="nav-item nav-link">Trang chủ</a>
+                        <a href="index.html" class="nav-item nav-link active">Trang chủ</a>
                         <a href="shop.jsp" class="nav-item nav-link">Cửa hàng</a>
                         <a href="donhangcuaban.jsp" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
@@ -156,9 +162,9 @@
                                 <a href="checkout.jsp" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="contact.jsp" class="nav-item nav-link active">Liên hệ</a>
+                        <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
                     </div>
-                    <%if(user == null) {%>
+                    <%if (user == null) {%>
                     <div class="navbar-nav ml-auto py-0">
                         <a href="login.jsp" class="nav-item nav-link">Đăng nhập</a>
                         <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
@@ -166,12 +172,13 @@
 
                     <%} else { %>
                     <div class="navbar-nav ml-auto py-0 position-relative">
-                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%></p>
+                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
+                        </p>
                         <div class="dropdown-menu rounded-0 m-0">
-                            <%if(!user.isVerifyEmail()){%>
+                            <%if (!user.isVerifyEmail()) {%>
                             <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
                             <%}%>
-                            <% if(user.isAdmin()){%>
+                            <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
                             <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
@@ -183,7 +190,7 @@
                     <%}%>
                 </div>
             </nav>
-        </div>
+           </div>
     </div>
 </div>
 <!-- Navbar End -->
@@ -194,7 +201,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
         <h1 class="font-weight-semi-bold text-uppercase mb-3">Chi tiết sản phẩm</h1>
         <div class="d-inline-flex">
-            <p class="m-0"><a href="index.jsp">Home</a></p>
+            <p class="m-0"><a href="index">Home</a></p>
             <p class="m-0 px-2">-</p>
             <p class="m-0">Chi tiết sản phẩm</p>
         </div>
@@ -207,12 +214,18 @@
 <div class="container-fluid py-5">
     <div class="row px-xl-5">
         <div class="col-lg-4 ">
-            <img id="image-interface" style="width: 100%;" src="<%=sourceImage%>"alt="alt">
+            <img id="image-interface" style="width: 100%;" src="<%=sourceImage%>" alt="alt">
         </div>
 
         <div class="col-lg-8">
-            <h3 class="font-weight-semi-bold"><%=name%>
-            </h3>
+           <div class="title-and-option d-flex align-items-center justify-content-between">
+               <h3 class="font-weight-semi-bold"><%=name%>
+               </h3>
+               <div class="option">
+                   <button class="btn border"> <i class="fas fa-heart text-primary"></i></button>
+                   <button class="btn border "><i class="fas fa-shopping-cart text-primary"></i></button>
+               </div>
+           </div>
             <div class="d-flex mb-3">
 <%--                <div class="text-primary mr-2">--%>
 <%--                    <small class="fas fa-star"></small>--%>
@@ -237,6 +250,33 @@
                 <%for(String source : list){%>
                 <img class="img-item" style="margin-left: 10px;width: 100px;height: 100px;object-fit: cover" src="<%=source%>" alt="">
                 <%}%>
+            </div>
+            <div class="d-flex mb-3 mt-5">
+                <form action="./order" method="post">
+                    <input type="hidden" name="type" value="<%=type%>">
+                    <input type="hidden"  name="idProduct" value="<%=id%>">
+                    <div class="d-flex align-items-center ">
+                        <p class="mb-0">Số lượng: </p>
+                        <button id="minus" type="button" class="ml-2 btn border" >-</button>
+                        <input type="number" name="total" value="1" class="total-product text-center"  style="width: 40px; padding: 5px 0;">
+                        <button id="plus" type="button" class=" btn border">+</button>
+                    </div>
+                    <p><%=errTotal%></p>
+                    <div class="address mt-2">
+                        <select name="nameCity"  id="nameCity" class="mt-3 p-2"  style="width: 250px">
+                            <option value="">Vui lòng chọn Tỉnh/Thành phố</option>
+                        </select>
+                        <select name="nameDistrict" id="nameDistrict" class="mt-3 p-2"  style="width: 250px" >
+                            <option value="">Vui lòng chọn Quận/Huyện</option>
+                        </select>
+                        <select name="nameCommune"  id="nameCommune" class="mt-3 p-2"  style="width: 250px">
+                            <option value="">Vui lòng chọn Xã/Thị trấn</option>
+                        </select>
+                        <input type="text" name="detail-address" class="mt-3 p-2"  style="width: 250px" placeholder="Địa chỉ cụ thể">
+                        <p><%=errAddress%></p>
+                    </div>
+                    <button class="btn btn-primary mt-2" type="submit" id="btn-buy">Mua Ngay</button>
+                </form>
             </div>
 
         </div>
@@ -503,7 +543,19 @@
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 <script src="js/detail.js"></script>
-
+<script>
+<%--    Buy product--%>
+const btnBuy = document.querySelector("#btn-buy");
+btnBuy.addEventListener("click", ()=>{
+    if(idUser === null){
+        alert("Vui lòng đăng nhập")
+        window.location.href = "http://localhost:8080/demoProject_war/login.jsp"
+    }
+    else{
+        
+    }
+})
+</script>
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
