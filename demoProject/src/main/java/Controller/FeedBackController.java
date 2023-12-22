@@ -56,7 +56,7 @@ public class FeedBackController extends HttpServlet {
 
                 feedbackDAO.insertFeedbackForAlbum(id, user.getId(), content.trim(), star);
             }
-            if(content.trim().length() == 0){
+            if(content.trim().length() == 0 || content.isEmpty()){
                 feedbackDAO.updateStarForAlbum(star, user.getId(),id);
             }
             feedbackDAO.updateAlbumFeedback(user.getId(), id,star, content);
