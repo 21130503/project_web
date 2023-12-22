@@ -19,8 +19,8 @@ public class HomeController extends HttpServlet {
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
-        req.setAttribute("listAlbumNew", topicDAO.getAllTopics());
-        req.setAttribute("listOddNew", topicDAO.getAllTopics());
+        req.setAttribute("listAlbumNew", productDAO.getTop8AlbumNew());
+        req.setAttribute("listOddNew",productDAO.getTop8ddImageNew());
 
         req.getRequestDispatcher("index.jsp").forward(req,resp);
     }

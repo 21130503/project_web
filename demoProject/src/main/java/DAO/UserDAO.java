@@ -89,7 +89,7 @@ public class UserDAO {
                 user.setId(resultSet.getInt(1));
                 user.setEmail(resultSet.getString(2));
                 user.setUsername(resultSet.getString(3));
-                user.setPasword(resultSet.getString(4));
+//                user.setPasword(resultSet.getString(4));
                 user.setVerifyEmail(resultSet.getBoolean(5));
                 user.setActive(resultSet.getBoolean(6));
                 user.setAdmin(resultSet.getBoolean(7));

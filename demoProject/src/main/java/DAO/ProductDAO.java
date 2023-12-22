@@ -2,10 +2,10 @@ package DAO;
 
 import Properties.URL;
 import Services.Connect;
-import com.mysql.cj.exceptions.ConnectionIsClosedException;
 import nhom26.Album;
 import nhom26.OddImage;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,6 +48,31 @@ public class ProductDAO {
             Connect.closeConnection(connection);
         }
     }
+    public boolean updateOddImage(int idTopic,String idOddImage, String nameOddImage, String description, int price, int discount){
+        Connection  connection = null;
+        System.out.println(" before insert " + price);
+        try{
+            connection = Connect.getConnection();
+            String sql = "update oddImage set  name = ? , price = ? ,discount = ? where  idOddImage = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nameOddImage);
+            preparedStatement.setInt(2, price);
+            preparedStatement.setInt(3, discount);
+//            preparedStatement.setDate(4, sqlDate);
+            preparedStatement.setString(4, idOddImage);
+            int check = preparedStatement.executeUpdate();
+            if( check > 0 && descriptionDAO.updateDescriptionOddImage(idOddImage, description) && belongDAO.updateOddImage(idTopic, Integer.parseInt(idOddImage))){
+                return  true;
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  false;
+    }
 
     public boolean checkOddNameExist(String name) {
         Connection connection = null;
@@ -60,6 +85,27 @@ public class ProductDAO {
             ResultSet check = preparedStatementCheckEmail.executeQuery();
             if (check.next()) {
                 return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return false;
+    }
+    public boolean checkOddNameExistForUpdate(String idOddImage,String name) {
+        Connection connection = null;
+
+        try {
+            connection = Connect.getConnection();
+            String sql = "select count(name) as total from oddImage where name = ? and idOddImage <> ?";
+            PreparedStatement preparedStatementCheckEmail = connection.prepareStatement(sql);
+            preparedStatementCheckEmail.setString(1, name);
+            preparedStatementCheckEmail.setString(2, idOddImage);
+            ResultSet check = preparedStatementCheckEmail.executeQuery();
+            if (check.next()) {
+                int count = check.getInt("total");
+                return count > 0;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -294,7 +340,35 @@ public class ProductDAO {
         }
         return oddImage;
     }
-
+    public OddImage getOddImageByIdForAdminUpdate(int idOddImage) {
+        Connection connection = null;
+        OddImage oddImage = new OddImage();
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idOddImage, name , price, discount, source from OddImage where idOddImage = ? ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idOddImage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
+                oddImage.setName(resultSet.getString("name"));
+                oddImage.setPrice(resultSet.getInt("price"));
+                oddImage.setDiscount(resultSet.getInt("discount"));
+                oddImage.setImage(URL.URL+  resultSet.getString("source"));
+                int idTopicFromIdOdd = belongDAO.getIdTopicFromIdOdd(idOddImage);
+                String topicName = topicDAO.getNameTopicById(idTopicFromIdOdd);
+                oddImage.setBelongTopic(topicName);
+                String description = descriptionDAO.getDescriptionByOddImage(idOddImage);
+                oddImage.setDescription(description);
+                return oddImage;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return oddImage;
+    }
     //    cho trang detail
     public Album getAlbumById(int idAlbum) {
         Connection connection = null;
@@ -462,5 +536,103 @@ public class ProductDAO {
         }
         return  false;
 
+    }
+//    get String show
+public String getShowOddImage(String idOddImage){
+    Connection connection = null;
+    String res ="";
+    try {
+        connection = Connect.getConnection();
+        String sql = "select isShow from oddImage where  idOddImage = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, idOddImage);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()){
+            res = resultSet.getString("isShow");
+            return  res;
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+    finally {
+        Connect.closeConnection(connection);
+    }
+    return  res;
+}
+    public String getShowAlbum(String idAlbum){
+        Connection connection = null;
+        String res ="";
+        try {
+            connection = Connect.getConnection();
+            String sql = "select isShow from album where  idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, idAlbum);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                res = resultSet.getString("isShow");
+                return  res;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  res;
+    }
+//    Lấy ra 10 sản phẩm mới nhất
+    public ArrayList<OddImage> getTop8ddImageNew(){
+        Connection connection = null;
+        ArrayList<OddImage> list10OddImage = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idOddImage, name, price, discount , source from oddImage where isShow = ? order by createdAt desc LIMIT 8 ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,"true");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                OddImage oddImage= new OddImage();
+                oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
+                oddImage.setName(resultSet.getString("name"));
+                oddImage.setPrice(resultSet.getInt("price"));
+                oddImage.setDiscount(resultSet.getInt("discount"));
+                oddImage.setImage(URL.URL + resultSet.getString("source"));
+                list10OddImage.add(oddImage);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  list10OddImage;
+    }
+    public ArrayList<Album> getTop8AlbumNew(){
+        Connection connection = null;
+        ArrayList<Album> list10Album = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idAlbum, name, price, discount  from album where isShow = ? order by createdAt desc LIMIT 8 ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,"true");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Album album= new Album();
+                album.setIdAlbum(resultSet.getInt("idAlbum"));
+                album.setName(resultSet.getString("name"));
+                album.setPrice(resultSet.getInt("price"));
+                album.setDiscount(resultSet.getInt("discount"));
+                album.setListImage(imageDAO.getAllImageByIdAlbum(resultSet.getInt("idAlbum")));
+                list10Album.add(album);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  list10Album;
     }
 }

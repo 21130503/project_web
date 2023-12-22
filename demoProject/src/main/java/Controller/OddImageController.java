@@ -3,14 +3,12 @@ package Controller;
 import DAO.ProductDAO;
 import DAO.TopicDAO;
 import Upload.UploadFile;
+import nhom26.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -19,6 +17,37 @@ import java.io.IOException;
         maxRequestSize = 1024 * 1024 * 50) // 50MB)
 @WebServlet(name = "OddImageController", value = "/oddImage")
 public class OddImageController extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding(("UTF-8"));
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
+//        // Kiểm tra quyền và chuyển hướng
+        ProductDAO productDAO = new ProductDAO();
+        TopicDAO topicDAO = new TopicDAO();
+        String param = req.getParameter("q");
+        String[] path =  param.split("/");
+        String id = path[0];
+        String type = path[1];
+        if (user == null || !user.isAdmin()) {
+            System.out.println("redirect");
+            resp.sendRedirect("404.jsp");
+            return;
+        } else if (user.isAdmin()) {
+            System.out.println("GET");
+        if("edit".equals(type)){
+            req.setAttribute("listNameTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("oddImage",productDAO.getOddImageByIdForAdminUpdate(Integer.parseInt(id)));
+            req.getRequestDispatcher("EditOddImage.jsp").forward(req, resp);
+            return;
+        }
+        resp.sendRedirect("index");
+        return;
+        }
+
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TopicDAO topicDAO = new TopicDAO();
@@ -106,7 +135,6 @@ public class OddImageController extends HttpServlet {
             resp.sendRedirect("product");
             return;
         }
-
 
     }
 }

@@ -144,6 +144,52 @@ public class BelongDAO {
             Connect.closeConnection(connection);
         }
     }
+    public boolean updateOddImage(int idTopic, int idOddImage){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "update oddImageBelongTopic set idTopic = ? where  idOddImage = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idTopic);
+            preparedStatement.setInt(2,idOddImage);
+            int check = preparedStatement.executeUpdate();
+            if(check >0){
+                return  true;
+            }
+            else{
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
+    public boolean updateAlbum(int idTopic,int idAlbum){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "update  AlbumBelongTopic set idTopic = ? where  idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idTopic);
+            preparedStatement.setInt(2,idAlbum);
+            int check = preparedStatement.executeUpdate();
+            if(check >0){
+                return  true;
+            }
+            else{
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+    }
     public ArrayList<Integer> listIdOddImageBelongTopic(String idTopic){
         Connection connection = null;
         ArrayList<Integer> list = new ArrayList<>();
