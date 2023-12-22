@@ -5,6 +5,7 @@ import Services.Connect;
 import nhom26.Album;
 import nhom26.OddImage;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -578,5 +579,60 @@ public String getShowOddImage(String idOddImage){
             Connect.closeConnection(connection);
         }
         return  res;
+    }
+//    Lấy ra 10 sản phẩm mới nhất
+    public ArrayList<OddImage> getTop8ddImageNew(){
+        Connection connection = null;
+        ArrayList<OddImage> list10OddImage = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idOddImage, name, price, discount , source from oddImage where isShow = ? order by createdAt desc LIMIT 8 ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,"true");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                OddImage oddImage= new OddImage();
+                oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
+                oddImage.setName(resultSet.getString("name"));
+                oddImage.setPrice(resultSet.getInt("price"));
+                oddImage.setDiscount(resultSet.getInt("discount"));
+                oddImage.setImage(URL.URL + resultSet.getString("source"));
+                list10OddImage.add(oddImage);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  list10OddImage;
+    }
+    public ArrayList<Album> getTop8AlbumNew(){
+        Connection connection = null;
+        ArrayList<Album> list10Album = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idAlbum, name, price, discount  from album where isShow = ? order by createdAt desc LIMIT 8 ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,"true");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Album album= new Album();
+                album.setIdAlbum(resultSet.getInt("idAlbum"));
+                album.setName(resultSet.getString("name"));
+                album.setPrice(resultSet.getInt("price"));
+                album.setDiscount(resultSet.getInt("discount"));
+                album.setListImage(imageDAO.getAllImageByIdAlbum(resultSet.getInt("idAlbum")));
+                list10Album.add(album);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  list10Album;
     }
 }

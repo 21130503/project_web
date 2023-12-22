@@ -2,8 +2,10 @@ package Controller;
 
 import DAO.FeedbackDAO;
 import DAO.ProductDAO;
+import DAO.TopicDAO;
 import nhom26.Album;
 import nhom26.OddImage;
+import nhom26.Topic;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,6 +40,8 @@ public class DetailController extends HttpServlet {
             req.setAttribute("avgStar", feedbackDAO.AvgRatingOddImage(id));
 
         }
+        TopicDAO topicDAO = new TopicDAO();
+        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.getRequestDispatcher("detail.jsp").forward(req, resp);
 
 
