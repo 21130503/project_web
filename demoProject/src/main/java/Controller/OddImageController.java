@@ -96,8 +96,24 @@ public class OddImageController extends HttpServlet {
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
-        if(discount == null || discount.trim().isEmpty()){
-            req.setAttribute("errDiscount", "Vui lòng nhập mô tả cho sản phẩm sản phẩm");
+        if (Integer.parseInt(price) < 0) {
+            req.setAttribute("errPrice", "Vui lòng nhập lại giá sản phẩm");
+            req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+            return;
+        }
+        if(discount == null || discount.trim().isEmpty() || Integer.parseInt(discount) < 0){
+            req.setAttribute("errDiscount", "Vui lòng nhập giảm giá cho sản phẩm");
+            req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+            return;
+        }
+        if(Integer.parseInt(discount) > Integer.parseInt(price)){
+            req.setAttribute("errDiscount", "Giá giảm không được vượt quá giá sản phẩm");
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
             req.setAttribute("listOddImage", productDAO.getAllOddImage());
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());

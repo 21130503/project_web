@@ -5,6 +5,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="nhom26.Album" %>
+<%@ page import="java.util.Random" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -47,8 +48,12 @@
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() : (ArrayList<Topic>) request.getAttribute("listTopic");
     ArrayList<OddImage> listOddNew = request.getAttribute("listOddNew") == null ? new ArrayList<>() : (ArrayList<OddImage>) request.getAttribute("listOddNew");
     ArrayList<Album> listAlbumNew = request.getAttribute("listAlbumNew") == null ? new ArrayList<>() : (ArrayList<Album>) request.getAttribute("listAlbumNew");
-
-
+    ArrayList<OddImage> listOddImageOrder = request.getAttribute("listOddImageOrder") == null ? new ArrayList<>() : (ArrayList<OddImage>) request.getAttribute("listOddImageOrder");
+    Random random = new Random();
+    int albumRan = random.nextInt(0,listAlbumNew.size());
+    Album albumSlide = listAlbumNew.get(albumRan);
+    int oddRan = random.nextInt(0, listOddImageOrder.size());
+    OddImage oddImageSlide = listOddImageOrder.get(oddRan);
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
@@ -113,7 +118,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
+                <a href="./index" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo" style="font-size: 34px;">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -121,9 +126,9 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index.html" class="nav-item nav-link active">Trang chủ</a>
+                        <a href="./index" class="nav-item nav-link active">Trang chủ</a>
                         <a href="shop.jsp" class="nav-item nav-link">Cửa hàng</a>
-                        <a href="donhangcuaban.jsp" class="nav-item nav-link">Đơn hàng của bạn</a>
+                        <a href="./donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -162,22 +167,22 @@
             <div id="header-carousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active" style="height: 410px;">
-                        <img class="img-fluid" src="img/dog-slide.jpg" alt="Image">
+                        <img class="img-fluid" src="<%=oddImageSlide.getImage()%>" alt="Image">
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                             <div class="p-3" style="max-width: 700px;">
-                                <h4 class="text-light text-uppercase font-weight-medium mb-3">Album được bán chạy</h4>
-                                <h3 class="display-4 text-white font-weight-semi-bold mb-4">Chó cưng</h3>
-                                <a href="" class="btn btn-light py-2 px-3">Xem ngay</a>
+                                <h4 class="text-light text-uppercase font-weight-medium mb-3">Ảnh bán chạy</h4>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%=oddImageSlide.getName()%></h3>
+                                <a href="./deatil?type=odd&id=<%=oddImageSlide.getIdOddImage()%>" class="btn btn-light py-2 px-3">Xem ngay</a>
                             </div>
                         </div>
                     </div>
                     <div class="carousel-item" style="height: 410px;">
-                        <img class="img-fluid" src="img/galaxy-slide.jpg" alt="Image">
+                        <img class="img-fluid" src="<%=albumSlide.getListImage().get(0)%>" alt="Image">
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                             <div class="p-3" style="max-width: 700px;">
                                 <h4 class="text-light text-uppercase font-weight-medium mb-3">Album mới nhất</h4>
-                                <h3 class="display-4 text-white font-weight-semi-bold mb-4">Vũ trụ</h3>
-                                <a href="" class="btn btn-light py-2 px-3">Xem ngay</a>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%=albumSlide.getName()%></h3>
+                                <a href="./detail?type=album&id=<%=albumSlide.getIdAlbum()%>" class="btn btn-light py-2 px-3">Xem ngay</a>
                             </div>
                         </div>
                     </div>
@@ -246,6 +251,210 @@
 
 
 <!-- Products Start -->
+<div class="container-fluid pt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">Ảnh bán chạy</span></h2>
+    </div>
+    <div class="row px-xl-5 pb-3">
+        <%if (listOddImageOrder.size() == 0) {%>
+            <div></div>
+        <%} else {%>
+        <%for (OddImage oddImage : listOddImageOrder) {%>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="<%=oddImage.getImage()%>" alt="<%=oddImage.getName()%>">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3"><%=oddImage.getName()%></h6>
+                    <div class="d-flex justify-content-center">
+                        <h6><%=oddImage.getPrice() - oddImage.getDiscount()%></h6>
+                        <h6 class="text-muted ml-2">
+                            <del><%=oddImage.getPrice()%></del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+        <%
+                }
+            }
+        %>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="img/pepole.avif" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3">Hoạt động con người</h6>
+                    <div class="d-flex justify-content-center">
+                        <h6>500.000 VNĐ</h6>
+                        <h6 class="text-muted ml-2">
+                            <del>100.000 VNĐ</del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="img/animal.avif" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3">Động vật hoang dã</h6>
+                    <div class="d-flex justify-content-center">
+                        <h6>500.000 VNĐ</h6>
+                        <h6 class="text-muted ml-2">
+                            <del>500.000 VNĐ</del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="img/car.avif" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3">Đua xe</h6>
+                    <div class="d-flex justify-content-center">
+                        <h6>500.000 VNĐ</h6>
+                        <h6 class="text-muted ml-2">
+                            <del>500.000 VNĐ</del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="img/dog.avif" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3">Chú chó đáng yêu</h6>
+                    <div class="d-flex justify-content-center">
+                        <h6>500.000 VNĐ</h6>
+                        <h6 class="text-muted ml-2">
+                            <del>500.000 VNĐ</del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="img/cat.avif" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3">Cô mèo nhí nhảnh</h6>
+                    <div class="d-flex justify-content-center">
+                        <h6>500.000 VNĐ</h6>
+                        <h6 class="text-muted ml-2">
+                            <del>500.000 VNĐ</del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="img/natural.avif" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3">Hòa mình với thiên nhiên</h6>
+                    <div class="d-flex justify-content-center">
+                        <h6>500.000 VNĐ</h6>
+                        <h6 class="text-muted ml-2">
+                            <del>500.000 VNĐ</del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="img/flower.jpg" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3">Hồn nhiên như cây cỏ</h6>
+                    <div class="d-flex justify-content-center">
+                        <h6>500.000 VNĐ</h6>
+                        <h6 class="text-muted ml-2">
+                            <del>500.000 VNĐ</del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" src="img/anime.avif" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3"> Tháng 4 là lời nói dối của em</h6>
+                    <div class="d-flex justify-content-center">
+                        <h6>500.000 VNĐ</h6>
+                        <h6 class="text-muted ml-2">
+                            <del>500.000 VNĐ</del>
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                        vào giỏ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid pt-5">
     <div class="text-center mb-4">
         <h2 class="section-title px-5"><span class="px-2">Bộ sưu tập bán chạy</span></h2>
@@ -431,22 +640,27 @@
     </div>
     <div class="row px-xl-5 pb-3">
         <%for (OddImage oddImage : listOddNew) {%>
-        <div  class="col-lg-3 col-md-6 col-sm-12 pb-1">
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div style="height: 337px;" class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img style="height: 164px;object-fit: cover" class="img-fluid w-100" src="<%=oddImage.getImage()%>" alt="">
+                    <img style="height: 164px;object-fit: cover" class="img-fluid w-100" src="<%=oddImage.getImage()%>"
+                         alt="">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"><%=oddImage.getName()%></h6>
+                    <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
+                    </h6>
                     <div class="d-flex justify-content-center">
-                        <h6><%= vndFormat.format(oddImage.getPrice() - oddImage.getDiscount())%></h6>
+                        <h6><%= vndFormat.format(oddImage.getPrice() - oddImage.getDiscount())%>
+                        </h6>
                         <h6 class="text-muted ml-2">
-                            <del><%= vndFormat.format(oddImage.getPrice())%></del>
+                            <del><%= vndFormat.format(oddImage.getPrice())%>
+                            </del>
                         </h6>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i
+                            class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
                     <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
                         vào giỏ</a>
                 </div>
@@ -629,22 +843,27 @@
     </div>
     <div class="row px-xl-5 pb-3">
         <%for (Album album : listAlbumNew) {%>
-        <div  class="col-lg-3 col-md-6 col-sm-12 pb-1">
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div style="height: 337px;" class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img style="height: 164px;object-fit: cover" class="img-fluid w-100" src="<%=album.getListImage().get(0)%>" alt="">
+                    <img style="height: 164px;object-fit: cover" class="img-fluid w-100"
+                         src="<%=album.getListImage().get(0)%>" alt="">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"><%=album.getName()%></h6>
+                    <h6 class="text-truncate mb-3"><%=album.getName()%>
+                    </h6>
                     <div class="d-flex justify-content-center">
-                        <h6><%= vndFormat.format(album.getPrice() - album.getDiscount())%></h6>
+                        <h6><%= vndFormat.format(album.getPrice() - album.getDiscount())%>
+                        </h6>
                         <h6 class="text-muted ml-2">
-                            <del><%= vndFormat.format(album.getPrice())%></del>
+                            <del><%= vndFormat.format(album.getPrice())%>
+                            </del>
                         </h6>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i
+                            class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
                     <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
                         vào giỏ</a>
                 </div>

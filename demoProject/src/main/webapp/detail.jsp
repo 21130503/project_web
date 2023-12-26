@@ -76,6 +76,8 @@
     String err = session.getAttribute("errMess") ==null ? "": (String) session.getAttribute("errMess");
     String errTotal = session.getAttribute("errTotal") ==null ? "": (String) session.getAttribute("errTotal");
     String errAddress = session.getAttribute("errAddress") ==null ? "": (String) session.getAttribute("errAddress");
+    String errReceiver = session.getAttribute("errReceiver") ==null ? "": (String) session.getAttribute("errReceiver");
+    String errPhoneNumber = session.getAttribute("errPhoneNumber") ==null ? "": (String) session.getAttribute("errPhoneNumber");
 %>
 
 
@@ -255,13 +257,23 @@
                 <form action="./order" method="post">
                     <input type="hidden" name="type" value="<%=type%>">
                     <input type="hidden"  name="idProduct" value="<%=id%>">
+                    <input type="hidden"  name="price" value="<%=price-discount%>">
                     <div class="d-flex align-items-center ">
                         <p class="mb-0">Số lượng: </p>
                         <button id="minus" type="button" class="ml-2 btn border" >-</button>
                         <input type="number" name="total" value="1" class="total-product text-center"  style="width: 40px; padding: 5px 0;">
                         <button id="plus" type="button" class=" btn border">+</button>
                     </div>
-                    <p><%=errTotal%></p>
+                    <p class="text-danger mt-1"><%=errTotal%></p>
+                    <div class="information-receive mt-2">
+                        <label for="reciver">Tên người nhận:</label>
+                        <input type="text" id="reciver" name="receiver" class="mt-1 mb-1 d-block p-2" placeholder="Thông tin người nhận">
+                        <p class="text-danger"><%=errReceiver%></p>
+                        <label for="phonenumber">Số điện thoại: </label>
+                        <input type="number" id="phonenumber" class="mt-1 mb-1  d-block p-2" name="phoneNumber" placeholder="Số điện thoại">
+                        <p class="text-danger"><%=errPhoneNumber%></p>
+
+                    </div>
                     <div class="address mt-2">
                         <select name="nameCity"  id="nameCity" class="mt-3 p-2"  style="width: 250px">
                             <option value="">Vui lòng chọn Tỉnh/Thành phố</option>
@@ -273,7 +285,7 @@
                             <option value="">Vui lòng chọn Xã/Thị trấn</option>
                         </select>
                         <input type="text" name="detail-address" class="mt-3 p-2"  style="width: 250px" placeholder="Địa chỉ cụ thể">
-                        <p><%=errAddress%></p>
+                        <p class="text-danger mt-1"><%=errAddress%></p>
                     </div>
                     <button class="btn btn-primary mt-2" type="submit" id="btn-buy">Mua Ngay</button>
                 </form>
