@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.OrderDAO;
 import DAO.ProductDAO;
 import DAO.TopicDAO;
 
@@ -18,10 +19,11 @@ public class HomeController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
+        OrderDAO orderDAO = new OrderDAO();
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.setAttribute("listAlbumNew", productDAO.getTop8AlbumNew());
         req.setAttribute("listOddNew",productDAO.getTop8ddImageNew());
-
+        req.setAttribute("listOddImageOrder", orderDAO.getTop8OddImageOrder());
         req.getRequestDispatcher("index.jsp").forward(req,resp);
     }
 }
