@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-@WebServlet(name = "OrderCintroller", value = "/order")
+@WebServlet(name = "OrderController", value = "/order")
 public class OrderController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,6 +40,7 @@ public class OrderController extends HttpServlet {
             resp.sendRedirect("login.jsp");
             return;
         }
+
         String type = req.getParameter("type");
         String idProduct = req.getParameter("idProduct");
         String price = req.getParameter("price");
@@ -55,6 +56,18 @@ public class OrderController extends HttpServlet {
         String URL = "/demoProject_war/detail?type=" + type + "&id=" + idProduct;
         String address = detailAddress + "," + nameCommune + "," + nameDistrict + "," + nameCity;
 
+        if(!user.isActive()){
+            session1.setAttribute("errActive" ,"Bạn không thể mua hàng");
+            session1.setMaxInactiveInterval(30);
+            resp.sendRedirect(URL);
+            return;
+        }
+        if(!user.isVerifyEmail()){
+            session1.setAttribute("errVerify" ,"Vui lòng xác thực email. <a href="+"http://localhost:8080/demoProject_war/verify"+ ">" +"Tại đây" + "</a>");
+            session1.setMaxInactiveInterval(30);
+            resp.sendRedirect(URL);
+            return;
+        }
         if(Integer.parseInt(quantity) <= 0){
             session1.setAttribute("errTotal" ,"Số lượng phải lớn hơn 0");
             session1.setMaxInactiveInterval(30);
@@ -92,6 +105,5 @@ public class OrderController extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
     }
 }
