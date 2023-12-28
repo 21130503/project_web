@@ -215,16 +215,16 @@
                 <%}else{%>
                 <%for(Order order : listOrder){%>
                     <tr>
-                        <td class="text-center"><%= order.getIdOrder()%></td>
+                        <td class="align-middle"><%= order.getIdOrder()%></td>
                         <td class="align-middle"><%= order.getNameProduct()%></td>
                         <td class="align-middle"><%= order.getQuantity()%></td>
                         <td class="align-middle"><%= order.getReceiver()%></td>
                         <td class="align-middle"><%= order.getPhoneNumber()%></td>
                          <td class="align-middle">
-                              <p class="text-center"><%= order.getPurchareDate()%></p>
+                              <%= order.getPurchareDate()%>
                         </td>
                         <td class="align-middle">
-                            <button class="btn btn-sm btn-primary"><%= order.getStatus()%></button>
+                            <%= order.getStatus()%>
                         </td>
                         <td class="align-middle td-address" title="<%= order.getAddress()%>"><%= order.getAddress()%></td>
                         <td><%=vndFormat.format(order.getTotalPrice())%></td>

@@ -40,13 +40,13 @@
 %>
 <% String type = (String) request.getAttribute("type");
     String name = null, description = null, sourceImage = null;
-    int price = 0, discount =0, tottalImage = 1,id= 0 ;
+    int price = 0, discount = 0, tottalImage = 1, id = 0;
     OddImage oddImage = null;
     Album album = null;
-    List<String>  list = new ArrayList<>();
-    ArrayList<Feedback> listFeedback = request.getAttribute("feedback") == null ? new ArrayList<>() :(ArrayList<Feedback>) request.getAttribute("feedback");
+    List<String> list = new ArrayList<>();
+    ArrayList<Feedback> listFeedback = request.getAttribute("feedback") == null ? new ArrayList<>() : (ArrayList<Feedback>) request.getAttribute("feedback");
     int totalFeedbackStar = request.getAttribute("totalStar") == null ? 0 : (int) request.getAttribute("totalStar");
-    double avgFeedbackStar = request.getAttribute("avgStar")== null ? 0 : (double) request.getAttribute("avgStar");
+    double avgFeedbackStar = request.getAttribute("avgStar") == null ? 0 : (double) request.getAttribute("avgStar");
     if (type.equals("album")) {
         album = (Album) request.getAttribute("detail");
         name = album.getName();
@@ -73,17 +73,17 @@
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
 <%
-    String err = session.getAttribute("errMess") ==null ? "": (String) session.getAttribute("errMess");
-    String errTotal = session.getAttribute("errTotal") ==null ? "": (String) session.getAttribute("errTotal");
-    String errAddress = session.getAttribute("errAddress") ==null ? "": (String) session.getAttribute("errAddress");
-    String errReceiver = session.getAttribute("errReceiver") ==null ? "": (String) session.getAttribute("errReceiver");
-    String errPhoneNumber = session.getAttribute("errPhoneNumber") ==null ? "": (String) session.getAttribute("errPhoneNumber");
+    String err = session.getAttribute("errMess") == null ? "" : (String) session.getAttribute("errMess");
+    String errTotal = session.getAttribute("errTotal") == null ? "" : (String) session.getAttribute("errTotal");
+    String errAddress = session.getAttribute("errAddress") == null ? "" : (String) session.getAttribute("errAddress");
+    String errReceiver = session.getAttribute("errReceiver") == null ? "" : (String) session.getAttribute("errReceiver");
+    String errPhoneNumber = session.getAttribute("errPhoneNumber") == null ? "" : (String) session.getAttribute("errPhoneNumber");
+    String errVerify = session.getAttribute("errVerify") == null ? "" : (String) session.getAttribute("errVerify");
+    String errActive = session.getAttribute("errActive") == null ? "" : (String) session.getAttribute("errActive");
+
 %>
 
 
-<script>
-    const idUser= <%= (session.getAttribute("user") != null) ? ((User) session.getAttribute("user")).getId() : "null" %>
-</script>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
@@ -130,7 +130,7 @@
                 <h6 class="m-0">Danh mục</h6>
                 <i class="fa fa-angle-down text-dark"></i>
             </a>
-            <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
+            <nav class="collapse  navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
                  id="navbar-vertical">
                 <div class="navbar-nav w-100 overflow" style="height: 410px">
                     <%if (listTopic.size() == 0) {%>
@@ -192,7 +192,7 @@
                     <%}%>
                 </div>
             </nav>
-           </div>
+        </div>
     </div>
 </div>
 <!-- Navbar End -->
@@ -210,7 +210,10 @@
     </div>
 </div>
 <!-- Page Header End -->
-
+<div class="d-flex align-items-center justify-content-center">
+    <h5 class="text-danger"><%=errActive%></h5>
+    <h5 class="text-danger"><%=errVerify%></h5>
+</div>
 
 <!-- Shop Detail Start -->
 <div class="container-fluid py-5">
@@ -220,72 +223,83 @@
         </div>
 
         <div class="col-lg-8">
-           <div class="title-and-option d-flex align-items-center justify-content-between">
-               <h3 class="font-weight-semi-bold"><%=name%>
-               </h3>
-               <div class="option">
-                   <button class="btn border"> <i class="fas fa-heart text-primary"></i></button>
-                   <button class="btn border "><i class="fas fa-shopping-cart text-primary"></i></button>
-               </div>
-           </div>
+            <div class="title-and-option d-flex align-items-center justify-content-between">
+                <h3 class="font-weight-semi-bold"><%=name%>
+                </h3>
+                <div class="option">
+                    <button class="btn border"><i class="fas fa-heart text-primary"></i></button>
+                    <button class="btn border "><i class="fas fa-shopping-cart text-primary"></i></button>
+                </div>
+            </div>
             <div class="d-flex mb-3">
-<%--                <div class="text-primary mr-2">--%>
-<%--                    <small class="fas fa-star"></small>--%>
-<%--                    <small class="fas fa-star"></small>--%>
-<%--                    <small class="fas fa-star"></small>--%>
-<%--                    <small class="fas fa-star-half-alt"></small>--%>
-<%--                    <small class="far fa-star"></small>--%>
-<%--                </div>--%>
+                <%--                <div class="text-primary mr-2">--%>
+                <%--                    <small class="fas fa-star"></small>--%>
+                <%--                    <small class="fas fa-star"></small>--%>
+                <%--                    <small class="fas fa-star"></small>--%>
+                <%--                    <small class="fas fa-star-half-alt"></small>--%>
+                <%--                    <small class="far fa-star"></small>--%>
+                <%--                </div>--%>
                 <h4 class="text-primary mr-2"><%=avgFeedbackStar%> <small class="fas fa-star"></small></h4>
                 <small class="pt-2">(<%=totalFeedbackStar%> Đánh giá)</small>
             </div>
             <h3 class="font-weight-semi-bold mb-4">
-               <%=vndFormat.format(price-discount)%>
+                <%=vndFormat.format(price - discount)%>
             </h3>
 
             </p>
             <div class="d-flex mb-3">
                 <p class="text-dark font-weight-medium mb-0 mr-3">Số ảnh:</p>
-                <p><%=tottalImage%></p>
+                <p><%=tottalImage%>
+                </p>
             </div>
             <div class="d-flex mb-3">
-                <%for(String source : list){%>
-                <img class="img-item" style="margin-left: 10px;width: 100px;height: 100px;object-fit: cover" src="<%=source%>" alt="">
+                <%for (String source : list) {%>
+                <img class="img-item" style="margin-left: 10px;width: 100px;height: 100px;object-fit: cover"
+                     src="<%=source%>" alt="">
                 <%}%>
             </div>
+
             <div class="d-flex mb-3 mt-5">
                 <form action="./order" method="post">
                     <input type="hidden" name="type" value="<%=type%>">
-                    <input type="hidden"  name="idProduct" value="<%=id%>">
-                    <input type="hidden"  name="price" value="<%=price-discount%>">
+                    <input type="hidden" name="idProduct" value="<%=id%>">
+                    <input type="hidden" name="price" value="<%=price-discount%>">
                     <div class="d-flex align-items-center ">
                         <p class="mb-0">Số lượng: </p>
-                        <button id="minus" type="button" class="ml-2 btn border" >-</button>
-                        <input type="number" name="total" value="1" class="total-product text-center"  style="width: 40px; padding: 5px 0;">
+                        <button id="minus" type="button" class="ml-2 btn border">-</button>
+                        <input type="number" name="total" value="1" class="total-product text-center"
+                               style="width: 40px; padding: 5px 0;">
                         <button id="plus" type="button" class=" btn border">+</button>
                     </div>
-                    <p class="text-danger mt-1"><%=errTotal%></p>
+                    <p class="text-danger mt-1"><%=errTotal%>
+                    </p>
                     <div class="information-receive mt-2">
                         <label for="reciver">Tên người nhận:</label>
-                        <input type="text" id="reciver" name="receiver" class="mt-1 mb-1 d-block p-2" placeholder="Thông tin người nhận">
-                        <p class="text-danger"><%=errReceiver%></p>
+                        <input type="text" id="reciver" name="receiver" class="mt-1 mb-1 d-block p-2"
+                               placeholder="Thông tin người nhận">
+                        <p class="text-danger"><%=errReceiver%>
+                        </p>
                         <label for="phonenumber">Số điện thoại: </label>
-                        <input type="number" id="phonenumber" class="mt-1 mb-1  d-block p-2" name="phoneNumber" placeholder="Số điện thoại">
-                        <p class="text-danger"><%=errPhoneNumber%></p>
+                        <input type="number" id="phonenumber" class="mt-1 mb-1  d-block p-2" name="phoneNumber"
+                               placeholder="Số điện thoại">
+                        <p class="text-danger"><%=errPhoneNumber%>
+                        </p>
 
                     </div>
                     <div class="address mt-2">
-                        <select name="nameCity"  id="nameCity" class="mt-3 p-2"  style="width: 250px">
+                        <select name="nameCity" id="nameCity" class="mt-3 p-2" style="width: 250px">
                             <option value="">Vui lòng chọn Tỉnh/Thành phố</option>
                         </select>
-                        <select name="nameDistrict" id="nameDistrict" class="mt-3 p-2"  style="width: 250px" >
+                        <select name="nameDistrict" id="nameDistrict" class="mt-3 p-2" style="width: 250px">
                             <option value="">Vui lòng chọn Quận/Huyện</option>
                         </select>
-                        <select name="nameCommune"  id="nameCommune" class="mt-3 p-2"  style="width: 250px">
+                        <select name="nameCommune" id="nameCommune" class="mt-3 p-2" style="width: 250px">
                             <option value="">Vui lòng chọn Xã/Thị trấn</option>
                         </select>
-                        <input type="text" name="detail-address" class="mt-3 p-2"  style="width: 250px" placeholder="Địa chỉ cụ thể">
-                        <p class="text-danger mt-1"><%=errAddress%></p>
+                        <input type="text" name="detail-address" class="mt-3 p-2" style="width: 250px"
+                               placeholder="Địa chỉ cụ thể">
+                        <p class="text-danger mt-1"><%=errAddress%>
+                        </p>
                     </div>
                     <button class="btn btn-primary mt-2" type="submit" id="btn-buy">Mua Ngay</button>
                 </form>
@@ -297,7 +311,8 @@
         <div class="col">
             <div class="nav nav-tabs justify-content-center border-secondary mb-4">
                 <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Mô tả</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đánh giá (<%=listFeedback.size()%>)</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đánh giá (<%=listFeedback.size()%>
+                    )</a>
             </div>
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="tab-pane-1">
@@ -308,14 +323,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h4 class="mb-4"><%=listFeedback.size()%> đánh giá cho "<%=name%>"</h4>
-                            <%if(listFeedback.size() == 0){ %>
-                                <p>Chưa có bình luận nào</p>
-                            <%}else{%>
-                                <%for(Feedback feedback: listFeedback){%>
+                            <%if (listFeedback.size() == 0) { %>
+                            <p>Chưa có bình luận nào</p>
+                            <%} else {%>
+                            <%for (Feedback feedback : listFeedback) {%>
                             <div class="media mb-4">
                                 <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                 <div class="media-body">
-                                    <h6><%=feedback.getUsername()%><small> - <i><%=feedback.getDate()%></i></small></h6>
+                                    <h6><%=feedback.getUsername()%><small> - <i><%=feedback.getDate()%>
+                                    </i></small></h6>
                                     <!-- <div class="text-primary mb-2">
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
@@ -323,41 +339,44 @@
                                         <i class="fas fa-star-half-alt"></i>
                                         <i class="far fa-star"></i>
                                     </div> -->
-                                    <p><%=feedback.getContent()%></p>
+                                    <p><%=feedback.getContent()%>
+                                    </p>
                                 </div>
                             </div>
-                                <%}%>
+                            <%}%>
                             <%}%>
 
                         </div>
                         <div class="col-md-6">
                             <h4 class="mb-4">Viết phản hồi của bạn</h4>
                             <form action="/demoProject_war/feedback" method="post">
-                                <p class="text-danger"><%=err%></p>
+                                <p class="text-danger"><%=err%>
+                                </p>
                                 <div class="form-group">
                                     <label for="message">Đánh giá của bạn: </label>
-                                    <textarea name="content" id="message" cols="30" rows="5" class="form-control"></textarea>
+                                    <textarea name="content" id="message" cols="30" rows="5"
+                                              class="form-control"></textarea>
                                 </div>
                                 <div class="d-flex my-3">
                                     <p class="mb-0 mr-2 d-flex align-items-center">Đánh giá dạng sao * :</p>
                                     <label class="feedback-star">
-                                        <input type="radio" name="star" value="1" class="star-radio" />
+                                        <input type="radio" name="star" value="1" class="star-radio"/>
                                         <small class="far fa-star"></small>
                                     </label>
                                     <label class="feedback-star">
-                                        <input type="radio" name="star" value="2" class="star-radio" />
+                                        <input type="radio" name="star" value="2" class="star-radio"/>
                                         <small class="far fa-star"></small>
                                     </label>
                                     <label class="feedback-star">
-                                        <input type="radio" name="star" value="3" class="star-radio" />
+                                        <input type="radio" name="star" value="3" class="star-radio"/>
                                         <small class="far fa-star"></small>
                                     </label>
                                     <label class="feedback-star">
-                                        <input type="radio" name="star" value="4" class="star-radio" />
+                                        <input type="radio" name="star" value="4" class="star-radio"/>
                                         <small class="far fa-star"></small>
                                     </label>
                                     <label class="feedback-star">
-                                        <input type="radio" name="star" value="5" class="star-radio" />
+                                        <input type="radio" name="star" value="5" class="star-radio"/>
                                         <small class="far fa-star"></small>
                                     </label>
                                 </div>
@@ -555,19 +574,27 @@
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 <script src="js/detail.js"></script>
-<script>
-<%--    Buy product--%>
-const btnBuy = document.querySelector("#btn-buy");
-btnBuy.addEventListener("click", ()=>{
-    if(idUser === null){
-        alert("Vui lòng đăng nhập")
-        window.location.href = "http://localhost:8080/demoProject_war/login.jsp"
-    }
-    else{
-        
-    }
-})
-</script>
+<%--<script>--%>
+<%--&lt;%&ndash;    Buy product&ndash;%&gt;--%>
+<%--const btnBuy = document.querySelector("#btn-buy");--%>
+<%--console.log(isActive, isVerifyEmail)--%>
+<%--btnBuy.addEventListener("click", ()=>{--%>
+
+<%--    if(!isActive){--%>
+<%--        alert("Bạn không thể mua hàng")--%>
+<%--    }--%>
+<%--    else if(!isVerifyEmail){--%>
+<%--        alert("Vui lòng xác thực email trước khi mua hàng")--%>
+<%--        window.location.href = "http://localhost:8080/demoProject_war/verify"--%>
+<%--    }--%>
+<%--    else if(idUser === null){--%>
+<%--        alert("Vui lòng đăng nhập")--%>
+<%--        window.location.href = "http://localhost:8080/demoProject_war/login.jsp"--%>
+<%--    }--%>
+
+<%--})--%>
+<%--</script>--%>
+
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>

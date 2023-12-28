@@ -11,6 +11,15 @@ public class Order {
     int quantity;
     String status;
     String address;
+    int idByer;
+
+    public int getIdByer() {
+        return idByer;
+    }
+
+    public void setIdByer(int idByer) {
+        this.idByer = idByer;
+    }
 
     public String getReceiver() {
         return receiver;
