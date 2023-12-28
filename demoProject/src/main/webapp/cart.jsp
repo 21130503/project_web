@@ -1,6 +1,22 @@
-<%@ page import="nhom26.User" %>
+<%@ page import="cart.Cart" %>
+<%@ page import="cart.CartProduct" %>
+<%@ page import="java.util.Map" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="nhom26.User" %>
 <%@ page import="nhom26.Topic" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.text.DecimalFormat" %>
+
+<%
+    Cart cart = (Cart) session.getAttribute("cart");
+    if (cart == null) {
+        cart = new Cart();
+    }
+
+    Locale vnLocal = new Locale("vi", "VN");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+%>
+
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -47,7 +63,7 @@
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="index.jsp" class="text-decoration-none">
+            <a href="index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -68,9 +84,9 @@
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge">0</span>
             </a>
-            <a href="cart.html" class="btn border" title="Giỏ hàng">
+            <a href="cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=cart.gettotal()%></span>
             </a>
         </div>
     </div>
@@ -104,7 +120,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
+                <a href="index" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -165,7 +181,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
         <h1 class="font-weight-semi-bold text-uppercase mb-3">Giỏ Hàng</h1>
         <div class="d-inline-flex">
-            <p class="m-0"><a href="">Trang Chủ</a></p>
+            <p class="m-0"><a href="index">Trang Chủ</a></p>
             <p class="m-0 px-2">-</p>
             <p class="m-0">Giỏ Hàng</p>
         </div>
@@ -177,80 +193,56 @@
 <!-- Cart Start -->
 <div class="container-fluid pt-5">
     <div class="row px-xl-5">
+
         <div class="col-lg-8 table-responsive mb-5">
+            <% if (cart.gettotal() > 0) { %>
             <table class="table table-bordered text-center mb-0">
                 <thead class="bg-secondary text-dark">
                 <tr>
                     <th>Sản Phẩm</th>
                     <th>Giá</th>
-                    <th>Mua</th>
+                    <th>Số lượng</th>
                     <th>Xóa</th>
                 </tr>
                 </thead>
                 <tbody class="align-middle">
+                <% for (Map.Entry<Integer, CartProduct> entry : cart.getData().entrySet()) {
+                    CartProduct cartProduct = entry.getValue();
+                    String productName;
+                    String productImage;
+                    int productPrice;
+
+                    // Xác định sản phẩm là OddImage hay Album
+                    if (cartProduct.getOddImage() != null) {
+                        productName = cartProduct.getOddImage().getName();
+                        productImage = cartProduct.getOddImage().getImage();
+                        productPrice = cartProduct.getOddImage().getPrice();
+                    } else {
+                        productName = cartProduct.getAlbum().getName();
+                        productImage = cartProduct.getAlbum().getListImage().get(0);
+                        productPrice = cartProduct.getAlbum().getPrice();
+                    }
+                %>
                 <tr>
-                    <td class="align-middle"><img src="img/flower.jpg" alt="" style="width: 50px;"> Ảnh bông hoa
+                    <td class="align-middle"><img src="<%=productImage %>" alt="<%=productName %>"
+                                                  style="width: 50px;"></td>
+                    <td class="align-middle"><%=vndFormat.format(productPrice)%>
                     </td>
-                    <td class="align-middle">50.000 VNĐ</td>
-                    <td class="align-middle">
-                        <i class="fa fa-check"></i>
+                    <td class="align-middle"><%=cartProduct.getQuantity()%>
                     </td>
                     <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
+                        <!-- Thêm link hoặc hành động để xóa sản phẩm từ giỏ hàng -->
+                        <button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button>
                     </td>
                 </tr>
-                <tr>
-                    <td class="align-middle"><img src="img/dog.avif" alt="" style="width: 50px;"> Ảnh chú chó
-                    </td>
-                    <td class="align-middle">70.000 VNĐ</td>
-                    <td class="align-middle">
-                        <i class="fa fa-check"></i>
-                    </td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-middle"><img src="img/cat.avif" alt="" style="width: 50px;"> Ảnh chú mèo
-                    </td>
-                    <td class="align-middle">100.000 VNĐ</td>
-                    <td class="align-middle">
-                        <i class="fa fa-check"></i>
-                    </td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-middle"><img src="img/car.avif" alt="" style="width: 50px;"> Ảnh xe oto
-                    </td>
-                    <td class="align-middle">70.000 VNĐ</td>
-                    <td class="align-middle">
-                        <i class="fa fa-check"></i>
-                    </td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-middle"><img src="img/anime.avif" alt="" style="width: 50px;"> Ảnh anime
-                    </td>
-                    <td class="align-middle">80.000 VNĐ</td>
-                    <td class="align-middle">
-                        <i class="fa fa-check"></i>
-                    </td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
-                    </td>
-                </tr>
+                <% } %>
                 </tbody>
             </table>
+            <% } else { %>
+            <p>Giỏ hàng trống.</p>
+            <% } %>
         </div>
+
 
         <div class="col-lg-4">
             <form class="mb-5" action="">

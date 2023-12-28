@@ -47,7 +47,7 @@
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="index.jsp" class="text-decoration-none">
+            <a href="index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -68,7 +68,7 @@
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge">0</span>
             </a>
-            <a href="cart.jsp" class="btn border" title="Giỏ hàng">
+            <a href="cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge">0</span>
             </a>
@@ -107,7 +107,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
+                <a href="index" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -167,7 +167,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
         <h1 class="font-weight-semi-bold text-uppercase mb-3">Thanh Toán</h1>
         <div class="d-inline-flex">
-            <p class="m-0"><a href="">Trang chủ</a></p>
+            <p class="m-0"><a href="index">Trang chủ</a></p>
             <p class="m-0 px-2">-</p>
             <p class="m-0">Thanh Toán</p>
         </div>
