@@ -23,6 +23,7 @@
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html lang="en">
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <head>
     <meta charset="utf-8">
@@ -33,6 +34,9 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
@@ -51,6 +55,9 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+    <%--    axios--%>z
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js" integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
