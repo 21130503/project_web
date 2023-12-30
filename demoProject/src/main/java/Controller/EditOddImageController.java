@@ -56,9 +56,23 @@ public class EditOddImageController extends HttpServlet {
             req.getRequestDispatcher("EditOddImage.jsp").forward(req, resp);
             return;
         }
-        if(discount == null || discount.isEmpty()){
+        if(Integer.parseInt(price) < 0){
+            req.setAttribute("listNameTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("errPrice" , "Vui lòng nhập lại trường này");
+            req.setAttribute("oddImage",productDAO.getOddImageByIdForAdminUpdate(Integer.parseInt(idOddImage)));
+            req.getRequestDispatcher("EditOddImage.jsp").forward(req, resp);
+            return;
+        }
+        if(discount == null || discount.isEmpty() || Integer.parseInt(discount) < 0){
             req.setAttribute("listNameTopic", topicDAO.getAllNamesTopic());
             req.setAttribute("errDiscount" , "Vui lòng nhập trường này");
+            req.setAttribute("oddImage",productDAO.getOddImageByIdForAdminUpdate(Integer.parseInt(idOddImage)));
+            req.getRequestDispatcher("EditOddImage.jsp").forward(req, resp);
+            return;
+        }
+        if(Integer.parseInt(price) < Integer.parseInt(discount)){
+            req.setAttribute("listNameTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("errDiscount" , "Giá giảm không vượt quá giá bán");
             req.setAttribute("oddImage",productDAO.getOddImageByIdForAdminUpdate(Integer.parseInt(idOddImage)));
             req.getRequestDispatcher("EditOddImage.jsp").forward(req, resp);
             return;

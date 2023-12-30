@@ -1,6 +1,9 @@
 <%@ page import="nhom26.User" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="nhom26.Topic" %>
+<%@ page import="nhom26.Order" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.text.DecimalFormat" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -32,6 +35,7 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="/css/logo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
@@ -43,8 +47,12 @@
 <% User user = (User) session.getAttribute("user");
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
+    ArrayList<Order> listOrder = request.getAttribute("Order") == null ? new ArrayList<>() : (ArrayList<Order>) request.getAttribute("Order");
 %>
-
+<%
+    Locale vnLocal = new Locale("vi", "VN");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
+%>
 <!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -112,7 +120,11 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+<<<<<<< HEAD
                 <a href="index" class="text-decoration-none d-block d-lg-none">
+=======
+                <a href="./index" class="text-decoration-none d-block d-lg-none">
+>>>>>>> d68c03236a8fdf27d2a78f702eab60d762eb0701
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -191,73 +203,43 @@
                 <tr>
                     <th>Mã đơn hàng</th>
                     <th>Tên đơn hàng</th>
+                    <th>Số lượng</th>
+                    <th>Tên người nhận</th>
+                    <th>Số điện thoại</th>
                     <th>Ngày đặt hàng</th>
-                    <th>Trạng thái đơn hàng</th>
+                    <th>Trạng thái</th>
+                    <th>Địa chỉ nhận hàng</th>
                     <th>Thành tiền</th>
                     <th>Hủy đơn</th>
                 </tr>
                 </thead>
                 <tbody class="align-middle">
-                <tr>
-                    <td class="text-center">123</td>
-                    <td class="align-middle">Đơn Sư tử</td>
-                    <td class="align-middle">
-                        <p class="text-center">22-10-2023</p>
-                    </td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary">Đang vận chuyển</button>
-                    </td>
-                    <td>290.000 VNĐ</td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
-                    </td>
+                <%if(listOrder.size() == 0){%>
+
+                <%}else{%>
+                <%for(Order order : listOrder){%>
+                    <tr>
+                        <td class="align-middle"><%= order.getIdOrder()%></td>
+                        <td class="align-middle"><%= order.getNameProduct()%></td>
+                        <td class="align-middle"><%= order.getQuantity()%></td>
+                        <td class="align-middle"><%= order.getReceiver()%></td>
+                        <td class="align-middle"><%= order.getPhoneNumber()%></td>
+                         <td class="align-middle">
+                              <%= order.getPurchareDate()%>
+                        </td>
+                        <td class="align-middle">
+                            <%= order.getStatus()%>
+                        </td>
+                        <td class="align-middle td-address" title="<%= order.getAddress()%>"><%= order.getAddress()%></td>
+                        <td><%=vndFormat.format(order.getTotalPrice())%></td>
+                        <td class="align-middle">
+                            <button data-id="<%=order.getIdOrder()%>" data-toggle="modal" data-target="#deleteOrder"  class="btn btn-sm btn-primary"><i
+                                    class="fa fa-times"></i></button>
+                        </td>
                 </tr>
-                <tr>
-                    <td class="text-center">133</td>
-                    <td class="align-middle">Đơn Rùa biển</td>
-                    <td class="align-middle">
-                        <p class="text-center">13-11-2023</p>
-                    </td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary">Đang vận chuyển
-                    </td>
-                    <td>100.000 VNĐ</td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center">012</td>
-                    <td class="align-middle">Đơn Mèo con</td>
-                    <td class="align-middle">
-                        <p class="text-center">2-11-2023</p>
-                    </td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary">Đang vận chuyển
-                    </td>
-                    <td>45.000 VNĐ</td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center">980</td>
-                    <td class="align-middle">Đơn Rái cá</td>
-                    <td class="align-middle">
-                        <p class="text-center">4-11-2023</p>
-                    </td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary">Bị Hủy
-                    </td>
-                    <td>23.000 VNĐ</td>
-                    <td class="align-middle">
-                        <button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button>
-                    </td>
-                </tr>
+                <%}%>
+                <%}%>
+
 
                 </tbody>
             </table>
@@ -323,11 +305,34 @@
     </div>
 </div>
 <!-- Footer End -->
-
+<div id="deleteOrder" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Hủy đơn hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn hủy đơn hàng ? </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-order" type="button" class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
+<script src="js/Dialog.js"></script>
+<script>
+    Dialog("#deleteOrder","#btn-delete-order","/order/odd","idOrder", "delete")
+    Dialog()
+</script>
 
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

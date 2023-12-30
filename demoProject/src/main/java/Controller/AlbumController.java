@@ -59,16 +59,24 @@ public class AlbumController extends HttpServlet {
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
-        if (discount == null || discount.trim().isEmpty()) {
-            req.setAttribute("errDiscountAlbum", "Vui lòng nhập giảm giá");
+        if (price == null || price.trim().isEmpty()) {
+            req.setAttribute("errPriceAlbum", "Vui lòng nhập giá sản phẩm");
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
             req.setAttribute("listOddImage", productDAO.getAllOddImage());
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
-        if (price == null || price.trim().isEmpty()) {
-            req.setAttribute("errPriceAlbum", "Vui lòng nhập giá sản phẩm");
+        if (Integer.parseInt(price) < 0) {
+            req.setAttribute("errPriceAlbum", "Vui lòng nhập lại giá sản phẩm");
+            req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+            return;
+        }
+        if (discount == null || discount.trim().isEmpty() || Integer.parseInt(discount) < 0) {
+            req.setAttribute("errDiscountAlbum", "Vui lòng nhập giảm giá");
             req.setAttribute("listAlbum", productDAO.getAllAlbum());
             req.setAttribute("listOddImage", productDAO.getAllOddImage());
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
