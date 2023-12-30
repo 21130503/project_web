@@ -172,7 +172,7 @@ public class ProductDAO {
 
         try {
             connection = Connect.getConnection();
-            String sql = "select name from oddImage where name = ?";
+            String sql = "select name from album where name = ?";
             PreparedStatement preparedStatementCheckEmail = connection.prepareStatement(sql);
             preparedStatementCheckEmail.setString(1, name);
             ResultSet check = preparedStatementCheckEmail.executeQuery();
@@ -635,4 +635,23 @@ public String getShowOddImage(String idOddImage){
         }
         return  list10Album;
     }
+//    public int getPriceOddImageById(int idOddImage){
+//        Connection connection= null;
+//        try {
+//            connection = Connect.getConnection();
+//            String sql = "select price from oddImage where idOddImage = ?";
+//            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+//            preparedStatement.setInt(1, idOddImage);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            if(resultSet.next()){
+//                return  resultSet.getInt("price");
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//        finally {
+//            Connect.closeConnection(connection);
+//        }
+//        return  0;
+//    }
 }

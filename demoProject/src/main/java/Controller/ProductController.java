@@ -33,23 +33,23 @@ public class ProductController extends HttpServlet {
 
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
-//        HttpSession session = req.getSession();
-//        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
 //        // Kiểm tra quyền và chuyển hướng
-//        if(user == null || !user.isAdmin() ) {
-//            System.out.println("redirect");
-//            resp.sendRedirect( "404.jsp");
-//            return;
-//        }
-//        else if (user.isAdmin()) {
-//            System.out.println("GET");
+        if(user == null || !user.isAdmin() ) {
+            System.out.println("redirect");
+            resp.sendRedirect( "404.jsp");
+            return;
+        }
+        else if (user.isAdmin()) {
+            System.out.println("GET");
         System.out.println("list Album :" + productDAO.getAllAlbum());
         System.out.println("list odd : " + productDAO.getAllOddImage());
         req.setAttribute("listAlbum", productDAO.getAllAlbum());
         req.setAttribute("listOddImage", productDAO.getAllOddImage());
         req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
         req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
-//        }
+        }
 
     }
 
