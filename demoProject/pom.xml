@@ -6,7 +6,10 @@
     <packaging>war</packaging>
     <properties>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         <maven.compiler.source>17</maven.compiler.source>
