@@ -1,3 +1,6 @@
+<%@ page import="nhom26.User" %>
+<%@ page import="nhom26.Topic" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,101 +35,131 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js" integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
+<% User user = (User) session.getAttribute("user");
+    ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
+            (ArrayList<Topic>) request.getAttribute("listTopic");
+%>
+
 <body>
-    
-    <!-- Start - Phần dùng chung cho các trang dành cho user -->
-    <!-- Topbar Start -->
-    <div class="container-fluid">
-        <div class="row align-items-center py-3 px-xl-5">
-            <div class="col-lg-3 d-none d-lg-block">
-                <a href="" class="text-decoration-none">
-                    <h1 class="logo">Nhóm 26</h1>
-                </a>
-            </div>
-            <div class="col-lg-6 col-6 text-left">
-                <form action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
-                        <div class="input-group-append">
+
+<!-- Start - Phần dùng chung cho các trang dành cho user -->
+<!-- Topbar Start -->
+<div class="container-fluid">
+    <div class="row align-items-center py-3 px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block">
+            <a href="index" class="text-decoration-none">
+                <h1 class="logo">Nhóm 26</h1>
+            </a>
+        </div>
+        <div class="col-lg-6 col-6 text-left">
+            <form action="">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <div class="input-group-append">
                             <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
                                 <i class="fa fa-search"></i>
                             </span>
-                        </div>
                     </div>
-                </form>
-            </div>
-            <div class="col-lg-3 col-6 text-right">
-                <a href="favourite.html" class="btn border" title="Yêu thích">
-                    <i class="fas fa-heart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
-                <a href="cart.jsp" class="btn border" title="Giỏ hàng">
-                    <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
-            </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-3 col-6 text-right">
+            <a href="favourite.jsp" class="btn border" title="Yêu thích">
+                <i class="fas fa-heart text-primary"></i>
+                <span class="badge">0</span>
+            </a>
+            <a href="cart" class="btn border" title="Giỏ hàng">
+                <i class="fas fa-shopping-cart text-primary"></i>
+                <span class="badge">0</span>
+            </a>
         </div>
     </div>
-    <!-- Topbar End -->
+</div>
+<!-- Topbar End -->
 
-    <!-- Navbar Start -->
-    <div class="container-fluid">
-        <div class="row border-top px-xl-5">
-            <div class="col-lg-3 d-none d-lg-block">
-                <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
-                    data-toggle="collapse" href="#navbar-vertical"
-                    style="height: 65px; margin-top: -1px; padding: 0 30px;">
-                    <h6 class="m-0">Danh mục</h6>
-                    <i class="fa fa-angle-down text-dark"></i>
-                </a>
-                <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
-                    id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                    <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                        <a href="" class="nav-item nav-link">Con người</a>
-                        <a href="" class="nav-item nav-link">Thiên nhiên</a>
-                        <a href="" class="nav-item nav-link">Động vật</a>
-                        <a href="" class="nav-item nav-link">Chó</a>
-                        <a href="" class="nav-item nav-link">Mèo</a>
-                        <a href="" class="nav-item nav-link">Xe</a>
-                        <a href="" class="nav-item nav-link">Vũ trụ</a>
-                        <a href="" class="nav-item nav-link">Hoạt hình</a>
-                        <a href="" class="nav-item nav-link">Hoa</a>
-                    </div>
-                </nav>
-            </div>
-            <div class="col-lg-9">
-                <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                    <a href="" class="text-decoration-none d-block d-lg-none">
-                        <h1 class="logo">Nhóm 26</h1>
+
+<!-- Navbar Start -->
+<div class="container-fluid">
+    <div class="row border-top px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block">
+            <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
+               data-toggle="collapse" href="#navbar-vertical"
+               style="height: 65px; margin-top: -1px; padding: 0 30px;">
+                <h6 class="m-0">Danh mục</h6>
+                <i class="fa fa-angle-down text-dark"></i>
+            </a>
+            <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
+                 id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
+
+                <%--Phần danh mục hiển thị các chủ đề--%>
+                <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                    <%if (listTopic.size() == 0) {%>
+                    <p>Chưa có topic nào</p>
+                    <%} else {%>
+                    <%for (Topic topic : listTopic) {%>
+                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
                     </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto py-0">
-                            <a href="index.jsp" class="nav-item nav-link">Trang chủ</a>
-                            <a href="shop.jsp" class="nav-item nav-link">Cửa hàng</a>
-                            <a href="donhangcuaban.jsp" class="nav-item nav-link">Đơn hàng của bạn</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
-                                <div class="dropdown-menu rounded-0 m-0">
-                                    <a href="cart.jsp" class="dropdown-item">Giỏ hàng</a>
-                                    <a href="checkout.jsp" class="dropdown-item">Thanh toán</a>
-                                </div>
+                    <%}%>
+                    <%}%>
+                </div>
+
+            </nav>
+        </div>
+        <div class="col-lg-9">
+            <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                <a href="index" class="text-decoration-none d-block d-lg-none">
+                    <h1 class="logo">Nhóm 26</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav mr-auto py-0">
+                        <a href="index" class="nav-item nav-link">Trang chủ</a>
+                        <a href="shop" class="nav-item nav-link">Cửa hàng</a>
+                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Trang</a>
+                            <div class="dropdown-menu rounded-0 m-0">
+                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
+                                <a href="checkout" class="dropdown-item active">Thanh toán</a>
                             </div>
-                            <a href="contact.jsp" class="nav-item nav-link active">Liên hệ</a>
                         </div>
-                        <div class="navbar-nav ml-auto py-0">
-                            <a href="login.jsp" class="nav-item nav-link">Đăng nhập</a>
-                            <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
+                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
+                    </div>
+
+                    <%--Phần login--%>
+                    <%if (user == null) {%>
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="login.jsp" class="nav-item nav-link">Đăng nhập</a>
+                        <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
+                    </div>
+                    <%} else { %>
+                    <div class="navbar-nav ml-auto py-0 position-relative">
+                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
+                        </p>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <%if (!user.isVerifyEmail()) {%>
+                            <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
+                            <%}%>
+                            <% if (user.isAdmin()) {%>
+                            <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
+                            <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
+                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <%}%>
+                            <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
                     </div>
-                </nav>
-            </div>
+                    <%}%>
+
+                </div>
+            </nav>
         </div>
     </div>
-    <!-- Navbar End -->
-    <!-- End - Phần dùng chung cho các trang dành cho user -->
+</div>
+<!-- Navbar End -->
+<!-- End - Phần dùng chung cho các trang dành cho user -->
 
 
     <!-- Page Header Start -->
