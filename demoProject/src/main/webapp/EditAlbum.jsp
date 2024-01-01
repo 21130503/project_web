@@ -3,6 +3,7 @@
 <%@ page import="nhom26.Topic" %>
 <%@ page import="java.util.List" %>
 <%@ page import="nhom26.OddImage" %>
+<%@ page import="nhom26.Album" %>
 <!DOCTYPE html>
 <%--<%@page contentType="text/html" pageEncoding="UTF-8"%>--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -11,13 +12,14 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Edit OddImage || Admin</title>
+    <title>Edit Album|| Admin</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js" integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
+    <link rel="stylesheet" href="./css/shop.css">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -40,7 +42,7 @@
 
 <body>
 <%
-    OddImage oddImage = request.getAttribute("oddImage") == null ? new OddImage() :  (OddImage) request.getAttribute("oddImage");
+    Album album = request.getAttribute("album") == null ? new Album() :  (Album) request.getAttribute("album");
     ArrayList<String> listTopic = (ArrayList<String>) request.getAttribute("listNameTopic");
 //    Invalidate
     String errName = request.getAttribute("errName") == null ? "" : (String) request.getAttribute("errName");
@@ -55,7 +57,7 @@
 
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="./index.html" class="text-decoration-none">
+            <a href="./index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -72,17 +74,17 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="/topic" class="btn border">
+            <a href="./topic" class="btn border">
                 <i class="fa-solid fa-boxes-stacked text-primary"></i>
             </a>
-            <a href="/order" class="btn border">
+            <a href="./orderManager" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
             </a>
-            <a href="/user" class="btn border">
+            <a href="./user" class="btn border">
                 <i class="fa-regular fa-user text-primary"></i>
 
             </a>
-            <a href="/product/" class="btn border">
+            <a href="./product" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
             </a>
         </div>
@@ -95,7 +97,7 @@
 <!-- Page Header Start -->
 <div class="container-fluid bg-secondary mb-5">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-        <h1 class="font-weight-semi-bold text-uppercase mb-3">Chỉnh sửa ảnh</h1>
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Chỉnh sửa albuma</h1>
     </div>
 </div>
 <!-- Page Header End -->
@@ -104,39 +106,48 @@
 <!-- Cart Start -->
 
 <div class="container-fluid pt-5">
-    <form action="./editOddImage" method="post" enctype="multipart/form-data">
-        <input name="idOddImage" type="hidden" value="<%=oddImage.getIdOddImage()%>">
+    <form action="./editAlbum" method="post" enctype="multipart/form-data">
+        <input name="idOddImage" type="hidden" value="<%=album.getIdAlbum()%>">
         <div class="form-group">
             <label for="nameTopicInput">Thuộc chủ đề</label>
             <select class="form-control select-topic"  name="nameTopic" id="nameTopicInput">
-                <option value="<%=oddImage.getBelongTopic()%>" ><%=oddImage.getBelongTopic()%></option>
+                <option value="<%=album.getBelongTopic()%>" ><%=album.getBelongTopic()%></option>
                 <%for (String nameTopic : listTopic){%>
-                    <option value="<%=nameTopic%>"><%=nameTopic%></option>
+                <option value="<%=nameTopic%>"><%=nameTopic%></option>
                 <%}%>
             </select>
-           </div>
+        </div>
         <div class="form-group">
             <label for="nameInput">Tên sản phẩm</label>
-            <input value="<%=oddImage.getName()%>" id="nameInput" name="nameOddImage" type="text" class="form-control"  aria-describedby="emailHelp" placeholder="Tên sản phẩm">
+            <input value="<%=album.getName()%>" id="nameInput" name="nameOddImage" type="text" class="form-control"  aria-describedby="emailHelp" placeholder="Tên sản phẩm">
             <small id="errName" class="form-text  text-danger"><%=errName%></small>
         </div>
         <div class="form-group">
             <label for="priceTopicInput">Giá</label>
-            <input value="<%=oddImage.getPrice()%>" id="priceTopicInput" name="price" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Giá">
-                        <small id="errPrice" class="form-text  text-danger"><%=errPrice%></small>
+            <input value="<%=album.getPrice()%>" id="priceTopicInput" name="price" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Giá">
+            <small id="errPrice" class="form-text  text-danger"><%=errPrice%></small>
         </div>
         <div class="form-group">
             <label for="discountTopicInput">Giảm giá</label>
-            <input value="<%=oddImage.getDiscount()%>" id="discountTopicInput" name="discount" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Giảm giá">
-                        <small id="errDiscount" class="form-text  text-danger"><%=errDiscount%></small>
+            <input value="<%=album.getDiscount()%>" id="discountTopicInput" name="discount" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Giảm giá">
+            <small id="errDiscount" class="form-text  text-danger"><%=errDiscount%></small>
         </div>
         <div class="form-group">
             <label for="desTopicInput">Mô tả sản phẩm</label>
-            <textarea value="<%=oddImage.getDescription()%>" id="desTopicInput" rows="3" name="description" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Mô tả sản phẩm"></textarea>
-                        <small id="errDes" class="form-text text-danger"><%=errDescription%></small>
-            <img style="width: 400px;" src="<%=oddImage.getImage()%>" alt="">
+            <textarea value="<%=album.getDescription()%>" id="desTopicInput" rows="3" name="description" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Mô tả sản phẩm"></textarea>
+            <small id="errDes" class="form-text text-danger"><%=errDescription%></small>
+            <div class="d-flex flex-wrap">
+                <%for(String src : album.getListImage()){%>
+                <div class="position-relative image_wrapper">
+                    <img class="mt-5 ml-2 image-in-album" style="width: 400px; height: 400px; object-fit: cover" src="<%=src%>" alt="">
+                    <div  class="position-absolute delete-image" >
+                        <span><i class="fa-solid fa-xmark"></i></span>
+                    </div>
+                </div>
+                <%}%>
+            </div>
         </div>
-       <button type="submit" class="btn btn-primary">Cập nhật</button>
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
     </form>
 </div>
 <!-- Cart End -->
@@ -221,10 +232,7 @@
         </div>
     </div>
 </div>
-<script src="./js/libaryCustom.js"></script>
-<script>
-    changeImage("#imageInterface","#showImage")
-</script>
+
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
@@ -237,7 +245,31 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
-<script src="js/topic.js"></script>
+<script>
+    // xử lí chỉnh sửa
+    const deleteList = document.querySelectorAll(".delete-image");
+    const imageList =  document.querySelectorAll(".image_wrapper");
+
+    //convert
+    const deleteArray = Array.from(deleteList)
+    const imageArray = Array.from(imageList)
+
+    console.log(deleteList)
+    console.log(imageList)
+
+    // for
+    deleteArray.forEach((item, index)=>{
+        item.addEventListener("click", ()=>{
+            item.parentNode.removeChild(item);
+
+            // Xóa phần tử .image_wrapper tương ứng
+            const imageWrapper = imageArray[index];
+            if (imageWrapper) {
+                imageWrapper.parentNode.removeChild(imageWrapper);
+            }
+        })
+    })
+</script>
 </body>
 
 </html>

@@ -79,7 +79,7 @@ public class ProductDAO {
 
         try {
             connection = Connect.getConnection();
-            String sql = "select name from oddImage where name = ?";
+            String sql = "select name from oddImage where name = ? ";
             PreparedStatement preparedStatementCheckEmail = connection.prepareStatement(sql);
             preparedStatementCheckEmail.setString(1, name);
             ResultSet check = preparedStatementCheckEmail.executeQuery();
@@ -237,7 +237,36 @@ public class ProductDAO {
         }
         return listOddImage;
     }
+    public ArrayList<OddImage> getAllOddImageForClient() {
+        Connection connection = null;
+        ArrayList<OddImage> listOddImage = new ArrayList<OddImage>();
+        try {
+            connection = Connect.getConnection();
+            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage where  isShow= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "true");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                OddImage oddImage = new OddImage();
+                oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
+                oddImage.setName(resultSet.getString("name"));
+                oddImage.setImage(URL.URL + resultSet.getString("source"));
+                oddImage.setPrice(resultSet.getInt("price"));
+                oddImage.setDiscount(resultSet.getInt("discount"));
+                int idTopic = belongDAO.getIdTopicFromIdOdd(resultSet.getInt("idOddImage"));
+                String nameTopic = topicDAO.getNameTopicById(idTopic);
+                oddImage.setBelongTopic(nameTopic);
+                oddImage.setShow(resultSet.getBoolean("isShow"));
+                listOddImage.add(oddImage);
+            }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return listOddImage;
+    }
     public ArrayList<Album> getAllAlbum() {
         Connection connection = null;
         ArrayList<Album> listAlbum = new ArrayList<>();
@@ -267,7 +296,36 @@ public class ProductDAO {
         }
         return listAlbum;
     }
-
+    public ArrayList<Album> getAllAlbumForClient() {
+        Connection connection = null;
+        ArrayList<Album> listAlbum = new ArrayList<>();
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idAlbum, name, price, discount ,isShow from album where isShow = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "true");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("idAlbum");
+                Album album = new Album();
+                album.setIdAlbum(id);
+                album.setName(resultSet.getString("name"));
+                album.setPrice(resultSet.getInt("price"));
+                album.setDiscount(resultSet.getInt("discount"));
+                album.setShow(resultSet.getBoolean("isShow"));
+                album.setListImage(imageDAO.getAllImageByIdAlbum(id));
+                int idTopic = belongDAO.getIdTopicFromIdAlbum(id);
+                String nameTopic = topicDAO.getNameTopicById(idTopic);
+                album.setBelongTopic(nameTopic);
+                listAlbum.add(album);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return listAlbum;
+    }
     public boolean deleteOddImage(int idOddImage) {
         Connection connection = null;
         try {
@@ -400,6 +458,36 @@ public class ProductDAO {
         }
         return album;
     }
+    public Album getAlbumByIdForAdminUpdate(int idAlbum) {
+        Connection connection = null;
+        Album album = new Album();
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idAlbum, name , price, discount from Album where idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idAlbum);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                album.setIdAlbum(resultSet.getInt("idAlbum"));
+                album.setName(resultSet.getString("name"));
+                album.setPrice(resultSet.getInt("price"));
+                album.setDiscount(resultSet.getInt("discount"));
+                album.setListImage(imageDAO.getAllImageByIdAlbum(idAlbum));
+                String description = descriptionDAO.getDescriptionByAlbum(idAlbum);
+                int idTopic = belongDAO.getIdTopicFromIdAlbum(idAlbum);
+                String topicName = topicDAO.getNameTopicById(idTopic);
+                album.setBelongTopic(topicName);
+                album.setDescription(description);
+                return album;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return album;
+    }
+
 
     //    tìm kiesm sản phẩm
     public ArrayList<Album> searchAlbumWithParam(String name) {

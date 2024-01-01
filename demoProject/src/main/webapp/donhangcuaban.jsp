@@ -48,6 +48,7 @@
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
     ArrayList<Order> listOrder = request.getAttribute("Order") == null ? new ArrayList<>() : (ArrayList<Order>) request.getAttribute("Order");
+    ArrayList<Order> listOrderAlbum = request.getAttribute("OrderAlbum") == null ? new ArrayList<>() : (ArrayList<Order>) request.getAttribute("OrderAlbum");
 %>
 <%
     Locale vnLocal = new Locale("vi", "VN");
@@ -216,7 +217,7 @@
                 <%for(Order order : listOrder){%>
                     <tr>
                         <td class="align-middle"><%= order.getIdOrder()%></td>
-                        <td class="align-middle"><%= order.getNameProduct()%></td>
+                        <td class="align-middle"><a href="./detail?type=<%=order.getType()%>&id=<%=order.getIdProduct()%>"><%= order.getNameProduct()%></a></td>
                         <td class="align-middle"><%= order.getQuantity()%></td>
                         <td class="align-middle"><%= order.getReceiver()%></td>
                         <td class="align-middle"><%= order.getPhoneNumber()%></td>
@@ -234,7 +235,7 @@
                         </td>
                 </tr>
                 <%}%>
-                <%}%>
+               <%}%>
 
 
                 </tbody>

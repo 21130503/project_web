@@ -12,6 +12,24 @@ public class Order {
     String status;
     String address;
     int idByer;
+    String type;
+    int idProduct;
+
+    public int getIdProduct() {
+        return idProduct;
+    }
+
+    public void setIdProduct(int idProduct) {
+        this.idProduct = idProduct;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public int getIdByer() {
         return idByer;
