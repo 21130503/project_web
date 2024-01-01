@@ -3,14 +3,12 @@ package Controller;
 import DAO.ProductDAO;
 import DAO.TopicDAO;
 import Upload.UploadFile;
+import nhom26.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +20,42 @@ import java.util.UUID;
 @WebServlet(name = "AlbumController", value = "/album")
 public class AlbumController extends HttpServlet {
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding(("UTF-8"));
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
+//        // Kiểm tra quyền và chuyển hướng
+        ProductDAO productDAO = new ProductDAO();
+        TopicDAO topicDAO = new TopicDAO();
+        String param = req.getParameter("q");
+        String[] path =  param.split("/");
+        String id = path[0];
+        String type = path[1];
+        if (user == null || !user.isAdmin()) {
+            System.out.println("redirect");
+            resp.sendRedirect("404.jsp");
+            return;
+        } else if (user.isAdmin()) {
+            System.out.println("GET");
+            if("edit".equals(type)){
+                req.setAttribute("listNameTopic", topicDAO.getAllNamesTopic());
+                req.setAttribute("album",productDAO.getAlbumByIdForAdminUpdate(Integer.parseInt(id)));
+                req.getRequestDispatcher("EditAlbum.jsp").forward(req, resp);
+                return;
+            }
+            resp.sendRedirect("index");
+            return;
+        }
+
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-        UploadFile uploadFile = new UploadFile();
+       UploadFile uploadFile = new UploadFile();
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
         String nameTopic = req.getParameter("nameTopic");
@@ -102,22 +131,17 @@ public class AlbumController extends HttpServlet {
         for (Part part : req.getParts()) {
             String fileName = uploadFile.extractFileName(part);
             // Tạo một tên tệp duy nhất
-            String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
 
-            listFileNames.add(uniqueFileName);
+           if(fileName.length() >3 || !fileName.isEmpty()){
+               listFileNames.add(fileName);
+               try {
+                   part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
 
-            try (InputStream input = part.getInputStream();
-                 OutputStream output = new FileOutputStream(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + uniqueFileName)) {
 
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = input.read(buffer)) != -1) {
-                    output.write(buffer, 0, bytesRead);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         for (String file : listFileNames) {

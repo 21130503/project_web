@@ -1,0 +1,12 @@
+.delete-image{
+    right: 20px;
+    top: 60px;
+    cursor: pointer;
+}
+.image-in-album:hover{
+    cursor: pointer;
+}
+.delete-image span i{
+    font-size: 26px;
+    padding: 5px;
+}

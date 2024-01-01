@@ -7,18 +7,7 @@
 <%@ page import="nhom26.Topic" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
-
-<%
-    ProductDAO productDAO = new ProductDAO();
-    ArrayList<OddImage> oddImageList = productDAO.getAllOddImage();
-    ArrayList<Album> albumList = productDAO.getAllAlbum();
-
-    if (oddImageList == null) oddImageList = new ArrayList<>(oddImageList);
-    if (albumList == null) albumList = new ArrayList<>(albumList);
-
-    Locale vnLocal = new Locale("vi", "VN");
-    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
-%>
+<%@ page import="DAO.OrderDAO" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -53,11 +42,22 @@
     <link rel="stylesheet" href="./css/logo.css">
 </head>
 
-<body>
+<body id="listProduct">
 
 <% User user = (User) session.getAttribute("user");
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
+
+    ArrayList<Album> listAlbum =  request.getAttribute("listAlbum") == null ? new ArrayList<>() :
+            (ArrayList<Album>) request.getAttribute("listAlbum");
+
+    ArrayList<OddImage> listOddImage=  request.getAttribute("listOddImage") == null ? new ArrayList<>() :
+            (ArrayList<OddImage>) request.getAttribute("listOddImage");
+%>
+<%
+
+    Locale vnLocal = new Locale("vi", "VN");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
 %>
 
 <!-- Topbar Start -->
@@ -255,25 +255,25 @@
                             <button class="btn border dropdown-toggle" type="button" id="triggerId"
                                     data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                Sắp xếp theo
+                                Thể loại
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
-                                <a class="dropdown-item" href="#">Cũ nhất</a>
-                                <a class="dropdown-item" href="#">Phổ biến</a>
-                                <a class="dropdown-item" href="#">Mới nhất</a>
+                                <p class="dropdown-item" href="" title="album" id="toggle-album">Album</p>
+                                <p class="dropdown-item" href="" title="odd" id="toggle-odd">Ảnh lẻ</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <%--Hiển thị ảnh và thêm vào giỏ hàng--%>
-                <% for (OddImage oddImage : oddImageList) { %>
+                <%if(listOddImage.size() >0){%>
+                     <% for (OddImage oddImage : listOddImage) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                             <img class="img-fluid w-100"
 
-                                 src="<%=request.getContextPath()%>/<%=oddImage.getImage()%>"
+                                 src="<%=oddImage.getImage()%>"
 
                                  alt="<%=oddImage.getName()%>">
                         </div>
@@ -298,9 +298,11 @@
                     </div>
                 </div>
                 <% }%>
+                <%}%>
 
                 <%--Hiển thị album và thêm nó vào giỏ hàng--%>
-                <% for (Album album : albumList) { %>
+                <%if(listAlbum.size() >0){%>
+                <% for (Album album : listAlbum) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
@@ -330,6 +332,7 @@
                     </div>
                 </div>
                 <% }%>
+                <%}%>
 
                 <div class="col-12 pb-1">
                     <nav aria-label="Page navigation">
@@ -437,6 +440,7 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
+<script src="js/shop.js"></script>
 </body>
 
 </html>

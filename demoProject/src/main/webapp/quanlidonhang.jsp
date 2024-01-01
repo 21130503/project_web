@@ -133,7 +133,7 @@
                     <td class="align-middle"><%=order.getIdByer()%></td>
                     <td class="align-middle"><%=order.getReceiver()%></td>
                     <td class="align-middle"><%=order.getPhoneNumber()%></td>
-                    <td class="align-middle"><%=order.getNameProduct()%></td>
+                    <td class="align-middle"><a href="./detail?type=<%=order.getType()%>&id=<%=order.getIdProduct()%>"><%=order.getNameProduct()%></a></td>
                     <td class="align-middle"><%=order.getQuantity()%></td>
                     <td class="align-middle"><%=order.getStatus()%></td>
                     <td class="align-middle"><%=order.getAddress()%></td>
