@@ -21,8 +21,6 @@ public class CartController extends HttpServlet {
 
         TopicDAO topicDAO = new TopicDAO();
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
-        req.setAttribute("listAlbumNew", topicDAO.getAllTopics());
-        req.setAttribute("listOddNew", topicDAO.getAllTopics());
 
         req.getRequestDispatcher("cart.jsp").forward(req, resp);
     }

@@ -24,6 +24,7 @@ public class DetailController extends HttpServlet {
         String type = req.getParameter("type");
         ProductDAO productDAO = new ProductDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
+
         if (type.equals("album")) {
             Album album = productDAO.getAlbumById(id);
             req.setAttribute("detail", album);
@@ -43,7 +44,8 @@ public class DetailController extends HttpServlet {
         TopicDAO topicDAO = new TopicDAO();
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.getRequestDispatcher("detail.jsp").forward(req, resp);
-
+        return;
 
     }
+
 }

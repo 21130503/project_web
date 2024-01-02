@@ -37,12 +37,12 @@ public class AddCartController extends HttpServlet {
 
         if ("odd".equals(type)) {
             OddImage oddImage = productDAO.getOddImageById(Integer.parseInt(idProduct));
-            if (oddImage != null) {
+            if (oddImage.getName() != null) {
                 cart.addProduct(oddImage, 1);
             }
         } else if ("album".equals(type)) {
             Album album = productDAO.getAlbumById(Integer.parseInt(idProduct));
-            if (album != null) {
+            if (album.getName() != null) {
                 cart.addProduct(album, 1);
             }
         }
