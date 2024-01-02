@@ -49,6 +49,7 @@
     String errPrice =  request.getAttribute("errPrice") == null ? "" : (String) request.getAttribute("errPrice");
     String errDiscount =  request.getAttribute("errDiscount") == null ? "" : (String) request.getAttribute("errDiscount");
     String errDescription=  request.getAttribute("errDescription") == null ? "" : (String) request.getAttribute("errDescription");
+    String errDelete=  request.getAttribute("errDelete") == null ? "" : (String) request.getAttribute("errDelete");
 
 
 %>
@@ -107,7 +108,7 @@
 
 <div class="container-fluid pt-5">
     <form action="./editAlbum" method="post" enctype="multipart/form-data">
-        <input name="idOddImage" type="hidden" value="<%=album.getIdAlbum()%>">
+        <input name="idAlbum" type="hidden" value="<%=album.getIdAlbum()%>">
         <div class="form-group">
             <label for="nameTopicInput">Thuộc chủ đề</label>
             <select class="form-control select-topic"  name="nameTopic" id="nameTopicInput">
@@ -119,7 +120,7 @@
         </div>
         <div class="form-group">
             <label for="nameInput">Tên sản phẩm</label>
-            <input value="<%=album.getName()%>" id="nameInput" name="nameOddImage" type="text" class="form-control"  aria-describedby="emailHelp" placeholder="Tên sản phẩm">
+            <input value="<%=album.getName()%>" id="nameInput" name="nameAlbum" type="text" class="form-control"  aria-describedby="emailHelp" placeholder="Tên sản phẩm">
             <small id="errName" class="form-text  text-danger"><%=errName%></small>
         </div>
         <div class="form-group">
@@ -136,18 +137,26 @@
             <label for="desTopicInput">Mô tả sản phẩm</label>
             <textarea value="<%=album.getDescription()%>" id="desTopicInput" rows="3" name="description" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Mô tả sản phẩm"></textarea>
             <small id="errDes" class="form-text text-danger"><%=errDescription%></small>
-            <div class="d-flex flex-wrap">
-                <%for(String src : album.getListImage()){%>
-                <div class="position-relative image_wrapper">
-                    <img class="mt-5 ml-2 image-in-album" style="width: 400px; height: 400px; object-fit: cover" src="<%=src%>" alt="">
-                    <div  class="position-absolute delete-image" >
-                        <span><i class="fa-solid fa-xmark"></i></span>
-                    </div>
-                </div>
-                <%}%>
-            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Cập nhật</button>
+        <div class="input-group d-flex justify-content-between mt-3">
+            <input type="file" accept="image/*" style="height: 100%;" class="form-control p-3 w-100 upload-img"
+                   placeholder="Tải ảnh lên" name="listImg">
+        </div>
+        <div id="dynamic-input-container"></div>
+        <input name="deleteImage" id="deleteImage" value="" type="hidden"></input>
+        <small id="errDelete" class="form-text text-danger"><%=errDelete%></small>
+        <div class="d-flex flex-wrap">
+            <%for(String src : album.getListImage()){%>
+            <div class="position-relative image_wrapper">
+                <img class="mt-5 ml-2 image-in-album" style="width: 400px; height: 400px; object-fit: cover" src="<%=src%>" alt="">
+                <div  class="position-absolute delete-image" >
+                    <span><i class="fa-solid fa-xmark"></i></span>
+                </div>
+            </div>
+            <%}%>
+
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Cập nhật</button>
     </form>
 </div>
 <!-- Cart End -->
@@ -253,7 +262,7 @@
     //convert
     const deleteArray = Array.from(deleteList)
     const imageArray = Array.from(imageList)
-
+    const imageDelete= []
     console.log(deleteList)
     console.log(imageList)
 
@@ -265,11 +274,24 @@
             // Xóa phần tử .image_wrapper tương ứng
             const imageWrapper = imageArray[index];
             if (imageWrapper) {
+                const  image = imageWrapper.querySelector(".image-in-album")
+                const path = new  URL(image.src).pathname
+                // Tìm vị trí của "/images"
+                var indexOfImages = path.indexOf("/images");
+                if (indexOfImages !== -1) {
+                    // Lấy phần từ "/images" đến hết
+                    var pathFromImagesToEnd = path.substring(indexOfImages);
+
+                  imageDelete.push(pathFromImagesToEnd)
+                    $("#deleteImage").val(JSON.stringify(imageDelete))
+                }
+                console.log(imageDelete)
                 imageWrapper.parentNode.removeChild(imageWrapper);
             }
         })
     })
 </script>
+<script src="js/uploadAlbum.js"></script>
 </body>
 
 </html>

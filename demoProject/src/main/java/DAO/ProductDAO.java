@@ -73,6 +73,31 @@ public class ProductDAO {
         }
         return  false;
     }
+    public boolean updateAlbum(int idTopic,String idAlbum, String nameAlbum, String description, int price, int discount,ArrayList<String> deleteImage,ArrayList<String> sources){
+        Connection  connection = null;
+        System.out.println(" before insert " + price);
+        try{
+            connection = Connect.getConnection();
+            String sql = "update album set  name = ? , price = ? ,discount = ? where  idAlbum = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nameAlbum);
+            preparedStatement.setInt(2, price);
+            preparedStatement.setInt(3, discount);
+//            preparedStatement.setDate(4, sqlDate);
+            preparedStatement.setString(4, idAlbum);
+            int check = preparedStatement.executeUpdate();
+            if( check > 0 && descriptionDAO.updateDescriptionAlbum(idAlbum, description)&& imageDAO.addImage(sources,Integer.parseInt(idAlbum)) && imageDAO.updateImageForAlbum(Integer.parseInt(idAlbum), deleteImage) && belongDAO.updateAlbum(idTopic, Integer.parseInt(idAlbum))){
+                return  true;
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  false;
+    }
 
     public boolean checkOddNameExist(String name) {
         Connection connection = null;
