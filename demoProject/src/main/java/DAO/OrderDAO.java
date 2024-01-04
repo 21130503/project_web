@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class OrderDAO {
     java.util.Date utilDate = new java.util.Date();
     java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+    ProductDAO productDAO = new ProductDAO();
 
     public boolean insertOrderOdd(int idOddImage, int idUser,String receiver ,String phoneNumber ,int quantity, int totalPrice, String address) {
         Connection connection = null;
@@ -84,7 +85,7 @@ public class OrderDAO {
             while (resultSet.next()) {
                 Order order = new Order();
                 order.setIdOrder(resultSet.getInt("idOrder"));
-                order.setNameProduct(productDAO.getOddImageById(resultSet.getInt("idOddImage")).getName());
+                order.setNameProduct(productDAO.getOddImageByIdForAdminUpdate(resultSet.getInt("idOddImage")).getName());
                 order.setQuantity(resultSet.getInt("quantity"));
                 order.setAddress(resultSet.getString("address"));
                 order.setStatus(resultSet.getString("status"));
@@ -117,7 +118,7 @@ public class OrderDAO {
             while (resultSet.next()) {
                 Order order = new Order();
                 order.setIdOrder(resultSet.getInt("idOrder"));
-                order.setNameProduct(productDAO.getAlbumById(resultSet.getInt("idAlbum")).getName());
+                order.setNameProduct(productDAO.getAlbumByIdForAdminUpdate(resultSet.getInt("idAlbum")).getName());
                 order.setQuantity(resultSet.getInt("quantity"));
                 order.setAddress(resultSet.getString("address"));
                 order.setStatus(resultSet.getString("status"));
@@ -283,7 +284,7 @@ public ArrayList<Order> getAllOrderOddImageForAdmin() {
         while (resultSet.next()) {
             Order order = new Order();
             order.setIdOrder(resultSet.getInt("idOrder"));
-            order.setNameProduct(productDAO.getOddImageById(resultSet.getInt("idOddImage")).getName());
+            order.setNameProduct(productDAO.getOddImageByIdForAdminUpdate(resultSet.getInt("idOddImage")).getName());
             order.setQuantity(resultSet.getInt("quantity"));
             order.setAddress(resultSet.getString("address"));
             order.setStatus(resultSet.getString("status"));
@@ -315,7 +316,7 @@ public ArrayList<Order> getAllOrderOddImageForAdmin() {
             while (resultSet.next()) {
                 Order order = new Order();
                 order.setIdOrder(resultSet.getInt("idOrder"));
-                order.setNameProduct(productDAO.getAlbumById(resultSet.getInt("idAlbum")).getName());
+                order.setNameProduct(productDAO.getAlbumByIdForAdminUpdate(resultSet.getInt("idAlbum")).getName());
                 order.setQuantity(resultSet.getInt("quantity"));
                 order.setAddress(resultSet.getString("address"));
                 order.setStatus(resultSet.getString("status"));
@@ -440,5 +441,106 @@ public ArrayList<Order> getAllOrderOddImageForAdmin() {
             Connect.closeConnection(connection);
         }
         return  false;
+    }
+
+//    get order
+    public Order getOrderOddEdit(String idOrder){
+        Connection connection = null;
+        Order order = new Order();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idOrder,idOddImage, receiver ,totalPrice, phoneNumber, address, status from oddImageOrder where idOrder = ? and status not like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,idOrder);
+            preparedStatement.setString(2,"%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                order.setIdOrder(resultSet.getInt("idOrder"));
+                order.setReceiver(resultSet.getString("receiver"));
+                order.setPhoneNumber(resultSet.getString("phoneNumber"));
+                order.setAddress(resultSet.getString("address"));
+                order.setStatus(resultSet.getString("status"));
+                order.setTotalPrice(resultSet.getInt("totalPrice"));
+                order.setType("odd");
+                order.setNameProduct(productDAO.getOddImageByIdForAdminUpdate(resultSet.getInt("idOddImage")).getName());
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return order;
+    }
+    public Order getOrderAlbumEdit(String idOrder){
+        Connection connection = null;
+        Order order = new Order();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idOrder,idAlbum, receiver ,totalPrice, phoneNumber, address, status from AlbumOrder where idOrder = ? and status not like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,idOrder);
+            preparedStatement.setString(2, "%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                order.setIdOrder(resultSet.getInt("idOrder"));
+                order.setReceiver(resultSet.getString("receiver"));
+                order.setPhoneNumber(resultSet.getString("phoneNumber"));
+                order.setAddress(resultSet.getString("address"));
+                order.setStatus(resultSet.getString("status"));
+                order.setTotalPrice(resultSet.getInt("totalPrice"));
+                order.setType("album");
+                order.setNameProduct(productDAO.getAlbumByIdForAdminUpdate(resultSet.getInt("idAlbum")).getName());
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return order;
+    }
+
+    public  boolean updateOddStatus(String idOrder,String status){
+        Connection connection= null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update OddImageOrder set status= ? where idOrder = ?";
+            PreparedStatement preparedStatement =connection.prepareStatement(sql);
+            preparedStatement.setString(1, status);
+            preparedStatement.setString(2,idOrder);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0){
+                return  true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return false;
+    }
+    public  boolean updateAlbumStatus(String idOrder,String status){
+        Connection connection= null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update AlbumOrder set status= ? where idOrder = ?";
+            PreparedStatement preparedStatement =connection.prepareStatement(sql);
+            preparedStatement.setString(1, status);
+            preparedStatement.setString(2,idOrder);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0){
+                return  true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return false;
     }
 }
