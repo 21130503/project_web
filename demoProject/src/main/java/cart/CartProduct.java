@@ -15,12 +15,13 @@ public class CartProduct {
     }
 
     public void increQuantity(int quantity) {
+//        this.quantity = quantity + 1;
         this.quantity += quantity;
     }
 
     public void decreQuantity(int quantity) {
+//        this.quantity = quantity - 1;
         this.quantity -= quantity;
-        if (this.quantity <= 0) this.quantity += quantity;
     }
 
     public int getQuantity() {
@@ -47,4 +48,16 @@ public class CartProduct {
         this.album = album;
     }
 
+    //Tính tổng tiền của món hàng khi tăng số lượng
+    public int getTotalPrice() {
+        int totalPrice = 0;
+
+        if (getOddImage() != null) {
+            totalPrice += getQuantity() * getOddImage().getPrice();
+        } else if (getAlbum() != null) {
+            totalPrice += getQuantity() * getAlbum().getPrice();
+        }
+
+        return totalPrice;
+    }
 }

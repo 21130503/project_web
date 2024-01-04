@@ -16,7 +16,7 @@
     if (oddImageList == null) oddImageList = new ArrayList<>(oddImageList);
     if (albumList == null) albumList = new ArrayList<>(albumList);
 
-    Locale vnLocal = new Locale("vi", "VN");
+//    Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VND");
 %>
 <!DOCTYPE html>
@@ -55,6 +55,7 @@
 
 <body>
 
+<%--Cho hiển thị user--%>
 <% User user = (User) session.getAttribute("user");
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
@@ -241,7 +242,8 @@
             <div class="row pb-3">
                 <div class="col-12 pb-1">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <form action="">
+
+                        <form action="cart" method="post">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                                 <div class="input-group-append">
@@ -290,10 +292,15 @@
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-                            <a href="./add-cart?idProduct=<%=oddImage.getIdOddImage()%>&type=odd"
-                               class="btn btn-sm text-dark p-0">
-                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
-                            </a>
+
+                            <%-- Form để chức năng add cart --%>
+                            <form action="cart" method="post">
+                                <input type="hidden" name="action" value="add"/>
+                                <input type="hidden" name="idProduct" value="<%= oddImage.getIdOddImage() %>"/>
+                                <input type="hidden" name="type" value="odd"/>
+                                <button type="submit" class="btn btn-primary">Thêm vào giỏ</button>
+                            </form>
+
                         </div>
                     </div>
                 </div>
@@ -322,10 +329,14 @@
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-                            <a href="./add-cart?idProduct=<%=album.getIdAlbum()%>&type=odd"
-                               class="btn btn-sm text-dark p-0">
-                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
-                            </a>
+
+                            <%-- Form để chức năng add cart --%>
+                            <form action="cart" method="post">
+                                <input type="hidden" name="action" value="add"/>
+                                <input type="hidden" name="idProduct" value="<%= album.getListImage().get(0)%>"/>
+                                <input type="hidden" name="type" value="odd"/>
+                                <button type="submit" class="btn btn-primary">Thêm vào giỏ</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -419,10 +430,6 @@
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-<!-- Add cart js -->
-<script src="js/addToCart.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
 <!-- JavaScript Libraries -->
