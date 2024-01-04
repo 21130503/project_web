@@ -39,3 +39,8 @@ body{
   .select-topic > option {
       padding: 5px 0 5px;
   }
+  .align-middle.td-address{
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+  }
