@@ -12,4 +12,13 @@ public class Regex {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        String regex = "^(\\+\\d{1,2})?\\d{10,}$";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+
+        return matcher.matches();
+    }
 }

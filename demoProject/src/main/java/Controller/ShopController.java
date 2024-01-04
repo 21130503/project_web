@@ -17,15 +17,23 @@ public class ShopController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
-
-        ProductDAO productDAO = new ProductDAO();
-        req.setAttribute("listOddImage", productDAO.getAllOddImage());
-        req.setAttribute("listAlbum", productDAO.getAllAlbum());
-
         TopicDAO topicDAO = new TopicDAO();
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
-        req.setAttribute("listAlbumNew", topicDAO.getAllTopics());
-        req.setAttribute("listOddNew", topicDAO.getAllTopics());
+        ProductDAO productDAO = new ProductDAO();
+        String type = req.getParameter("type");
+        System.out.println("type: " + type );
+        if("album".equals(type)){
+            req.setAttribute("listAlbum", productDAO.getAllAlbumForClient());
+            req.getRequestDispatcher("shop.jsp").forward(req, resp);
+            return;
+        }
+        if("odd".equals(type)){
+            req.setAttribute("listOddImage", productDAO.getAllOddImageForClient());
+            req.getRequestDispatcher("shop.jsp").forward(req, resp);
+            return;
+        }
+        req.setAttribute("listOddImage", productDAO.getAllOddImageForClient());
+        req.setAttribute("listAlbum", productDAO.getAllAlbumForClient());
 
         req.getRequestDispatcher("shop.jsp").forward(req, resp);
     }

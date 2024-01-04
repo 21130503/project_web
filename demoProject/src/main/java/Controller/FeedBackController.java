@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.FeedbackDAO;
+import DAO.OrderDAO;
 import Services.Connect;
 import nhom26.User;
 
@@ -28,6 +29,7 @@ public class FeedBackController extends HttpServlet {
         String star = req.getParameter("star");
         System.out.println(type + id + content);
         FeedbackDAO feedbackDAO = new FeedbackDAO();
+        OrderDAO orderDAO = new OrderDAO();
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         String URL = "/demoProject_war/detail?type=" + type + "&id=" + id;
@@ -37,10 +39,18 @@ public class FeedBackController extends HttpServlet {
             resp.sendRedirect("login.jsp");
             return;
         }
+        //  Xử lí mua hàng rồi mới được bình luận
+        if(!orderDAO.checkUserOrderOddImage(user.getId(), id) || !orderDAO.checkUserOrderAlbum(user.getId(), id)){
+            HttpSession session1 = req.getSession();
+            session1.setAttribute("errMess", "Bạn chưa mua sản phẩm này ");
+            session1.setMaxInactiveInterval(60);
+            resp.sendRedirect(URL);
+            return;
+        }
 
 //        Xử lí value rỗng
         if (content.trim().length() == 0 && star == null) {
-            req.setAttribute("err", "Vui lòng nhập trường này");
+
             HttpSession session1 = req.getSession();
             session1.setAttribute("errMess", "Vui lòng nhập trường này");
             session1.setMaxInactiveInterval(60);
@@ -48,7 +58,6 @@ public class FeedBackController extends HttpServlet {
             return;
         }
 
-//        Chưa xử lí mua hàng rồi mới được bình luận
 //        thỏa điều kiện thì mới cho insert
 //
         if (type.equals("album")) {
