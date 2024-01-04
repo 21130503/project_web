@@ -43,9 +43,15 @@ public class ProductController extends HttpServlet {
         }
         else if (user.isAdmin()) {
             System.out.println("GET");
-        System.out.println("list Album :" + productDAO.getAllAlbum());
-        System.out.println("list odd : " + productDAO.getAllOddImage());
-        req.setAttribute("listAlbum", productDAO.getAllAlbum());
+            int page = 0;
+            if(req.getParameter("page") !=null){
+
+                page= Integer.parseInt(req.getParameter("page"));
+            }
+            int pageSize = 5; // Số lượng mục trên mỗi trang
+            int start = (page - 1) * pageSize;
+            System.out.println(page);
+        req.setAttribute("listAlbum", productDAO.getAllAlbum(start,pageSize));
         req.setAttribute("listOddImage", productDAO.getAllOddImage());
         req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
         req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);

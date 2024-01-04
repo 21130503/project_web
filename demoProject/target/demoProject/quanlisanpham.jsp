@@ -245,6 +245,13 @@
                 </tbody>
             </table>
         </div>
+        <div class="col-lg-12 mt-4 mb-4 justify-content-center">
+            <div id="paginationContainer">
+                <a href="#" class="btn-primary p-2 mr-2 " id="prevPage">Trang trước</a>
+                <span id="currentPage">1</span>
+                <a href="#" class="btn-primary p-2 ml-2" id="nextPage">Trang sau</a>
+            </div>
+        </div>
         <div class="col-lg-6 table-responsive mb-5">
             <div class="card-header bg-secondary border-0">
                 <h6 class="font-weight-semi-bold m-0">Thêm album mới </h6>
@@ -554,6 +561,40 @@
                     // Xử lý sự kiện khi có thay đổi trên input mới
                 });
             }
+        });
+    });
+</script>
+<script>
+    function loadPage(pageNumber) {
+        $.ajax({
+            type: "GET",
+            url: "./product",
+            data: { page: pageNumber },
+            success: function (data) {
+                $("#itemContainer").html(data);
+            },
+            error: function () {
+                alert("Lỗi khi tải dữ liệu trang.");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        // Mặc định, tải trang đầu tiên khi trang web được nạp
+        loadPage(1);
+
+        // Bắt sự kiện click trên liên kết "Trang trước"
+        $(document).on("click", "a#prevPage", function (event) {
+            event.preventDefault();
+            var currentPage = parseInt($("#currentPage").val());
+            loadPage(currentPage - 1);
+        });
+
+        // Bắt sự kiện click trên liên kết "Trang sau"
+        $(document).on("click", "a#nextPage", function (event) {
+            event.preventDefault();
+            var currentPage = parseInt($("#currentPage").val());
+            loadPage(currentPage + 1);
         });
     });
 </script>
