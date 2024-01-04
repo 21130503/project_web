@@ -3,7 +3,7 @@
 <%@ page import="nhom26.Topic" %>
 <%@ page import="nhom26.OddImage" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.text.DecimalFormat" z%>
 <%@ page import="nhom26.Album" %>
 <!DOCTYPE html>
 <html lang="en">
