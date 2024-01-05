@@ -5,6 +5,7 @@ import nhom26.Album;
 import nhom26.OddImage;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Cart {
@@ -14,10 +15,15 @@ public class Cart {
         return this.data;
     }
 
+    public Cart() {
+    }
+
+    //add sản phẩm vô giỏ
     public boolean addProduct(Object product, int quantity) {
         int productId;
         CartProduct cartProduct;
 
+        //Phân biệt product là oddimage hay album
         if (product instanceof OddImage) {
             OddImage oddImage = (OddImage) product;
             productId = oddImage.getIdOddImage();
@@ -25,9 +31,10 @@ public class Cart {
             Album album = (Album) product;
             productId = album.getIdAlbum();
         } else {
-            return false; // Nếu sản phẩm không phải OddImage hoặc Album
+            return false;
         }
 
+        //nếu sản phẩm đã có thì tăng số lượng lên
         if (data.containsKey(productId)) {
             cartProduct = data.get(productId);
             cartProduct.increQuantity(quantity);
@@ -40,14 +47,20 @@ public class Cart {
         return true;
     }
 
-
-    public boolean remove(int id) {
-        if (!data.containsKey(id)) return false;
-        data.remove(id);
-        return true;
+    //Xóa sản phẩm khỏi giỏ có phân biệt odd hoặc album
+    public boolean remove(int productId, String type) {
+        if ("odd".equals(type) && data.containsKey(productId)) {
+            data.remove(productId);
+            return true;
+        } else if ("album".equals(type) && data.containsKey(productId)) {
+            data.remove(productId);
+            return true;
+        }
+        return false;
     }
 
-    //Tính tổng giá trị của giỏ hàng
+
+    //Tính tổng giá trị của cả giỏ hàng
     public int getTotalPrice() {
         int totalPrice = 0;
         for (CartProduct cartProduct : data.values()) {
@@ -60,7 +73,9 @@ public class Cart {
         return totalPrice;
     }
 
-    public int gettotal() {
+    //Lấy ra tổng số sản phẩm hiện có trong giỏ hàng
+    public int getTotal() {
         return data.size();
     }
+
 }
