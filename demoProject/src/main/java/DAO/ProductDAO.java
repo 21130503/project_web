@@ -262,6 +262,7 @@ public class ProductDAO {
         }
         return listOddImage;
     }
+
     public ArrayList<OddImage> getAllOddImageForClient() {
         Connection connection = null;
         ArrayList<OddImage> listOddImage = new ArrayList<OddImage>();
@@ -293,6 +294,35 @@ public class ProductDAO {
         return listOddImage;
     }
     public ArrayList<Album> getAllAlbum() {
+        Connection connection = null;
+        ArrayList<Album> listAlbum = new ArrayList<>();
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idAlbum, name, price, discount ,isShow from album";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("idAlbum");
+                Album album = new Album();
+                album.setIdAlbum(id);
+                album.setName(resultSet.getString("name"));
+                album.setPrice(resultSet.getInt("price"));
+                album.setDiscount(resultSet.getInt("discount"));
+                album.setShow(resultSet.getBoolean("isShow"));
+                album.setListImage(imageDAO.getAllImageByIdAlbum(id));
+                int idTopic = belongDAO.getIdTopicFromIdAlbum(id);
+                String nameTopic = topicDAO.getNameTopicById(idTopic);
+                album.setBelongTopic(nameTopic);
+                listAlbum.add(album);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return listAlbum;
+    }
+    public ArrayList<Album> getAllAlbum(int start, int pageSize) {
         Connection connection = null;
         ArrayList<Album> listAlbum = new ArrayList<>();
         try {
