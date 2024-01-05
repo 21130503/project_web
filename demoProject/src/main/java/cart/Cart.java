@@ -65,9 +65,9 @@ public class Cart {
         int totalPrice = 0;
         for (CartProduct cartProduct : data.values()) {
             if (cartProduct.getOddImage() != null) {
-                totalPrice += cartProduct.getQuantity() * cartProduct.getOddImage().getPrice();
+                totalPrice += cartProduct.getQuantity() * cartProduct.getOddImage().getDiscount();
             } else if (cartProduct.getAlbum() != null) {
-                totalPrice += cartProduct.getQuantity() * cartProduct.getAlbum().getPrice();
+                totalPrice += cartProduct.getQuantity() * cartProduct.getAlbum().getDiscount();
             }
         }
         return totalPrice;

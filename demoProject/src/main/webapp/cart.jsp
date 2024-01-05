@@ -249,13 +249,13 @@
                         productId = cartProduct.getOddImage().getIdOddImage();
                         productName = cartProduct.getOddImage().getName();
                         productImage = cartProduct.getOddImage().getImage();
-                        productPrice = cartProduct.getOddImage().getPrice();
+                        productPrice = cartProduct.getOddImage().getDiscount();
                     } else {
                         productType = "album";
                         productId = cartProduct.getAlbum().getIdAlbum();
                         productName = cartProduct.getAlbum().getName();
                         productImage = cartProduct.getAlbum().getListImage().get(0);
-                        productPrice = cartProduct.getAlbum().getPrice();
+                        productPrice = cartProduct.getAlbum().getDiscount();
                     }
                 %>
                 <tr>
