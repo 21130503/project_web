@@ -3,7 +3,7 @@
 <%@ page import="nhom26.Topic" %>
 <%@ page import="nhom26.OddImage" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="java.text.DecimalFormat" z%>
+<%@ page import="java.text.DecimalFormat" %>
 <%@ page import="nhom26.Album" %>
 <%@ page import="java.util.Random" %>
 <!DOCTYPE html>
@@ -156,7 +156,7 @@
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
