@@ -113,7 +113,7 @@
                     <p>Chưa có topic nào</p>
                     <%} else {%>
                     <%for (Topic topic : listTopic) {%>
-                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
+                    <a href="./pTopic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
                     </a>
                     <%}%>
                     <%}%>
@@ -131,9 +131,9 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index" class="nav-item nav-link">Trang chủ</a>
+                        <a href="./index" class="nav-item nav-link">Trang chủ</a>
                         <a href="shop" class="nav-item nav-link active">Cửa hàng</a>
-                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
+                        <a href="./donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -182,7 +182,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
         <h1 class="font-weight-semi-bold text-uppercase mb-3">Cửa Hàng Của Chúng Tôi</h1>
         <div class="d-inline-flex">
-            <p class="m-0"><a href="./index">Trang Chủ</a></p>
+            <p class="m-0"><a href="index">Trang Chủ</a></p>
             <p class="m-0 px-2">-</p>
             <p class="m-0">Cửa Hàng</p>
         </div>
@@ -264,10 +264,8 @@
                         </div>
                     </div>
                 </div>
-
-                <%--Hiển thị ảnh và thêm vào giỏ hàng--%>
                 <%if(listOddImage.size() >0){%>
-                     <% for (OddImage oddImage : listOddImage) { %>
+                <% for (OddImage oddImage : listOddImage) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
@@ -281,7 +279,7 @@
                             <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
                             </h6>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format(oddImage.getPrice()-oddImage.getDiscount())%></h6>
+                                <h6><%=vndFormat.format(oddImage.getPrice()-oddImage.getDiscount())%> </h6>
                                 <h6 class="text-muted ml-2">
                                     <del><%=vndFormat.format(oddImage.getPrice())%></del>
                                 </h6>
@@ -324,7 +322,7 @@
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-                            <a href="./add-cart?idProduct=<%=album.getIdAlbum()%>&type=odd"
+                            <a href="./add-cart?idProduct=<%=album.getIdAlbum()%>&type=album"
                                class="btn btn-sm text-dark p-0">
                                 <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
                             </a>
@@ -440,7 +438,41 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
-<script src="js/shop.js"></script>
+<script>
+    const albumToggle = document.querySelector("#toggle-album")
+    const oddToggle = document.querySelector("#toggle-odd")
+    albumToggle.addEventListener("click",()=>{
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/demoProject_war/pTopic",
+            data: { type: albumToggle.title},
+            success: function (data) {
+                $("#listProduct").empty();
+                // Xử lý phản hồi từ server và hiển thị tại trang
+                $("#listProduct").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    })
+    oddToggle.addEventListener("click",()=>{
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/demoProject_war/pTopic",
+            data: { type: oddToggle.title},
+            success: function (data) {
+                console.log(data)
+                $("#listProduct").empty();
+                // Xử lý phản hồi từ server và hiển thị tại trang
+                $("#listProduct").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    })
+</script>
 </body>
 
 </html>
