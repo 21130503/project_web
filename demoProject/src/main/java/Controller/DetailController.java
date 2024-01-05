@@ -32,6 +32,8 @@ public class DetailController extends HttpServlet {
             req.setAttribute("feedback", feedbackDAO.getAllFeedbackForAlbumById(id));
             req.setAttribute("totalStar", feedbackDAO.countRatingAlbum(id));
             req.setAttribute("avgStar", feedbackDAO.AvgRatingAlbum(id));
+            req.setAttribute("suggested", productDAO.getTop8AlbumNew());
+
         } else if (type.equals("odd")) {
             OddImage oddImage = productDAO.getOddImageById(id);
             req.setAttribute("detail", oddImage);
@@ -39,6 +41,7 @@ public class DetailController extends HttpServlet {
             req.setAttribute("feedback", feedbackDAO.getAllFeedbackForOddImageById(id));
             req.setAttribute("totalStar", feedbackDAO.countRatingOddImage(id));
             req.setAttribute("avgStar", feedbackDAO.AvgRatingOddImage(id));
+            req.setAttribute("suggested", productDAO.getTop8ddImageNew());
 
         }
         TopicDAO topicDAO = new TopicDAO();

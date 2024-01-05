@@ -57,7 +57,7 @@
 <%
 
     Locale vnLocal = new Locale("vi", "VN");
-    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
 
 <!-- Topbar Start -->
@@ -123,7 +123,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
+                <a href="./index" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -161,7 +161,7 @@
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
@@ -182,7 +182,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
         <h1 class="font-weight-semi-bold text-uppercase mb-3">Cửa Hàng Của Chúng Tôi</h1>
         <div class="d-inline-flex">
-            <p class="m-0"><a href="index">Trang Chủ</a></p>
+            <p class="m-0"><a href="./index">Trang Chủ</a></p>
             <p class="m-0 px-2">-</p>
             <p class="m-0">Cửa Hàng</p>
         </div>
@@ -281,14 +281,14 @@
                             <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
                             </h6>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format(oddImage.getPrice())%> VNĐ</h6>
+                                <h6><%=vndFormat.format(oddImage.getPrice()-oddImage.getDiscount())%></h6>
                                 <h6 class="text-muted ml-2">
-                                    <del><%=vndFormat.format(oddImage.getDiscount())%> VNĐ</del>
+                                    <del><%=vndFormat.format(oddImage.getPrice())%></del>
                                 </h6>
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
+                            <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
                             <a href="./add-cart?idProduct=<%=oddImage.getIdOddImage()%>&type=odd"
                                class="btn btn-sm text-dark p-0">
@@ -313,16 +313,16 @@
                             <h6 class="text-truncate mb-3"><%=album.getName()%>
                             </h6>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format(album.getPrice())%>
+                                <h6><%=vndFormat.format(album.getPrice()-album.getDiscount())%>
                                 </h6>
                                 <h6 class="text-muted ml-2">
-                                    <del><%=vndFormat.format(album.getDiscount())%>
+                                    <del><%=vndFormat.format(album.getPrice())%>
                                     </del>
                                 </h6>
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
+                            <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
                             <a href="./add-cart?idProduct=<%=album.getIdAlbum()%>&type=odd"
                                class="btn btn-sm text-dark p-0">

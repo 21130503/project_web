@@ -44,6 +44,8 @@
     OddImage oddImage = null;
     Album album = null;
     List<String> list = new ArrayList<>();
+    ArrayList<Album> listSuggestedAlbum = null;
+    ArrayList<OddImage> listSuggestedOddImage = null;
     ArrayList<Feedback> listFeedback = request.getAttribute("feedback") == null ? new ArrayList<>() : (ArrayList<Feedback>) request.getAttribute("feedback");
     int totalFeedbackStar = request.getAttribute("totalStar") == null ? 0 : (int) request.getAttribute("totalStar");
     double avgFeedbackStar = request.getAttribute("avgStar") == null ? 0 : (double) request.getAttribute("avgStar");
@@ -57,6 +59,7 @@
         sourceImage = album.getListImage().get(0);
         id = album.getIdAlbum();
         list = album.getListImage();
+        listSuggestedAlbum = (ArrayList<Album>) request.getAttribute("suggested");
     } else if (type.equals("odd")) {
         oddImage = (OddImage) request.getAttribute("detail");
         name = oddImage.getName();
@@ -66,6 +69,7 @@
         sourceImage = oddImage.getImage();
         id = oddImage.getIdOddImage();
         list.add(oddImage.getImage());
+        listSuggestedOddImage = (ArrayList<OddImage>) request.getAttribute("suggested");
     }
 %>
 <%
@@ -211,8 +215,10 @@
 </div>
 <!-- Page Header End -->
 <div class="d-flex align-items-center justify-content-center">
-    <h5 class="text-danger"><%=errActive%></h5>
-    <h5 class="text-danger"><%=errVerify%></h5>
+    <h5 class="text-danger"><%=errActive%>
+    </h5>
+    <h5 class="text-danger"><%=errVerify%>
+    </h5>
 </div>
 
 <!-- Shop Detail Start -->
@@ -407,106 +413,66 @@
     <div class="row px-xl-5">
         <div class="col">
             <div class="owl-carousel related-carousel">
+                <%if (listSuggestedAlbum.size() > 0) {%>
+                <%for (Album album1 : listSuggestedAlbum) {%>
                 <div class="card product-item border-0">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/cat.avif" alt="">
+                        <img class="img-fluid w-100" src="<%=album1.getListImage().get(0)%>" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Ablum mèo</h6>
+                        <h6 class="text-truncate mb-3"><%=album1.getName()%></h6>
                         <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
+                            <h6><%=vndFormat.format(album1.getPrice() - album1.getDiscount())%></h6>
                             <h6 class="text-muted ml-2">
-                                <del>200.000VNĐ</del>
+                                <del><%=vndFormat.format(album1.getPrice())%></del>
                             </h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                        <a href="./detail?type=album&id=<%=album1.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
                             tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
                 </div>
+                <%
+                        }
+                    }
+                %>
+
+            </div>
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+                <%if (listSuggestedOddImage.size() > 0) {%>
+                <%for (OddImage oddImage1 : listSuggestedOddImage) {%>
                 <div class="card product-item border-0">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/dog.avif" alt="">
+                        <img class="img-fluid w-100" src="<%=oddImage1.getImage()%>" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Ablum chó</h6>
+                        <h6 class="text-truncate mb-3"><%=oddImage1.getName()%></h6>
                         <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
+                            <h6><%=vndFormat.format(oddImage1.getPrice() - oddImage1.getDiscount())%></h6>
                             <h6 class="text-muted ml-2">
-                                <del>200.000VNĐ</del>
+                                <del><%=vndFormat.format(oddImage1.getPrice())%></del>
                             </h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                        <a href="./detail?type=odd&id=<%=oddImage1.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
                             tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
                 </div>
-                <div class="card product-item border-0">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/car.avif" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Album Car</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2">
-                                <del>500.000VNĐ</del>
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
-                            tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-                <div class="card product-item border-0">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/anime.avif" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Hoạt hình tuyển tập</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2">
-                                <del>50.000VNĐ</del>
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
-                            tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-                <div class="card product-item border-0">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/animal.avif" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Thế giới động vật</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2">
-                                <del>70.000VNĐ</del>
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
-                            tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
+                <%
+                        }
+                    }
+                %>
+
             </div>
         </div>
     </div>
