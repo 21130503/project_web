@@ -15,12 +15,10 @@ public class CartProduct {
     }
 
     public void increQuantity(int quantity) {
-//        this.quantity = quantity + 1;
         this.quantity += quantity;
     }
 
     public void decreQuantity(int quantity) {
-//        this.quantity = quantity - 1;
         this.quantity -= quantity;
     }
 
