@@ -49,6 +49,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+
 </head>
 
 <body>
@@ -57,6 +58,7 @@
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
 %>
+
 
 <!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
@@ -86,7 +88,7 @@
             </a>
             <a href="cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge"><%=cart.gettotal()%></span>
+                <span class="badge"><%=cart.getTotal()%></span>
             </a>
         </div>
     </div>
@@ -195,29 +197,62 @@
     <div class="row px-xl-5">
 
         <div class="col-lg-8 table-responsive mb-5">
-            <% if (cart.gettotal() > 0) { %>
+            <% if (cart.getTotal() > 0) { %>
             <table class="table table-bordered text-center mb-0">
                 <thead class="bg-secondary text-dark">
-                <tr>
+
+                <%--Thông báo lỗi khi cố giảm số lượng sản phẩm xuống dưới 1--%>
+                <% if (session.getAttribute("errorMessage") != null) { %>
+                <div class="alert alert-warning">
+                    <%= session.getAttribute("errorMessage") %>
+                </div>
+                <% session.removeAttribute("errorMessage"); %> <%--Xóa thông báo khi tải lại trang--%>
+                <% } %>
+
+
+                <%-- Khi có sản phẩm trong giỏ --%>
+                <div class="align-middle" style="display: flex;justify-content: space-between">
+                    <div class="cols-md-6">
+                        <a href="./shop" style="display: flex;justify-content: center">
+                            <button class="btn btn-block btn-primary"
+                                    style="width: 100%">Mua sắm tiếp
+                            </button>
+                        </a>
+                    </div>
+                    <div class="cols-md-6">
+                        <button class="btn btn-block btn-primary"
+                                style="width: 100%">Xóa toàn bộ sản phẩm
+                        </button>
+                    </div>
+                </div>
+
+                <tr class="align-middle">
                     <th>Sản Phẩm</th>
                     <th>Giá</th>
                     <th>Số lượng</th>
+                    <th>Thành tiền</th>
                     <th>Xóa</th>
                 </tr>
                 </thead>
                 <tbody class="align-middle">
                 <% for (Map.Entry<Integer, CartProduct> entry : cart.getData().entrySet()) {
                     CartProduct cartProduct = entry.getValue();
+                    String productType;
+                    int productId;
                     String productName;
                     String productImage;
                     int productPrice;
 
                     // Xác định sản phẩm là OddImage hay Album
                     if (cartProduct.getOddImage() != null) {
+                        productType = "odd";
+                        productId = cartProduct.getOddImage().getIdOddImage();
                         productName = cartProduct.getOddImage().getName();
                         productImage = cartProduct.getOddImage().getImage();
                         productPrice = cartProduct.getOddImage().getPrice();
                     } else {
+                        productType = "album";
+                        productId = cartProduct.getAlbum().getIdAlbum();
                         productName = cartProduct.getAlbum().getName();
                         productImage = cartProduct.getAlbum().getListImage().get(0);
                         productPrice = cartProduct.getAlbum().getPrice();
@@ -226,20 +261,86 @@
                 <tr>
                     <td class="align-middle"><img src="<%=productImage %>" alt="<%=productName %>"
                                                   style="width: 50px;"></td>
+
                     <td class="align-middle"><%=vndFormat.format(productPrice)%>
                     </td>
-                    <td class="align-middle"><%=cartProduct.getQuantity()%>
-                    </td>
+
                     <td class="align-middle">
-                        <!-- Thêm link hoặc hành động để xóa sản phẩm từ giỏ hàng -->
-                        <button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button>
+                        <div class="input-group quantity mx-auto"
+                             style="width: 300px;justify-content: center">
+                            <%-- Giảm số lượng bằng nút --%>
+                            <form action="cart" method="post">
+                                <input type="hidden" name="action" value="decrease">
+                                <input type="hidden" name="idProduct" value="<%= productId %>">
+                                <input type="hidden" name="type" value="<%= productType%>">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </form>
+
+                            <%-- Nhập số lượng mong muốn --%>
+                            <form action="cart" method="post" class="quantity-form" style="width: 90px">
+                                <input type="hidden" name="action" value="updateQuantity">
+                                <input type="hidden" name="idProduct" value="<%= productId %>">
+                                <input type="hidden" name="type" value="<%= productType %>">
+                                <input type="number" class="form-control form-control-sm bg-secondary text-center"
+                                       name="quantity" value="<%= cartProduct.getQuantity() %>" min="1">
+                            </form>
+
+                            <!-- Tăng số lượng bằng nút -->
+                            <form action="cart" method="post">
+                                <input type="hidden" name="action" value="increase">
+                                <input type="hidden" name="idProduct" value="<%= productId %>">
+                                <input type="hidden" name="type" value="<%= productType%>">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </form>
+                        </div>
                     </td>
+
+                    <td class="align-middle"><%=vndFormat.format(cartProduct.getTotalPrice())%>
+                    </td>
+
+                    <td class="align-middle">
+                        <%--Nút X xóa sản phẩm khỏi giỏ hàng --%>
+                        <form action="cart" method="post"
+                              onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?');">
+                            <input type="hidden" name="action" value="remove"/>
+                            <input type="hidden" name="idProduct" value="<%= productId %>"/>
+                            <input type="hidden" name="type" value="<%= productType %>"/>
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </form>
+                    </td>
+
                 </tr>
                 <% } %>
                 </tbody>
             </table>
             <% } else { %>
-            <p>Giỏ hàng trống.</p>
+            <%-- Khi không có sản phẩm trong giỏ --%>
+            <div class="">
+                <div class="text-center mb-4">
+                    <h2 class="section px-5"><span
+                    >Bạn chưa mua sản phẩm nào.</span></h2>
+                </div>
+
+                <div class="" style="justify-content: center; display: flex">
+                    <img class="align-middle" style="width: 16%; margin-top: 40px" src="./asset/remove-from-cart.png"
+                         alt="ảnh giỏ hàng">
+                </div>
+
+                <div class="text-center" style="margin-top: 40px; ">
+                    <a href="./shop" style="display: flex;justify-content: center">
+                        <button class="btn btn-block btn-primary my-3 py-3"
+                                style="width: 50%">Mua sắm
+                        </button>
+                    </a>
+                </div>
+
+            </div>
             <% } %>
         </div>
 
@@ -259,8 +360,9 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-3 pt-1">
-                        <h6 class="font-weight-medium">Tổng phụ</h6>
-                        <h6 class="font-weight-medium">300.000 VNĐ</h6>
+                        <h6 class="font-weight-medium">Tổng Tiền Các Sản Phẩm</h6>
+                        <h6 class="font-weight-medium"><%=vndFormat.format(cart.getTotalPrice())%>
+                        </h6>
                     </div>
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Phí Vận Chuyển</h6>
@@ -270,9 +372,10 @@
                 <div class="card-footer border-secondary bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
                         <h5 class="font-weight-bold">Tổng Cộng</h5>
-                        <h5 class="font-weight-bold">330.000 VNĐ</h5>
+                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.getTotalPrice() + 30000)%>
+                        </h5>
                     </div>
-                    <a href="checkout.jsp">
+                    <a href="checkout">
                         <button class="btn btn-block btn-primary my-3 py-3">Tiến Hành Thanh
                             Toán
                         </button>
@@ -280,6 +383,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
 <!-- Cart End -->
