@@ -44,3 +44,8 @@ body{
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
   }
+  .image-view{
+      height: 160px;
+      width: 100%;
+      object-fit: cover;
+  }

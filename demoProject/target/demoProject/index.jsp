@@ -3,7 +3,7 @@
 <%@ page import="nhom26.Topic" %>
 <%@ page import="nhom26.OddImage" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="java.text.DecimalFormat" z%>
+<%@ page import="java.text.DecimalFormat" %>
 <%@ page import="nhom26.Album" %>
 <%@ page import="java.util.Random" %>
 <!DOCTYPE html>
@@ -36,6 +36,7 @@
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/common.css">
     <%--    axios--%>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"
@@ -257,7 +258,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="<%=oddImage.getImage()%>" alt="<%=oddImage.getName()%>">
+                    <img class="img-fluid w-100 image-view" src="<%=oddImage.getImage()%>" alt="<%=oddImage.getName()%>">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                     <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
@@ -465,7 +466,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="<%=album.getListImage().get(0)%>" alt="">
+                    <img class="img-fluid w-100 image-view" src="<%=album.getListImage().get(0)%>" alt="">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                     <h6 class="text-truncate mb-3"><%=album.getName()%>
@@ -654,7 +655,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div style="height: 337px;" class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img style="height: 164px;object-fit: cover" class="img-fluid w-100" src="<%=oddImage.getImage()%>"
+                    <img class="img-fluid w-100 image-view" src="<%=oddImage.getImage()%>"
                          alt="">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
@@ -857,7 +858,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div style="height: 337px;" class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img style="height: 164px;object-fit: cover" class="img-fluid w-100"
+                    <img  class="img-fluid w-100 image-view"
                          src="<%=album.getListImage().get(0)%>" alt="">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
