@@ -282,7 +282,7 @@
                             </h6>
                             <%-- Tiền sau khi giảm giá --%>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format(oddImage.getDiscount())%>
+                                <h6><%=vndFormat.format((oddImage.getPrice() - oddImage.getDiscount()))%>
                                 </h6>
                                 <%-- Giá gốc --%>
                                 <h6 class="text-muted ml-2">
@@ -322,7 +322,7 @@
                             </h6>
                             <%-- Tiền sau khi giảm giá --%>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format(album.getDiscount())%>
+                                <h6><%=vndFormat.format((album.getPrice() - album.getDiscount()))%>
                                 </h6>
                                 <%-- Giá gốc --%>
                                 <h6 class="text-muted ml-2">
