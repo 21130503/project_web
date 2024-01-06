@@ -9,6 +9,12 @@ public class OddImage {
     String belongTopic;
     String description;
     boolean isShow;
+    String type = "odd";
+
+    public String getType() {
+        return type;
+    }
+
     public OddImage() {
     }
 

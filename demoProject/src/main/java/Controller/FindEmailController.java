@@ -38,6 +38,7 @@ public class FindEmailController extends HttpServlet {
                 resp.addCookie(cookie);
                 resp.addCookie(cookie1);
                 resp.sendRedirect("forgot");
+                return;
             }
             else{
                 req.setAttribute("email-not-found", "Email chưa tồn tại");

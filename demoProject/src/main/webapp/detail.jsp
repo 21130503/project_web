@@ -32,6 +32,7 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
 </head>
 
 <body>
@@ -44,11 +45,11 @@
     OddImage oddImage = null;
     Album album = null;
     List<String> list = new ArrayList<>();
-    ArrayList<Album> listSuggestedAlbum = null;
-    ArrayList<OddImage> listSuggestedOddImage = null;
     ArrayList<Feedback> listFeedback = request.getAttribute("feedback") == null ? new ArrayList<>() : (ArrayList<Feedback>) request.getAttribute("feedback");
     int totalFeedbackStar = request.getAttribute("totalStar") == null ? 0 : (int) request.getAttribute("totalStar");
     double avgFeedbackStar = request.getAttribute("avgStar") == null ? 0 : (double) request.getAttribute("avgStar");
+    ArrayList<OddImage> listSuggestedOddImage = (ArrayList<OddImage>) request.getAttribute("suggestedOdd");
+    ArrayList<Album> listSuggestedAlbum = (ArrayList<Album>) request.getAttribute("suggestedAlbum");
     if (type.equals("album")) {
         album = (Album) request.getAttribute("detail");
         name = album.getName();
@@ -59,7 +60,6 @@
         sourceImage = album.getListImage().get(0);
         id = album.getIdAlbum();
         list = album.getListImage();
-        listSuggestedAlbum = (ArrayList<Album>) request.getAttribute("suggested");
     } else if (type.equals("odd")) {
         oddImage = (OddImage) request.getAttribute("detail");
         name = oddImage.getName();
@@ -69,7 +69,6 @@
         sourceImage = oddImage.getImage();
         id = oddImage.getIdOddImage();
         list.add(oddImage.getImage());
-        listSuggestedOddImage = (ArrayList<OddImage>) request.getAttribute("suggested");
     }
 %>
 <%
@@ -158,9 +157,9 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index.html" class="nav-item nav-link active">Trang chủ</a>
-                        <a href="shop.jsp" class="nav-item nav-link">Cửa hàng</a>
-                        <a href="donhangcuaban.jsp" class="nav-item nav-link">Đơn hàng của bạn</a>
+                        <a href="./index" class="nav-item nav-link active">Trang chủ</a>
+                        <a href="./shop" class="nav-item nav-link">Cửa hàng</a>
+                        <a href="./donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -233,7 +232,7 @@
                 <h3 class="font-weight-semi-bold"><%=name%>
                 </h3>
                 <div class="option">
-                    <button class="btn border"><i class="fas fa-heart text-primary"></i></button>
+                    <button id="btn-favourite" title="<%=type%>" value="<%=id%>" class="btn border"><i class="fas fa-heart text-primary"></i></button>
                     <button class="btn border "><i class="fas fa-shopping-cart text-primary"></i></button>
                 </div>
             </div>
@@ -413,11 +412,11 @@
     <div class="row px-xl-5">
         <div class="col">
             <div class="owl-carousel related-carousel">
-                <%if (listSuggestedAlbum.size() > 0) {%>
+                <%if (listSuggestedAlbum.size() > 0 && "album".equals(type)) {%>
                 <%for (Album album1 : listSuggestedAlbum) {%>
                 <div class="card product-item border-0">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="<%=album1.getListImage().get(0)%>" alt="">
+                        <img class="img-fluid w-100 image-view" src="<%=album1.getListImage().get(0)%>" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                         <h6 class="text-truncate mb-3"><%=album1.getName()%></h6>
@@ -446,11 +445,11 @@
     <div class="row px-xl-5">
         <div class="col">
             <div class="owl-carousel related-carousel">
-                <%if (listSuggestedOddImage.size() > 0) {%>
+                <%if (listSuggestedOddImage.size() > 0 && "odd".equals(type)) {%>
                 <%for (OddImage oddImage1 : listSuggestedOddImage) {%>
                 <div class="card product-item border-0">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="<%=oddImage1.getImage()%>" alt="">
+                        <img class="img-fluid w-100 image-view" src="<%=oddImage1.getImage()%>" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                         <h6 class="text-truncate mb-3"><%=oddImage1.getName()%></h6>
@@ -574,6 +573,34 @@
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
 <script src="./js/user.js"></script>
+<script>
+    const  idProduct = <%=id%>
+</script>
+<script>
+    const favouriteBtn = document.getElementById('btn-favourite');
+    console.log(favouriteBtn)
+    const type = favouriteBtn.title;
+    console.log(idProduct)
+    favouriteBtn.addEventListener("click", ()=>{
+        const xhr = new XMLHttpRequest();
+        const url = `http://localhost:8080/demoProject_war/favourite?type=<%=type%>&idProduct`;
+
+        xhr.open("POST", url, true);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                location.reload();
+            } else if (xhr.status === 500) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+            }
+        };
+
+        xhr.send();
+    })
+</script>
 </body>
 
 </html>

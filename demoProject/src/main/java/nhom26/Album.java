@@ -11,6 +11,12 @@ public class Album {
     ArrayList<String> listImage;
     String description;
     String belongTopic;
+    String type = "album";
+
+    public String getType() {
+        return type;
+    }
+
     public int getIdAlbum() {
         return idAlbum;
     }
