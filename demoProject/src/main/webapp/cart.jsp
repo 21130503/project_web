@@ -6,6 +6,7 @@
 <%@ page import="nhom26.Topic" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="favourite.Favourite" %>
 
 <%
     Cart cart = (Cart) session.getAttribute("cart");
@@ -16,7 +17,10 @@
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VND");
 %>
-
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
+%>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -82,9 +86,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border" title="Yêu thích">
+            <a href="./favourite" class="btn border" title="Yêu thích">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -220,9 +224,14 @@
                         </a>
                     </div>
                     <div class="cols-md-6">
-                        <button class="btn btn-block btn-primary"
-                                style="width: 100%">Xóa toàn bộ sản phẩm
-                        </button>
+                        <%--Nút xóa toàn bộ sản phẩm khỏi giỏ hàng --%>
+                        <form action="cart" method="post"
+                              onsubmit="return confirm('Điều này sẽ xóa toàn bộ sản phẩm khỏi giỏ hàng. Bạn chắc chứ ?');">
+                            <input type="hidden" name="action" value="clearCart"/>
+                            <button type="submit" class="btn btn-block btn-primary" style="width: 100%">
+                                Làm trống giỏ hàng
+                            </button>
+                        </form>
                     </div>
                 </div>
 
@@ -235,6 +244,8 @@
                 </tr>
                 </thead>
                 <tbody class="align-middle">
+
+                <%-- Dữ liệu cho cart --%>
                 <% for (Map.Entry<Integer, CartProduct> entry : cart.getData().entrySet()) {
                     CartProduct cartProduct = entry.getValue();
                     String productType;
@@ -249,13 +260,13 @@
                         productId = cartProduct.getOddImage().getIdOddImage();
                         productName = cartProduct.getOddImage().getName();
                         productImage = cartProduct.getOddImage().getImage();
-                        productPrice = cartProduct.getOddImage().getPrice();
+                        productPrice = (cartProduct.getOddImage().getPrice()- cartProduct.getOddImage().getDiscount());
                     } else {
                         productType = "album";
                         productId = cartProduct.getAlbum().getIdAlbum();
                         productName = cartProduct.getAlbum().getName();
                         productImage = cartProduct.getAlbum().getListImage().get(0);
-                        productPrice = cartProduct.getAlbum().getPrice();
+                        productPrice = (cartProduct.getAlbum().getPrice() - cartProduct.getAlbum().getDiscount());
                     }
                 %>
                 <tr>

@@ -8,6 +8,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="DAO.OrderDAO" %>
+<%@ page import="favourite.Favourite" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -40,6 +41,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body id="listProduct">
@@ -48,16 +50,20 @@
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
 
-    ArrayList<Album> listAlbum =  request.getAttribute("listAlbum") == null ? new ArrayList<>() :
+    ArrayList<Album> listAlbum = request.getAttribute("listAlbum") == null ? new ArrayList<>() :
             (ArrayList<Album>) request.getAttribute("listAlbum");
 
-    ArrayList<OddImage> listOddImage=  request.getAttribute("listOddImage") == null ? new ArrayList<>() :
+    ArrayList<OddImage> listOddImage = request.getAttribute("listOddImage") == null ? new ArrayList<>() :
             (ArrayList<OddImage>) request.getAttribute("listOddImage");
 %>
 <%
 
     Locale vnLocal = new Locale("vi", "VN");
-    DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+%>
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
 %>
 
 <!-- Topbar Start -->
@@ -81,9 +87,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -123,7 +129,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="./index" class="text-decoration-none d-block d-lg-none">
+                <a href="" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -161,7 +167,7 @@
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
@@ -182,7 +188,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
         <h1 class="font-weight-semi-bold text-uppercase mb-3">Cửa Hàng Của Chúng Tôi</h1>
         <div class="d-inline-flex">
-            <p class="m-0"><a href="./index">Trang Chủ</a></p>
+            <p class="m-0"><a href="index">Trang Chủ</a></p>
             <p class="m-0 px-2">-</p>
             <p class="m-0">Cửa Hàng</p>
         </div>
@@ -266,12 +272,12 @@
                 </div>
 
                 <%--Hiển thị ảnh và thêm vào giỏ hàng--%>
-                <%if(listOddImage.size() >0){%>
-                     <% for (OddImage oddImage : listOddImage) { %>
+                <%if (listOddImage.size() > 0) {%>
+                <% for (OddImage oddImage : listOddImage) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100"
+                            <img class="img-fluid w-100 image-view"
 
                                  src="<%=oddImage.getImage()%>"
 
@@ -280,20 +286,28 @@
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
                             </h6>
+                            <%-- Tiền sau khi giảm giá --%>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format(oddImage.getPrice()-oddImage.getDiscount())%></h6>
+                                <h6><%=vndFormat.format((oddImage.getPrice() - oddImage.getDiscount()))%>
+                                </h6>
+                                <%-- Giá gốc --%>
                                 <h6 class="text-muted ml-2">
-                                    <del><%=vndFormat.format(oddImage.getPrice())%></del>
+                                    <del><%=vndFormat.format(oddImage.getPrice())%>
+                                    </del>
                                 </h6>
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-                            <a href="./add-cart?idProduct=<%=oddImage.getIdOddImage()%>&type=odd"
-                               class="btn btn-sm text-dark p-0">
-                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
-                            </a>
+
+                            <form action="cart" method="post">
+                                <input type="hidden" name="action" value="add"/>
+                                <input type="hidden" name="idProduct" value="<%= oddImage.getIdOddImage() %>"/>
+                                <input type="hidden" name="type" value="odd"/>
+                                <button type="submit" class="btn btn-sm text-dark p-0">Thêm vào giỏ</button>
+                            </form>
+
                         </div>
                     </div>
                 </div>
@@ -301,20 +315,22 @@
                 <%}%>
 
                 <%--Hiển thị album và thêm nó vào giỏ hàng--%>
-                <%if(listAlbum.size() >0){%>
+                <%if (listAlbum.size() > 0) {%>
                 <% for (Album album : listAlbum) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100"
+                            <img class="img-fluid w-100 image-view"
                                  src="<%=album.getListImage().get(0)%>" alt="">
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3"><%=album.getName()%>
                             </h6>
+                            <%-- Tiền sau khi giảm giá --%>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format(album.getPrice()-album.getDiscount())%>
+                                <h6><%=vndFormat.format((album.getPrice() - album.getDiscount()))%>
                                 </h6>
+                                <%-- Giá gốc --%>
                                 <h6 class="text-muted ml-2">
                                     <del><%=vndFormat.format(album.getPrice())%>
                                     </del>
@@ -324,10 +340,14 @@
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-                            <a href="./add-cart?idProduct=<%=album.getIdAlbum()%>&type=odd"
-                               class="btn btn-sm text-dark p-0">
-                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
-                            </a>
+
+                            <form action="cart" method="post">
+                                <input type="hidden" name="action" value="add"/>
+                                <input type="hidden" name="idProduct" value="<%= album.getListImage() %>"/>
+                                <input type="hidden" name="type" value="odd"/>
+                                <button type="submit" class="btn btn-sm text-dark p-0">Thêm vào giỏ</button>
+                            </form>
+
                         </div>
                     </div>
                 </div>

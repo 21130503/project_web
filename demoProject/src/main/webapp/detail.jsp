@@ -4,6 +4,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.awt.*" %>
 <%@ page import="nhom26.*" %>
+<%@ page import="favourite.Favourite" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -86,7 +87,10 @@
 
 %>
 
-
+<%
+    Favourite  favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
@@ -109,9 +113,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart.jsp" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -583,7 +587,7 @@
     console.log(idProduct)
     favouriteBtn.addEventListener("click", ()=>{
         const xhr = new XMLHttpRequest();
-        const url = `http://localhost:8080/demoProject_war/favourite?type=<%=type%>&idProduct`;
+        const url = `http://localhost:8080/demoProject_war/favourite?type=<%=type%>&idProduct=<%=id%>`;
 
         xhr.open("POST", url, true);
 
@@ -595,6 +599,7 @@
             } else if (xhr.status === 500) {
                 const data = JSON.parse(xhr.responseText);
                 alert(data.message);
+                // window.location.href="http://localhost:8080/demoProject_war/favourite"
             }
         };
 

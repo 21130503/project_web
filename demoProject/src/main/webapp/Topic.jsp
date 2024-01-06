@@ -8,6 +8,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="DAO.OrderDAO" %>
+<%@ page import="favourite.Favourite" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -59,12 +60,15 @@
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
-
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="index" class="text-decoration-none">
+            <a href="./index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -81,9 +85,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>

@@ -6,6 +6,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="nhom26.Album" %>
 <%@ page import="java.util.Random" %>
+<%@ page import="favourite.Favourite" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -59,6 +60,10 @@
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
@@ -81,9 +86,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart.jsp" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>

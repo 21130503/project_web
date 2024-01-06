@@ -39,15 +39,14 @@ public class Cart {
             cartProduct = data.get(productId);
             cartProduct.increQuantity(quantity);
         } else {
-            cartProduct = new CartProduct(quantity, (product instanceof OddImage) ?
-                    (OddImage) product : null, (product instanceof Album) ? (Album) product : null);
+            cartProduct = new CartProduct(quantity, (product instanceof OddImage) ? (OddImage) product : null, (product instanceof Album) ? (Album) product : null);
         }
 
         data.put(productId, cartProduct);
         return true;
     }
 
-    //Xóa sản phẩm khỏi giỏ có phân biệt odd hoặc album
+    //Xóa từng sản phẩm khỏi giỏ có phân biệt odd hoặc album
     public boolean remove(int productId, String type) {
         if ("odd".equals(type) && data.containsKey(productId)) {
             data.remove(productId);
@@ -59,15 +58,21 @@ public class Cart {
         return false;
     }
 
+    //Xóa toàn bộ sản phẩm trong giỏ hàng
+    public void clear() {
+        this.data.clear();
+    }
 
     //Tính tổng giá trị của cả giỏ hàng
     public int getTotalPrice() {
         int totalPrice = 0;
         for (CartProduct cartProduct : data.values()) {
             if (cartProduct.getOddImage() != null) {
-                totalPrice += cartProduct.getQuantity() * cartProduct.getOddImage().getPrice();
+                totalPrice += cartProduct.getQuantity() * (cartProduct.getOddImage().getPrice() -
+                        cartProduct.getOddImage().getDiscount());
             } else if (cartProduct.getAlbum() != null) {
-                totalPrice += cartProduct.getQuantity() * cartProduct.getAlbum().getPrice();
+                totalPrice += cartProduct.getQuantity() * (cartProduct.getAlbum().getPrice() -
+                        cartProduct.getAlbum().getDiscount());
             }
         }
         return totalPrice;

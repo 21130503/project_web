@@ -18,6 +18,7 @@ public class Favourite {
         if("odd".equals(type)){
             OddImage oddImage = productDAO.getOddImageById(id);
             data.put(idMap,oddImage);
+            return  true;
         } else if ("album".equals(type)) {
             Album album = productDAO.getAlbumById(id);
 
@@ -28,7 +29,9 @@ public class Favourite {
             return  false;
         }
 
-        return false;
+    }
+    public  boolean exist(String idMap){
+        return  data.containsKey(idMap);
     }
     public boolean remove(String id){
         if(!data.containsKey(id)){
@@ -36,5 +39,11 @@ public class Favourite {
         }
         data.remove(id);
         return  true;
+    }
+    public int total(){
+        return data.size();
+    }
+    public Map<String , Object> getData(){
+        return  data;
     }
 }
