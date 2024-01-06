@@ -36,10 +36,18 @@ public class CartController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        String idProduct = req.getParameter("idProduct");
         String type = req.getParameter("type");
+        String idProduct = req.getParameter("idProduct");
 
-        int productId = Integer.parseInt(idProduct);
+        //Xử lý ngoại lệ khi có action không cần phân tích idProduct (vd: clearCart)
+        int productId = 0;
+        if (idProduct != null && !idProduct.isEmpty()) {
+            try {
+                productId = Integer.parseInt(idProduct);
+            } catch (NumberFormatException e) {
+                productId = 0;
+            }
+        }
 
         HttpSession session = req.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
@@ -66,6 +74,7 @@ public class CartController extends HttpServlet {
             session.setAttribute("cart", cart);
             resp.sendRedirect("cart");
 
+
         } else if ("remove".equals(action)) {
             //Chức năng xóa từng sản phẩm khỏi giỏ hàng
             cart.remove(productId, type);
@@ -85,8 +94,7 @@ public class CartController extends HttpServlet {
                 } else if ("decrease".equals(action)) {
                     if (cartProduct.getQuantity() <= 1) {
                         cartProduct.setQuantity(1);
-                        session.setAttribute("errorMessage", "Bạn không thể giảm số lượng sản phẩm ít hơn 1. " +
-                                "Nếu bạn muốn xóa, vui lòng bấm nút X.");
+                        session.setAttribute("errorMessage", "Bạn không thể giảm số lượng sản phẩm ít hơn 1. " + "Nếu bạn muốn xóa, vui lòng bấm nút X.");
                     } else {
                         cartProduct.decreQuantity(1);
                     }
@@ -95,6 +103,7 @@ public class CartController extends HttpServlet {
 
             session.setAttribute("cart", cart);
             resp.sendRedirect("cart");
+
 
         } else if ("updateQuantity".equals(action)) {
             //Chức năng cho phép người dùng đặt số lượng sản phẩm theo 1 số nhất định
@@ -105,6 +114,14 @@ public class CartController extends HttpServlet {
                 cartProduct.setQuantity(quantity);
             }
 
+            session.setAttribute("cart", cart);
+            resp.sendRedirect("cart");
+
+
+        } else if ("clearCart".equals(action)) {
+            // Chức năng xóa toàn bộ sản phẩm khỏi giỏ hàng
+            cart.clear();
+            
             session.setAttribute("cart", cart);
             resp.sendRedirect("cart");
         }
