@@ -51,9 +51,9 @@ public class CartProduct {
         int totalPrice = 0;
 
         if (getOddImage() != null) {
-            totalPrice += getQuantity() * getOddImage().getDiscount();
+            totalPrice += getQuantity() * (getOddImage().getPrice() - getOddImage().getDiscount());
         } else if (getAlbum() != null) {
-            totalPrice += getQuantity() * getAlbum().getDiscount();
+            totalPrice += getQuantity() * (getAlbum().getPrice() - getAlbum().getDiscount());
         }
 
         return totalPrice;

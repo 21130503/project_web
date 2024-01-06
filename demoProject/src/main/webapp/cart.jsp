@@ -220,9 +220,14 @@
                         </a>
                     </div>
                     <div class="cols-md-6">
-                        <button class="btn btn-block btn-primary"
-                                style="width: 100%">Xóa toàn bộ sản phẩm
-                        </button>
+                        <%--Nút xóa toàn bộ sản phẩm khỏi giỏ hàng --%>
+                        <form action="cart" method="post"
+                              onsubmit="return confirm('Điều này sẽ xóa toàn bộ sản phẩm khỏi giỏ hàng. Bạn chắc chứ ?');">
+                            <input type="hidden" name="action" value="clearCart"/>
+                            <button type="submit" class="btn btn-block btn-primary" style="width: 100%">
+                                Làm trống giỏ hàng
+                            </button>
+                        </form>
                     </div>
                 </div>
 
@@ -235,6 +240,8 @@
                 </tr>
                 </thead>
                 <tbody class="align-middle">
+
+                <%-- Dữ liệu cho cart --%>
                 <% for (Map.Entry<Integer, CartProduct> entry : cart.getData().entrySet()) {
                     CartProduct cartProduct = entry.getValue();
                     String productType;
@@ -249,13 +256,13 @@
                         productId = cartProduct.getOddImage().getIdOddImage();
                         productName = cartProduct.getOddImage().getName();
                         productImage = cartProduct.getOddImage().getImage();
-                        productPrice = cartProduct.getOddImage().getDiscount();
+                        productPrice = (cartProduct.getOddImage().getPrice()- cartProduct.getOddImage().getDiscount());
                     } else {
                         productType = "album";
                         productId = cartProduct.getAlbum().getIdAlbum();
                         productName = cartProduct.getAlbum().getName();
                         productImage = cartProduct.getAlbum().getListImage().get(0);
-                        productPrice = cartProduct.getAlbum().getDiscount();
+                        productPrice = (cartProduct.getAlbum().getPrice() - cartProduct.getAlbum().getDiscount());
                     }
                 %>
                 <tr>
