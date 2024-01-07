@@ -8,6 +8,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="DAO.OrderDAO" %>
+<%@ page import="favourite.Favourite" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -40,6 +41,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body id="listProduct">
@@ -58,6 +60,10 @@
 
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+%>
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
 %>
 
 <!-- Topbar Start -->
@@ -81,9 +87,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -271,7 +277,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100"
+                            <img class="img-fluid w-100 image-view"
 
                                  src="<%=oddImage.getImage()%>"
 
@@ -292,14 +298,14 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
+                            <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
 
                             <form action="cart" method="post">
                                 <input type="hidden" name="action" value="add"/>
                                 <input type="hidden" name="idProduct" value="<%= oddImage.getIdOddImage() %>"/>
                                 <input type="hidden" name="type" value="odd"/>
-                                <button type="submit" class="btn btn-primary">Thêm vào giỏ</button>
+                                <button type="submit" class="btn btn-sm text-dark p-0">Thêm vào giỏ</button>
                             </form>
 
                         </div>
@@ -314,7 +320,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100"
+                            <img class="img-fluid w-100 image-view"
                                  src="<%=album.getListImage().get(0)%>" alt="">
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
@@ -332,14 +338,14 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
+                            <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
 
                             <form action="cart" method="post">
                                 <input type="hidden" name="action" value="add"/>
                                 <input type="hidden" name="idProduct" value="<%= album.getListImage() %>"/>
                                 <input type="hidden" name="type" value="odd"/>
-                                <button type="submit" class="btn btn-primary">Thêm vào giỏ</button>
+                                <button type="submit" class="btn btn-sm text-dark p-0">Thêm vào giỏ</button>
                             </form>
 
                         </div>
