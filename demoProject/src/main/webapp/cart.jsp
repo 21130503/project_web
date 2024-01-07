@@ -6,6 +6,7 @@
 <%@ page import="nhom26.Topic" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="favourite.Favourite" %>
 
 <%
     Cart cart = (Cart) session.getAttribute("cart");
@@ -16,7 +17,10 @@
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VND");
 %>
-
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
+%>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -82,9 +86,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border" title="Yêu thích">
+            <a href="./favourite" class="btn border" title="Yêu thích">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>

@@ -41,7 +41,6 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
-    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body id="listProduct">
@@ -50,27 +49,26 @@
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
 
-    ArrayList<Album> listAlbum = request.getAttribute("listAlbum") == null ? new ArrayList<>() :
+    ArrayList<Album> listAlbum =  request.getAttribute("listAlbum") == null ? new ArrayList<>() :
             (ArrayList<Album>) request.getAttribute("listAlbum");
 
-    ArrayList<OddImage> listOddImage = request.getAttribute("listOddImage") == null ? new ArrayList<>() :
+    ArrayList<OddImage> listOddImage=  request.getAttribute("listOddImage") == null ? new ArrayList<>() :
             (ArrayList<OddImage>) request.getAttribute("listOddImage");
 %>
 <%
 
     Locale vnLocal = new Locale("vi", "VN");
-    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
 <%
     Favourite favourite = (Favourite) session.getAttribute("favourite");
     if(favourite ==null) favourite = new Favourite();
 %>
-
 <!-- Topbar Start -->
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="index" class="text-decoration-none">
+            <a href="./index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -119,7 +117,7 @@
                     <p>Chưa có topic nào</p>
                     <%} else {%>
                     <%for (Topic topic : listTopic) {%>
-                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
+                    <a href="./pTopic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
                     </a>
                     <%}%>
                     <%}%>
@@ -129,7 +127,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
+                <a href="./index" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -137,9 +135,9 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index" class="nav-item nav-link">Trang chủ</a>
+                        <a href="./index" class="nav-item nav-link">Trang chủ</a>
                         <a href="shop" class="nav-item nav-link active">Cửa hàng</a>
-                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
+                        <a href="./donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -167,7 +165,7 @@
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
@@ -270,14 +268,12 @@
                         </div>
                     </div>
                 </div>
-
-                <%--Hiển thị ảnh và thêm vào giỏ hàng--%>
-                <%if (listOddImage.size() > 0) {%>
+                <%if(listOddImage.size() >0){%>
                 <% for (OddImage oddImage : listOddImage) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100 image-view"
+                            <img class="img-fluid w-100"
 
                                  src="<%=oddImage.getImage()%>"
 
@@ -286,28 +282,20 @@
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
                             </h6>
-                            <%-- Tiền sau khi giảm giá --%>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format((oddImage.getPrice() - oddImage.getDiscount()))%>
-                                </h6>
-                                <%-- Giá gốc --%>
+                                <h6><%=vndFormat.format(oddImage.getPrice()-oddImage.getDiscount())%> </h6>
                                 <h6 class="text-muted ml-2">
-                                    <del><%=vndFormat.format(oddImage.getPrice())%>
-                                    </del>
+                                    <del><%=vndFormat.format(oddImage.getPrice())%></del>
                                 </h6>
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-
-                            <form action="cart" method="post">
-                                <input type="hidden" name="action" value="add"/>
-                                <input type="hidden" name="idProduct" value="<%= oddImage.getIdOddImage() %>"/>
-                                <input type="hidden" name="type" value="odd"/>
-                                <button type="submit" class="btn btn-sm text-dark p-0">Thêm vào giỏ</button>
-                            </form>
-
+                            <a href="./add-cart?idProduct=<%=oddImage.getIdOddImage()%>&type=odd"
+                               class="btn btn-sm text-dark p-0">
+                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -315,22 +303,20 @@
                 <%}%>
 
                 <%--Hiển thị album và thêm nó vào giỏ hàng--%>
-                <%if (listAlbum.size() > 0) {%>
+                <%if(listAlbum.size() >0){%>
                 <% for (Album album : listAlbum) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100 image-view"
+                            <img class="img-fluid w-100"
                                  src="<%=album.getListImage().get(0)%>" alt="">
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3"><%=album.getName()%>
                             </h6>
-                            <%-- Tiền sau khi giảm giá --%>
                             <div class="d-flex justify-content-center">
-                                <h6><%=vndFormat.format((album.getPrice() - album.getDiscount()))%>
+                                <h6><%=vndFormat.format(album.getPrice()-album.getDiscount())%>
                                 </h6>
-                                <%-- Giá gốc --%>
                                 <h6 class="text-muted ml-2">
                                     <del><%=vndFormat.format(album.getPrice())%>
                                     </del>
@@ -340,14 +326,10 @@
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-
-                            <form action="cart" method="post">
-                                <input type="hidden" name="action" value="add"/>
-                                <input type="hidden" name="idProduct" value="<%= album.getListImage() %>"/>
-                                <input type="hidden" name="type" value="odd"/>
-                                <button type="submit" class="btn btn-sm text-dark p-0">Thêm vào giỏ</button>
-                            </form>
-
+                            <a href="./add-cart?idProduct=<%=album.getIdAlbum()%>&type=album"
+                               class="btn btn-sm text-dark p-0">
+                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -460,7 +442,41 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
-<script src="js/shop.js"></script>
+<script>
+    const albumToggle = document.querySelector("#toggle-album")
+    const oddToggle = document.querySelector("#toggle-odd")
+    albumToggle.addEventListener("click",()=>{
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/demoProject_war/pTopic",
+            data: { type: albumToggle.title},
+            success: function (data) {
+                $("#listProduct").empty();
+                // Xử lý phản hồi từ server và hiển thị tại trang
+                $("#listProduct").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    })
+    oddToggle.addEventListener("click",()=>{
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/demoProject_war/pTopic",
+            data: { type: oddToggle.title},
+            success: function (data) {
+                console.log(data)
+                $("#listProduct").empty();
+                // Xử lý phản hồi từ server và hiển thị tại trang
+                $("#listProduct").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    })
+</script>
 </body>
 
 </html>
