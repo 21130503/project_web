@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.TopicDAO;
 import favourite.Favourite;
 import nhom26.User;
 import org.json.JSONObject;
@@ -19,11 +20,13 @@ public class FavouriteController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
+        TopicDAO topicDAO = new TopicDAO();
         User user = (User) session.getAttribute("user");
         if(user == null){
             resp.sendRedirect("login.jsp");
             return;
         }
+        req.setAttribute("listTopic",topicDAO.getAllTopicsForClient() );
         req.getRequestDispatcher("favourite.jsp").forward(req, resp);
     }
 
@@ -36,12 +39,13 @@ public class FavouriteController extends HttpServlet {
         System.out.println("FAV" + type + id);
         HttpSession session = req.getSession();
         Favourite favourite = (Favourite) session.getAttribute("favourite");
+        User user = (User) session.getAttribute("user");
         JSONObject jsonObject = new JSONObject();
         if (favourite == null) {
             favourite = new Favourite();
         }
 
-        if (favourite.add(type, type + id, Integer.parseInt(id))) {
+        if ( user!=null && favourite.add(type, type + id, Integer.parseInt(id))) {
             session.setAttribute("favourite", favourite);
             jsonObject.put("status", 200);
             jsonObject.put("message", "Thêm thành công");
