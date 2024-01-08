@@ -263,14 +263,17 @@ public class ProductDAO {
         return listOddImage;
     }
 
-    public ArrayList<OddImage> getAllOddImageForClient() {
+    public ArrayList<OddImage> getAllOddImageForClient(int page, int recSize) {
         Connection connection = null;
         ArrayList<OddImage> listOddImage = new ArrayList<OddImage>();
+        int startIndex = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage where  isShow= ?";
+            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage where  isShow= ? LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, "true");
+            preparedStatement.setInt(2,recSize);
+            preparedStatement.setInt(3,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 OddImage oddImage = new OddImage();
@@ -351,14 +354,17 @@ public class ProductDAO {
         }
         return listAlbum;
     }
-    public ArrayList<Album> getAllAlbumForClient() {
+    public ArrayList<Album> getAllAlbumForClient(int page, int recSize) {
         Connection connection = null;
         ArrayList<Album> listAlbum = new ArrayList<>();
+        int startIndex = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idAlbum, name, price, discount ,isShow from album where isShow = ?";
+            String sql = "select idAlbum, name, price, discount ,isShow from album where isShow = ? LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, "true");
+            preparedStatement.setInt(2,recSize);
+            preparedStatement.setInt(3, startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("idAlbum");
@@ -778,23 +784,42 @@ public String getShowOddImage(String idOddImage){
         }
         return  list10Album;
     }
-//    public int getPriceOddImageById(int idOddImage){
-//        Connection connection= null;
-//        try {
-//            connection = Connect.getConnection();
-//            String sql = "select price from oddImage where idOddImage = ?";
-//            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-//            preparedStatement.setInt(1, idOddImage);
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//            if(resultSet.next()){
-//                return  resultSet.getInt("price");
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        finally {
-//            Connect.closeConnection(connection);
-//        }
-//        return  0;
-//    }
+
+//    toatl product;
+    public int totalOdd(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOddImage) as total from oddImage";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
+    }
+    public int totalAlbum(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idAlbum) as total from Album";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
+    }
 }
