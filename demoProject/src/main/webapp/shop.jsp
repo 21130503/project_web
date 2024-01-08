@@ -9,6 +9,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="DAO.OrderDAO" %>
 <%@ page import="favourite.Favourite" %>
+<%@ page import="cart.Cart" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -64,8 +65,16 @@
 <%
     Favourite favourite = (Favourite) session.getAttribute("favourite");
     if(favourite ==null) favourite = new Favourite();
-%>
 
+    Cart cart = (Cart) session.getAttribute("cart");
+    if(cart ==null) cart = new Cart();
+%>
+<%
+//  Pagination
+    int totalPage = (int) request.getAttribute("totalPage");
+    int currentPage = (int) request.getAttribute("currentPage");
+
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
@@ -91,9 +100,9 @@
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge"><%=favourite.total()%></span>
             </a>
-            <a href="cart" class="btn border">
+            <a href="./cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=cart.total()%></span>
             </a>
         </div>
     </div>
@@ -301,12 +310,8 @@
                             <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
 
-                            <form action="cart" method="post">
-                                <input type="hidden" name="action" value="add"/>
-                                <input type="hidden" name="idProduct" value="<%= oddImage.getIdOddImage() %>"/>
-                                <input type="hidden" name="type" value="odd"/>
-                                <button type="submit" class="btn btn-sm text-dark p-0">Thêm vào giỏ</button>
-                            </form>
+                            <button  title="<%=oddImage.getType()%>" value="<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0 addCart"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                                vào giỏ</button>
 
                         </div>
                     </div>
@@ -341,12 +346,8 @@
                             <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
 
-                            <form action="cart" method="post">
-                                <input type="hidden" name="action" value="add"/>
-                                <input type="hidden" name="idProduct" value="<%= album.getListImage() %>"/>
-                                <input type="hidden" name="type" value="odd"/>
-                                <button type="submit" class="btn btn-sm text-dark p-0">Thêm vào giỏ</button>
-                            </form>
+                            <button  title="<%=album.getType()%>" value="<%=album.getIdAlbum()%>" href="" class="btn btn-sm text-dark p-0 addCart"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                                vào giỏ</button>
 
                         </div>
                     </div>
@@ -363,9 +364,12 @@
                                     <span class="sr-only">Quay lại</span>
                                 </a>
                             </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <%for(int i=1 ; i<=totalPage;i++){%>
+                            <%String s = currentPage==i ? "active": "";%>
+                            <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./shop?page=<%=i%>"><%=i%></a></li>
+                            <%}%>
+<%--                            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
+<%--                            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
@@ -461,6 +465,35 @@
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
 <script src="js/shop.js"></script>
+<script>
+    const btnCart = document.querySelectorAll(".addCart")
+    console.log(btnCart)
+    const arrBtn = Array.from(btnCart);
+    arrBtn.forEach((item)=>{
+        console.log(item)
+        const type = item.title;
+        const id = item.value
+        item.addEventListener("click",()=>{
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:8080/demoProject_war/cart?type=${type}&idProduct=${id}`;
+
+            xhr.open("POST", url, true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                    location.reload();
+                } else if (xhr.status === 500) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                }
+            };
+
+            xhr.send();
+        })
+    })
+</script>
 </body>
 
 </html>
