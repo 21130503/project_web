@@ -7,6 +7,8 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="favourite.Favourite" %>
+<%@ page import="nhom26.OddImage" %>
+<%@ page import="nhom26.Album" %>
 
 <%
     Cart cart = (Cart) session.getAttribute("cart");
@@ -15,11 +17,11 @@
     }
 
     Locale vnLocal = new Locale("vi", "VN");
-    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
 <%
     Favourite favourite = (Favourite) session.getAttribute("favourite");
-    if(favourite ==null) favourite = new Favourite();
+    if (favourite == null) favourite = new Favourite();
 %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
@@ -92,7 +94,7 @@
             </a>
             <a href="cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge"><%=cart.getTotal()%></span>
+                <span class="badge"><%=cart.total()%></span>
             </a>
         </div>
     </div>
@@ -201,7 +203,7 @@
     <div class="row px-xl-5">
 
         <div class="col-lg-8 table-responsive mb-5">
-            <% if (cart.getTotal() > 0) { %>
+            <% if (cart.total() > 0) { %>
             <table class="table table-bordered text-center mb-0">
                 <thead class="bg-secondary text-dark">
 
@@ -216,22 +218,18 @@
 
                 <%-- Khi có sản phẩm trong giỏ --%>
                 <div class="align-middle" style="display: flex;justify-content: space-between">
-                    <div class="cols-md-6">
+                    <div class="cols-md-6 mb-4">
                         <a href="./shop" style="display: flex;justify-content: center">
                             <button class="btn btn-block btn-primary"
                                     style="width: 100%">Mua sắm tiếp
                             </button>
                         </a>
                     </div>
-                    <div class="cols-md-6">
+                    <div class="cols-md-6 mb-4">
                         <%--Nút xóa toàn bộ sản phẩm khỏi giỏ hàng --%>
-                        <form action="cart" method="post"
-                              onsubmit="return confirm('Điều này sẽ xóa toàn bộ sản phẩm khỏi giỏ hàng. Bạn chắc chứ ?');">
-                            <input type="hidden" name="action" value="clearCart"/>
-                            <button type="submit" class="btn btn-block btn-primary" style="width: 100%">
-                                Làm trống giỏ hàng
-                            </button>
-                        </form>
+                        <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal" data-target="#deleteCart">
+                            Làm trống giỏ hàng
+                        </button>
                     </div>
                 </div>
 
@@ -246,84 +244,60 @@
                 <tbody class="align-middle">
 
                 <%-- Dữ liệu cho cart --%>
-                <% for (Map.Entry<Integer, CartProduct> entry : cart.getData().entrySet()) {
+                <%
+                    String name = null, type = null, image = null;
+                    int id = 0, price = 0, discount = 0;
+                %>
+                <% for (Map.Entry<String, CartProduct> entry : cart.getData().entrySet()) {
                     CartProduct cartProduct = entry.getValue();
-                    String productType;
-                    int productId;
-                    String productName;
-                    String productImage;
-                    int productPrice;
-
-                    // Xác định sản phẩm là OddImage hay Album
-                    if (cartProduct.getOddImage() != null) {
-                        productType = "odd";
-                        productId = cartProduct.getOddImage().getIdOddImage();
-                        productName = cartProduct.getOddImage().getName();
-                        productImage = cartProduct.getOddImage().getImage();
-                        productPrice = (cartProduct.getOddImage().getPrice()- cartProduct.getOddImage().getDiscount());
-                    } else {
-                        productType = "album";
-                        productId = cartProduct.getAlbum().getIdAlbum();
-                        productName = cartProduct.getAlbum().getName();
-                        productImage = cartProduct.getAlbum().getListImage().get(0);
-                        productPrice = (cartProduct.getAlbum().getPrice() - cartProduct.getAlbum().getDiscount());
+                    if (cartProduct.getObject() instanceof OddImage) {
+                        id = ((OddImage) cartProduct.getObject()).getIdOddImage();
+                        price = ((OddImage) cartProduct.getObject()).getPrice();
+                        discount = ((OddImage) cartProduct.getObject()).getDiscount();
+                        name = ((OddImage) cartProduct.getObject()).getName();
+                        type = ((OddImage) cartProduct.getObject()).getType();
+                        image = ((OddImage) cartProduct.getObject()).getImage();
+                    }
+                    if (cartProduct.getObject() instanceof Album) {
+                        id = ((Album) cartProduct.getObject()).getIdAlbum();
+                        price = ((Album) cartProduct.getObject()).getPrice();
+                        discount = ((Album) cartProduct.getObject()).getDiscount();
+                        name = ((Album) cartProduct.getObject()).getName();
+                        type = ((Album) cartProduct.getObject()).getType();
+                        image = ((Album) cartProduct.getObject()).getListImage().get(0);
                     }
                 %>
                 <tr>
-                    <td class="align-middle"><img src="<%=productImage %>" alt="<%=productName %>"
-                                                  style="width: 50px;"></td>
+                    <td class="text-left"><img class="mr-5" src="<%=image %>" alt="<%=name %>"
+                                                  style="width: 50px;">
+                        <a
+                                href="./detail?type=<%=type%>&id=<%=id%>"><%=name%>
+                        </a>
+                    </td>
 
-                    <td class="align-middle"><%=vndFormat.format(productPrice)%>
+                    <td class="align-middle"><%=vndFormat.format(price - discount)%>
                     </td>
 
                     <td class="align-middle">
                         <div class="input-group quantity mx-auto"
-                             style="width: 300px;justify-content: center">
-                            <%-- Giảm số lượng bằng nút --%>
-                            <form action="cart" method="post">
-                                <input type="hidden" name="action" value="decrease">
-                                <input type="hidden" name="idProduct" value="<%= productId %>">
-                                <input type="hidden" name="type" value="<%= productType%>">
-                                <button type="submit" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </form>
+                             style="width: 300px;justify-content: center ; align-items: center">
+                            <button  value="<%=id%>" title="<%=type%>"  class="p-2 border mr-3 decre" style="cursor: pointer">-</button>
+                            <span id="quantity"><%=cartProduct.getQuantity()%></span>
+                            <button value="<%=id%>" title="<%=type%>"  class="p-2 border ml-3 incre" style="cursor: pointer">+</button>
 
-                            <%-- Nhập số lượng mong muốn --%>
-                            <form action="cart" method="post" class="quantity-form" style="width: 90px">
-                                <input type="hidden" name="action" value="updateQuantity">
-                                <input type="hidden" name="idProduct" value="<%= productId %>">
-                                <input type="hidden" name="type" value="<%= productType %>">
-                                <input type="number" class="form-control form-control-sm bg-secondary text-center"
-                                       name="quantity" value="<%= cartProduct.getQuantity() %>" min="1">
-                            </form>
-
-                            <!-- Tăng số lượng bằng nút -->
-                            <form action="cart" method="post">
-                                <input type="hidden" name="action" value="increase">
-                                <input type="hidden" name="idProduct" value="<%= productId %>">
-                                <input type="hidden" name="type" value="<%= productType%>">
-                                <button type="submit" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </form>
                         </div>
                     </td>
 
-                    <td class="align-middle"><%=vndFormat.format(cartProduct.getTotalPrice())%>
+                    <td class="align-middle"><%=vndFormat.format(price - discount)%>
                     </td>
 
                     <td class="align-middle">
-                        <%--Nút X xóa sản phẩm khỏi giỏ hàng --%>
-                        <form action="cart" method="post"
-                              onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?');">
-                            <input type="hidden" name="action" value="remove"/>
-                            <input type="hidden" name="idProduct" value="<%= productId %>"/>
-                            <input type="hidden" name="type" value="<%= productType %>"/>
-                            <button type="submit" class="btn btn-sm btn-primary">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </form>
+
+                        <button type="submit" id="btnRemove" value="<%=id%>" title="<%=type%>"
+                                class="btnRemove btn btn-sm btn-primary">
+                            <i class="fa fa-times"></i>
+                        </button>
+
                     </td>
 
                 </tr>
@@ -372,7 +346,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-3 pt-1">
                         <h6 class="font-weight-medium">Tổng Tiền Các Sản Phẩm</h6>
-                        <h6 class="font-weight-medium"><%=vndFormat.format(cart.getTotalPrice())%>
+                        <h6 class="font-weight-medium"><%=vndFormat.format(cart.totalPrice())%>
                         </h6>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -383,7 +357,7 @@
                 <div class="card-footer border-secondary bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
                         <h5 class="font-weight-bold">Tổng Cộng</h5>
-                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.getTotalPrice() + 30000)%>
+                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.totalPrice() + 30000)%>
                         </h5>
                     </div>
                     <a href="checkout">
@@ -464,6 +438,26 @@
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+<%--Confirm delete--%>
+<div id="deleteCart" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xóa toàn bộ giỏ hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa toàn bộ không ? </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-cart" type="button" class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- JavaScript Libraries -->
@@ -478,6 +472,91 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
+<script src="js/removeSession.js"></script>
+<script> removeSession("cart")</script>
+<script>
+    const btnRemoveAll = document.querySelector("#btn-delete-cart");
+    btnRemoveAll.addEventListener("click", () => {
+        const xhr = new XMLHttpRequest();
+        const url = `http://localhost:8080/demoProject_war/cart`;
+        xhr.open("DELETE", url, true);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                location.reload();
+            } else if (xhr.status === 500) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                // window.location.href="http://localhost:8080/demoProject_war/favourite"
+            }
+        };
+
+        xhr.send();
+    })
+</script>
+<script>
+    const inrceArr =Array.from(document.querySelectorAll(".incre"))
+    const derceArr = Array.from(document.querySelectorAll(".decre"))
+
+    const quantity = document.querySelector("#quantity");
+    let value = +quantity.innerHTML;
+    inrceArr.forEach((inrce)=>{
+        inrce.addEventListener("click",()=>{
+            value++;
+            quantity.innerHTML = value;
+            const type = inrce.title;
+            const id = inrce.value
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:8080/demoProject_war/cart?type=${type}&idProduct=${id}`;
+
+            xhr.open("POST", url, true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                    location.reload();
+                } else if (xhr.status === 500) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                }
+            };
+
+            xhr.send();
+        })
+    })
+   derceArr.forEach((derce)=>{
+       derce.addEventListener("click",()=>{
+           if(value <=1){
+               return;
+           }
+           value--;
+
+           quantity.innerHTML = value;
+           const type = derce.title;
+           const id = derce.value
+           const xhr = new XMLHttpRequest();
+           const url = `http://localhost:8080/demoProject_war/delete-cart-item?type=${type}&idProduct=${id}`;
+
+           xhr.open("POST", url, true);
+
+           xhr.onload = function () {
+               if (xhr.status === 200) {
+                   const data = JSON.parse(xhr.responseText);
+                   alert(data.message);
+                   location.reload();
+               } else if (xhr.status === 500) {
+                   const data = JSON.parse(xhr.responseText);
+                   alert(data.message);
+               }
+           };
+
+           xhr.send();
+       })
+   })
+</script>
 </body>
 
 </html>

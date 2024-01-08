@@ -33,7 +33,6 @@
     <link rel="stylesheet" href="/css/logo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <%--    Xử lí --%>
-    <script src="js/RenderDataForAdmin.js"></script>
     <script>
         <% User user = (User) session.getAttribute("user") == null ? null : (User) (session.getAttribute("user"));  %>
 
@@ -80,12 +79,16 @@
     String success =  request.getAttribute("Exist") == null ? "" :(String) request.getAttribute("Exist");
 
 %>
+<%
+    int currentPage = (int) request.getAttribute("currentPage");
+    int totalPage = (int) request.getAttribute("totalPage");
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="./index.html" class="text-decoration-none">
+            <a href="./index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -102,17 +105,17 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="/topic" class="btn border">
+            <a href="./topic" class="btn border">
                 <i class="fa-solid fa-boxes-stacked text-primary"></i>
             </a>
-            <a href="/order" class="btn border">
+            <a href="./orderManager" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
             </a>
-            <a href="/user" class="btn border">
+            <a href="./user" class="btn border">
                 <i class="fa-regular fa-user text-primary"></i>
 
             </a>
-            <a href="/product/" class="btn border">
+            <a href="./product" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
             </a>
         </div>
@@ -136,6 +139,7 @@
 <div class="container-fluid pt-5">
     <div class="row px-xl-5">
         <div class="col-lg-8 table-responsive mb-5">
+
             <table class="table table-bordered text-center mb-0">
                 <thead class="bg-secondary text-dark">
                 <tr>
@@ -170,6 +174,28 @@
                 <%}%>>
                 </tbody>
             </table>
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center mb-3">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Quay lại</span>
+                        </a>
+                    </li>
+                    <%for(int i=1 ; i<=totalPage;i++){%>
+                    <%String s = currentPage==i ? "active": "";%>
+                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./topic?page=<%=i%>"><%=i%></a></li>
+                    <%}%>
+                    <%--                            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
+                    <%--                            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Tiếp</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
         <div class="col-lg-4">
             <div class="card-header bg-secondary border-0">
