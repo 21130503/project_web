@@ -5,6 +5,8 @@
 <%@ page import="nhom26.OddImage" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="nhom26.Topic" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -40,6 +42,9 @@
     if(favourite == null) favourite = new Favourite();
         Locale vnLocal = new Locale("vi", "VN");
         DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
+    %>
+    <%
+        ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<Topic>() : (ArrayList<Topic>) request.getAttribute("listTopic");
     %>
     <!-- Start - Phần dùng chung cho các trang dành cho user -->
     <!-- Topbar Start -->
@@ -86,21 +91,20 @@
                     <h6 class="m-0">Danh mục</h6>
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
-                <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
-                    id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                    <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                        <a href="" class="nav-item nav-link">Con người</a>
-                        <a href="" class="nav-item nav-link">Thiên nhiên</a>
-                        <a href="" class="nav-item nav-link">Động vật</a>
-                        <a href="" class="nav-item nav-link">Chó</a>
-                        <a href="" class="nav-item nav-link">Mèo</a>
-                        <a href="" class="nav-item nav-link">Xe</a>
-                        <a href="" class="nav-item nav-link">Vũ trụ</a>
-                        <a href="" class="nav-item nav-link">Hoạt hình</a>
-                        <a href="" class="nav-item nav-link">Hoa</a>
+                <nav class="collapse  navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
+                     id="navbar-vertical">
+                    <div class="navbar-nav w-100 overflow" style="height: 410px">
+                        <%if (listTopic.size() == 0) {%>
+                        <p>Chưa có topic nào</p>
+                        <%} else {%>
+                        <%for (Topic topic : listTopic) {%>
+                        <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
+                        </a>
+                        <%}%>
+                        <%}%>
                     </div>
                 </nav>
-            </div>
+              </div>
             <div class="col-lg-9">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="./index" class="text-decoration-none d-block d-lg-none">
@@ -159,7 +163,7 @@
                       </thead>
                       <tbody class="align-middle">
                       <% String name = null, image = null, type=null;
-                          int price = 0 ,id=0;%>
+                          int price = 0 ,id=0,discount=0;%>
                       <%for (Object object : favourite.getData().values()){%>
                         <%if(object instanceof Album){
                             name = ((Album) object).getName();
@@ -167,6 +171,7 @@
                             price = ((Album) object).getPrice();
                             id =  ((Album) object).getIdAlbum();
                             type =  ((Album) object).getType();
+                            discount = ((Album) object).getDiscount();
                         %>
                       <%}%>
                       <%if(object instanceof OddImage){
@@ -175,14 +180,15 @@
                           price = ((OddImage) object).getPrice();
                           id =  ((OddImage) object).getIdOddImage();
                           type =  ((OddImage) object).getType();
+                          discount = ((OddImage) object).getDiscount();
                       %>
                       <%}%>
                       <tr>
                           <td class="text-left"><img class="mr-5" src="<%=image%>" alt="" style="width: 50px;"> <a
                                   href="./detail?type=<%=type%>&id=<%=id%>"><%=name%></a>
                           </td>
-                          <td class="align-middle"><%=vndFormat.format(price)%></td>
-                          <td class="align-middle"><button id="btnRemove" value="<%=id%>" title="<%=type%>" class="btn btn-sm btn-primary"><i
+                          <td class="align-middle"><%=vndFormat.format(price-discount)%></td>
+                          <td class="align-middle"><button  value="<%=id%>" title="<%=type%>" class=" btnRemove btn btn-sm btn-primary"><i
                                   class="fa fa-times"></i></button></td>
                       </tr>
                       <%}%>
@@ -271,30 +277,10 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <script>
-        const  btnRemove = document.querySelector("#btnRemove");
-        const type = btnRemove.title;
-        const id = btnRemove.value;
-        btnRemove.addEventListener("click",()=>{
-            const xhr = new XMLHttpRequest();
-            const url = `http://localhost:8080/demoProject_war/favourite?type=${type}&idProduct=${id}`;
-            xhr.open("PUT", url, true);
+    <script src="js/removeSession.js">
 
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    const data = JSON.parse(xhr.responseText);
-                    alert(data.message);
-                    location.reload();
-                } else if (xhr.status === 500) {
-                    const data = JSON.parse(xhr.responseText);
-                    alert(data.message);
-                    // window.location.href="http://localhost:8080/demoProject_war/favourite"
-                }
-            };
-
-            xhr.send();
-        })
     </script>
+    <script>   removeSession('favourite')</script>
 </body>
 
 </html>

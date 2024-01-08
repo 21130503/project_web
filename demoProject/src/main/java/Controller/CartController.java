@@ -4,8 +4,11 @@ import DAO.ProductDAO;
 import DAO.TopicDAO;
 import cart.Cart;
 import cart.CartProduct;
+import favourite.Favourite;
 import nhom26.Album;
 import nhom26.OddImage;
+import nhom26.User;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,96 +38,74 @@ public class CartController extends HttpServlet {
     //Xử lí các chức năng của giỏ như thêm, sửa, xóa
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
         String type = req.getParameter("type");
-        String idProduct = req.getParameter("idProduct");
-
-        //Xử lý ngoại lệ khi có action không cần phân tích idProduct (vd: clearCart)
-        int productId = 0;
-        if (idProduct != null && !idProduct.isEmpty()) {
-            try {
-                productId = Integer.parseInt(idProduct);
-            } catch (NumberFormatException e) {
-                productId = 0;
-            }
-        }
-
+        String id = req.getParameter("idProduct");
         HttpSession session = req.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
-
+        User user = (User) session.getAttribute("user");
+        JSONObject jsonObject = new JSONObject();
         if (cart == null) {
             cart = new Cart();
         }
 
-        if ("add".equals(action)) {
-            //Chức năng thêm sản phẩm vào giỏ hàng
-            ProductDAO productDAO = new ProductDAO();
-            if ("odd".equals(type)) {
-                OddImage oddImage = productDAO.getOddImageById(productId);
-                if (oddImage != null) {
-                    cart.addProduct(oddImage, 1);
-                }
-            } else if ("album".equals(type)) {
-                Album album = productDAO.getAlbumById(productId);
-                if (album != null) {
-                    cart.addProduct(album, 1);
-                }
-            }
-
+        if ( cart.add(type, type + id, Integer.parseInt(id))) {
             session.setAttribute("cart", cart);
-            resp.sendRedirect("cart");
+            jsonObject.put("status", 200);
+            jsonObject.put("message", "Thêm thành công");
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObject.toString());
+        } else {
+            jsonObject.put("status", 500);
+            jsonObject.put("message", "Thêm không thành công");
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObject.toString());
+        }
 
-
-        } else if ("remove".equals(action)) {
-            //Chức năng xóa từng sản phẩm khỏi giỏ hàng
-            cart.remove(productId, type);
-
+    }
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        String type = req.getParameter("type");
+        String id = req.getParameter("idProduct");
+        HttpSession session = req.getSession();
+        Cart cart = (Cart) session.getAttribute("cart");
+        JSONObject jsonObject = new JSONObject();
+        if(cart.remove(type+id)){
             session.setAttribute("cart", cart);
-            resp.sendRedirect("cart");
-
-
-        } else if ("increase".equals(action) || "decrease".equals(action)) {
-            // Chức năng tăng giảm số lượng sản phẩm bằng nút bấm  '+'  '-'
-            CartProduct cartProduct = cart.getData().get(productId);
-
-            if (cartProduct != null) {
-                if ("increase".equals(action)) {
-                    cartProduct.increQuantity(1);
-
-                } else if ("decrease".equals(action)) {
-                    if (cartProduct.getQuantity() <= 1) {
-                        cartProduct.setQuantity(1);
-                        session.setAttribute("errorMessage", "Bạn không thể giảm số lượng sản phẩm ít hơn 1. " + "Nếu bạn muốn xóa, vui lòng bấm nút X.");
-                    } else {
-                        cartProduct.decreQuantity(1);
-                    }
-                }
-            }
-
+            jsonObject.put("status", 200);
+            jsonObject.put("message", "Xóa thành công");
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObject.toString());
+        }
+        else {
             session.setAttribute("cart", cart);
-            resp.sendRedirect("cart");
-
-
-        } else if ("updateQuantity".equals(action)) {
-            //Chức năng cho phép người dùng đặt số lượng sản phẩm theo 1 số nhất định
-            int quantity = Integer.parseInt(req.getParameter("quantity"));
-            CartProduct cartProduct = cart.getData().get(productId);
-
-            if (cartProduct != null && quantity > 0) {
-                cartProduct.setQuantity(quantity);
-            }
-
-            session.setAttribute("cart", cart);
-            resp.sendRedirect("cart");
-
-
-        } else if ("clearCart".equals(action)) {
-            // Chức năng xóa toàn bộ sản phẩm khỏi giỏ hàng
-            cart.clear();
-            
-            session.setAttribute("cart", cart);
-            resp.sendRedirect("cart");
+            jsonObject.put("status", 500);
+            jsonObject.put("message", "Xóa thất bại");
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObject.toString());
         }
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        HttpSession session = req.getSession();
+        Cart cart = (Cart) session.getAttribute("cart");
+        JSONObject jsonObject = new JSONObject();
+        if(cart.removeAll()){
+            session.setAttribute("cart", cart);
+            jsonObject.put("status", 200);
+            jsonObject.put("message", "Xóa thành công");
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObject.toString());
+        }
+        else{
+            session.setAttribute("cart", cart);
+            jsonObject.put("status", 500);
+            jsonObject.put("message", "Xóa không thành công");
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonObject.toString());
+        }
+    }
 }

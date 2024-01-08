@@ -17,24 +17,33 @@ public class ShopController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
-        TopicDAO topicDAO = new TopicDAO();
-        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         ProductDAO productDAO = new ProductDAO();
+        TopicDAO topicDAO = new TopicDAO();
+        int recSize = 6;
+        int page = 1;
+        int totalOdd = productDAO.totalOdd();
+        int totalAlbum = productDAO.totalAlbum();
+        int totalPage = (int) Math.ceil((totalAlbum+totalOdd)/recSize);
         String type = req.getParameter("type");
-        System.out.println("type: " + type );
-        if("album".equals(type)){
-            req.setAttribute("listAlbum", productDAO.getAllAlbumForClient());
+        if (req.getParameter("page") != null) {
+            page = Integer.parseInt(req.getParameter("page"));
+        }
+        System.out.println(type +" "+ page);
+        if ("album".equals(type)) {
+            req.setAttribute("listAlbum", productDAO.getAllAlbumForClient(page,recSize));
             req.getRequestDispatcher("shop.jsp").forward(req, resp);
             return;
         }
-        if("odd".equals(type)){
-            req.setAttribute("listOddImage", productDAO.getAllOddImageForClient());
+        if ("odd".equals(type)) {
+            req.setAttribute("listOddImage", productDAO.getAllOddImageForClient(page,recSize));
             req.getRequestDispatcher("shop.jsp").forward(req, resp);
             return;
         }
-        req.setAttribute("listOddImage", productDAO.getAllOddImageForClient());
-        req.setAttribute("listAlbum", productDAO.getAllAlbumForClient());
-
+        req.setAttribute("listOddImage", productDAO.getAllOddImageForClient(page,recSize));
+        req.setAttribute("listAlbum", productDAO.getAllAlbumForClient(page,recSize));
+        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
+        req.setAttribute("totalPage",totalPage);
+        req.setAttribute("currentPage",page);
         req.getRequestDispatcher("shop.jsp").forward(req, resp);
     }
 

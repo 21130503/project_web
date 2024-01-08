@@ -20,8 +20,6 @@ public class ContactController extends HttpServlet {
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
-        req.setAttribute("listAlbumNew", topicDAO.getAllTopics());
-        req.setAttribute("listOddNew", topicDAO.getAllTopics());
 
         req.getRequestDispatcher("contact.jsp").forward(req, resp);
     }

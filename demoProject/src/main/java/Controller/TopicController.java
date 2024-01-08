@@ -50,8 +50,19 @@ public class TopicController extends HttpServlet {
             resp.sendRedirect("404.jsp");
             return;
         } else if (user.isAdmin()) {
+            int page =1;
+            int recSize =5;
+            int totalTopic = topicDAO.totalTopic();
+            System.out.println("totalTopic: "+totalTopic);
+            int totalPage = (int) Math.ceil((double) totalTopic / recSize);
+            System.out.println("page:"+ totalPage);
+            if(req.getParameter("page")!=null){
+                page = Integer.parseInt(req.getParameter("page"));
+            }
 //            System.out.println("GET");
-            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("listTopic", topicDAO.getAllTopics(page,recSize));
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
         }
 
@@ -68,13 +79,13 @@ public class TopicController extends HttpServlet {
         TopicDAO topicDAO = new TopicDAO();
         UploadFile uploadFile = new UploadFile();
         if (topicDAO.checkNameTopicExist(name)) {
-            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("listTopic", topicDAO.getAllTopics(1,5));
             req.setAttribute("exist", "Tên chủ đề đã tồn tại");
             req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
             return;
         }
         if (name == null || name.trim().isEmpty()) {
-            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("listTopic", topicDAO.getAllTopics(1,5));
             req.setAttribute("errName", "Vui lòng nhập tên chủ đề");
             req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
             return;
@@ -92,7 +103,7 @@ public class TopicController extends HttpServlet {
 
         }
         if (fileName == null || fileName.trim().isEmpty()) {
-            req.setAttribute("listTopic", topicDAO.getAllTopics());
+            req.setAttribute("listTopic", topicDAO.getAllTopics(1,5));
             req.setAttribute("errImage", "Vui lòng nhập trường này");
             req.getRequestDispatcher("quanlichude.jsp").forward(req, resp);
             return;

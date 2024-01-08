@@ -9,78 +9,78 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Cart {
-    Map<Integer, CartProduct> data = new HashMap<>();
+    Map<String, CartProduct> data = new HashMap<>();
 
-    public Map<Integer, CartProduct> getData() {
+    public Map<String, CartProduct> getData() {
         return this.data;
     }
+
+    ProductDAO productDAO = new ProductDAO();
 
     public Cart() {
     }
 
-    //add sản phẩm vô giỏ
-    public boolean addProduct(Object product, int quantity) {
-        int productId;
-        CartProduct cartProduct;
+    public boolean add(String type, String idMap, int id) {
+        System.out.println("idMap: " + idMap);
+        if (data.containsKey(idMap)) {
+            CartProduct cartProduct = data.get(idMap);
+            int quantity = cartProduct.getQuantity();
+            cartProduct.setQuantity(++quantity);
+            return  true;
 
-        //Phân biệt product là oddimage hay album
-        if (product instanceof OddImage) {
-            OddImage oddImage = (OddImage) product;
-            productId = oddImage.getIdOddImage();
-        } else if (product instanceof Album) {
-            Album album = (Album) product;
-            productId = album.getIdAlbum();
         } else {
-            return false;
-        }
+            if ("odd".equals(type)) {
+                OddImage oddImage = productDAO.getOddImageById(id);
+                data.put(idMap, new CartProduct(1, oddImage));
+                return true;
 
-        //nếu sản phẩm đã có thì tăng số lượng lên
-        if (data.containsKey(productId)) {
-            cartProduct = data.get(productId);
-            cartProduct.increQuantity(quantity);
-        } else {
-            cartProduct = new CartProduct(quantity, (product instanceof OddImage) ? (OddImage) product : null, (product instanceof Album) ? (Album) product : null);
-        }
-
-        data.put(productId, cartProduct);
-        return true;
-    }
-
-    //Xóa từng sản phẩm khỏi giỏ có phân biệt odd hoặc album
-    public boolean remove(int productId, String type) {
-        if ("odd".equals(type) && data.containsKey(productId)) {
-            data.remove(productId);
-            return true;
-        } else if ("album".equals(type) && data.containsKey(productId)) {
-            data.remove(productId);
-            return true;
+            }
+            if ("album".equals(type)) {
+                Album album = productDAO.getAlbumById(id);
+                data.put(idMap, new CartProduct(1, album));
+                return true;
+            }
         }
         return false;
     }
+    public boolean removeCart(String idMap){
+        if(!data.containsKey(idMap)){
+            return  false;
 
-    //Xóa toàn bộ sản phẩm trong giỏ hàng
-    public void clear() {
-        this.data.clear();
-    }
-
-    //Tính tổng giá trị của cả giỏ hàng
-    public int getTotalPrice() {
-        int totalPrice = 0;
-        for (CartProduct cartProduct : data.values()) {
-            if (cartProduct.getOddImage() != null) {
-                totalPrice += cartProduct.getQuantity() * (cartProduct.getOddImage().getPrice() -
-                        cartProduct.getOddImage().getDiscount());
-            } else if (cartProduct.getAlbum() != null) {
-                totalPrice += cartProduct.getQuantity() * (cartProduct.getAlbum().getPrice() -
-                        cartProduct.getAlbum().getDiscount());
-            }
         }
-        return totalPrice;
+        CartProduct cartProduct = data.get(idMap);
+        int quantity = cartProduct.getQuantity();
+        System.out.println(quantity);
+        if(quantity <=1){
+            return  false;
+        }
+        else{
+            cartProduct.setQuantity(quantity-1);
+            return true;
+        }
     }
 
-    //Lấy ra tổng số sản phẩm hiện có trong giỏ hàng
-    public int getTotal() {
+    public int total() {
         return data.size();
     }
 
+    public boolean remove(String idMap) {
+        if (!data.containsKey(idMap)) {
+            return false;
+        }
+        data.remove(idMap);
+        return true;
+    }
+
+    public boolean removeAll() {
+        data.clear();
+        return true;
+    }
+    public int totalPrice(){
+        int totalPrice = 0;
+        for(CartProduct cartProduct :getData().values()){
+            totalPrice += cartProduct.getQuantity()*cartProduct.price();
+        }
+        return  totalPrice;
+    }
 }
