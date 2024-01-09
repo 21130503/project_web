@@ -1,6 +1,27 @@
-<%@ page import="nhom26.User" %>
+<%@ page import="cart.Cart" %>
+<%@ page import="cart.CartProduct" %>
+<%@ page import="java.util.Map" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="nhom26.User" %>
 <%@ page import="nhom26.Topic" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.text.DecimalFormat" %>
+<%@ page import="favourite.Favourite" %>
+
+<%
+    Cart cart = (Cart) session.getAttribute("cart");
+    if (cart == null) {
+        cart = new Cart();
+    }
+
+    Locale vnLocal = new Locale("vi", "VN");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+%>
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if (favourite == null) favourite = new Favourite();
+%>
+
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -33,6 +54,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body>
@@ -64,13 +86,13 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border" title="Yêu thích">
+            <a href="./favourite" class="btn border" title="Yêu thích">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
-            <a href="cart" class="btn border" title="Giỏ hàng">
+            <a href="./cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=cart.getTotal()%></span>
             </a>
         </div>
     </div>
@@ -146,6 +168,7 @@
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
                             <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
@@ -259,17 +282,17 @@
                 <div class="col-md-6 mb-5" style="padding-left: 70px;">
                     <h5 class="font-weight-bold text-dark mb-4">Di Chuyển Nhanh</h5>
                     <div class="d-flex flex-column justify-content-start">
-                        <a class="text-dark mb-2" href="index.jsp"><i class="fa fa-angle-right mr-2"></i>Trang
+                        <a class="text-dark mb-2" href="./index"><i class="fa fa-angle-right mr-2"></i>Trang
                             chủ</a>
-                        <a class="text-dark mb-2" href="shop.jsp"><i class="fa fa-angle-right mr-2"></i>Cửa
+                        <a class="text-dark mb-2" href="./shop"><i class="fa fa-angle-right mr-2"></i>Của
                             hàng</a>
-                        <a class="text-dark mb-2" href="donhangcuaban.jsp"><i
+                        <a class="text-dark mb-2" href="./donhangcuaban"><i
                                 class="fa fa-angle-right mr-2"></i>Đơn hàng của bạn</a>
-                        <a class="text-dark mb-2" href="cart.jsp"><i class="fa fa-angle-right mr-2"></i>Giỏ
+                        <a class="text-dark mb-2" href="./cart"><i class="fa fa-angle-right mr-2"></i>Giỏ
                             hàng</a>
-                        <a class="text-dark mb-2" href="checkout.jsp"><i class="fa fa-angle-right mr-2"></i>Thanh
+                        <a class="text-dark mb-2" href="./checkout"><i class="fa fa-angle-right mr-2"></i>Thanh
                             toán</a>
-                        <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Liên hệ</a>
+                        <a class="text-dark" href="./contact"><i class="fa fa-angle-right mr-2"></i>Liên hệ</a>
                     </div>
                 </div>
                 <div class="col-md-6 mb-5">
