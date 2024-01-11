@@ -78,6 +78,10 @@
     String albumStr = "Danh sách album";
     String oddStr = "Danh sách ảnh lẻ";
 %>
+<%
+    int totalPage = (int) request.getAttribute("totalPage");
+    int currentPage = (int) request.getAttribute("currentPage");
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
@@ -244,6 +248,28 @@
                 <%}%>
                 </tbody>
             </table>
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center mb-3">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Quay lại</span>
+                        </a>
+                    </li>
+                    <%for(int i=1 ; i<=totalPage;i++){%>
+                    <%String s = currentPage==i ? "active": "";%>
+                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./product?page=<%=i%>"><%=i%></a></li>
+                    <%}%>
+                    <%--                            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
+                    <%--                            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Tiếp</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
         <div class="col-lg-12 mt-4 mb-4 justify-content-center">
             <div id="paginationContainer">

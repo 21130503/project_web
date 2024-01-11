@@ -233,13 +233,16 @@ public class ProductDAO {
         return res;
     }
 
-    public ArrayList<OddImage> getAllOddImage() {
+    public ArrayList<OddImage> getAllOddImage(int page , int recSize) {
         Connection connection = null;
+        int startIndex = (page-1)*recSize;
         ArrayList<OddImage> listOddImage = new ArrayList<OddImage>();
         try {
             connection = Connect.getConnection();
-            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage";
+            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,recSize);
+            preparedStatement.setInt(2,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 OddImage oddImage = new OddImage();
@@ -296,13 +299,16 @@ public class ProductDAO {
         }
         return listOddImage;
     }
-    public ArrayList<Album> getAllAlbum() {
+    public ArrayList<Album> getAllAlbum(int page, int recSize) {
         Connection connection = null;
         ArrayList<Album> listAlbum = new ArrayList<>();
+        int startIndex = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idAlbum, name, price, discount ,isShow from album";
+            String sql = "select idAlbum, name, price, discount ,isShow from album LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,recSize);
+            preparedStatement.setInt(2,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("idAlbum");
@@ -325,35 +331,7 @@ public class ProductDAO {
         }
         return listAlbum;
     }
-    public ArrayList<Album> getAllAlbum(int start, int pageSize) {
-        Connection connection = null;
-        ArrayList<Album> listAlbum = new ArrayList<>();
-        try {
-            connection = Connect.getConnection();
-            String sql = "select idAlbum, name, price, discount ,isShow from album";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("idAlbum");
-                Album album = new Album();
-                album.setIdAlbum(id);
-                album.setName(resultSet.getString("name"));
-                album.setPrice(resultSet.getInt("price"));
-                album.setDiscount(resultSet.getInt("discount"));
-                album.setShow(resultSet.getBoolean("isShow"));
-                album.setListImage(imageDAO.getAllImageByIdAlbum(id));
-                int idTopic = belongDAO.getIdTopicFromIdAlbum(id);
-                String nameTopic = topicDAO.getNameTopicById(idTopic);
-                album.setBelongTopic(nameTopic);
-                listAlbum.add(album);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            Connect.closeConnection(connection);
-        }
-        return listAlbum;
-    }
+
     public ArrayList<Album> getAllAlbumForClient(int page, int recSize) {
         Connection connection = null;
         ArrayList<Album> listAlbum = new ArrayList<>();
