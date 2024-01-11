@@ -128,18 +128,21 @@
                 <%if(listOrder.size() ==0){%>
                 <%}else{%>
                 <%for(Order order : listOrder){%>
+                <%
+                    String href = "cart".equals(order.getType()) ? "#" : ("./detail?type=" + order.getType() + "&id=" + order.getIdProduct());
+                %>
                 <tr>
                     <td class="align-middle"><%=order.getIdOrder()%></td>
                     <td class="align-middle"><%=order.getIdByer()%></td>
                     <td class="align-middle"><%=order.getReceiver()%></td>
                     <td class="align-middle"><%=order.getPhoneNumber()%></td>
-                    <td class="align-middle"><a href="./detail?type=<%=order.getType()%>&id=<%=order.getIdProduct()%>"><%=order.getNameProduct()%></a></td>
+                    <td class="align-middle"><a href="<%=href%>"><%=order.getNameProduct()%></a></td>
                     <td class="align-middle"><%=order.getQuantity()%></td>
                     <td class="align-middle"><a href="./editShip?q=<%=order.getIdOrder()%>&type=<%=order.getType()%>"><%=order.getStatus()%></a></td>
                     <td class="align-middle"><%=order.getAddress()%></td>
                     <td class="align-middle"><%=vndFormat.format(order.getTotalPrice())%></td>
                     <td class="align-middle">
-                        <button data-id="<%=order.getIdOrder()%>" data-toggle="modal" data-target="#deleteOrderAdmin"  class="btn btn-sm btn-primary">
+                        <button data-id="<%=order.getIdOrder()%>" value="<%=order.getType()%>" data-toggle="modal" data-target="#deleteOrderAdmin"  class="btn btn-sm btn-primary">
                                <i class="fa fa-times"></i></button>
                     </td>
                 </tr>
@@ -278,9 +281,46 @@
         }
     });
 </script>
-<script src="js/Dialog.js"></script>
 <script>
-    Dialog("#deleteOrderAdmin","#btn-delete-order","/order/odd","idOrder", "delete")
+    // Dialog("#deleteOrder","#btn-delete-order","/order/odd","idOrder", "delete")
+    let where;
+    document.addEventListener("DOMContentLoaded", () => {
+        $("#deleteOrderAdmin").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            let type = button.val()
+            id = button.data('id')// Extract info from data-* attributes
+            if (type === "odd") {
+                where = "/order/odd"
+            }
+            if (type === "album") {
+                where = "/order/album"
+            }
+            if(type ==="cart"){
+                where = "/order/cart"
+            }
+        })
+        const btnDelete = document.querySelector("#btn-delete-order")
+        btnDelete.addEventListener('click', async () => {
+
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:8080/demoProject_war/${where}?idOrder=${id}`;
+
+            xhr.open('DELETE', url, true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                    location.reload();
+                } else if (xhr.status === 500) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                }
+            };
+
+            xhr.send();
+        })
+    })
 </script>
 </body>
 </html>
