@@ -55,7 +55,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
-
+    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body>
@@ -168,6 +168,7 @@
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
                             <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
@@ -227,7 +228,8 @@
                     </div>
                     <div class="cols-md-6 mb-4">
                         <%--Nút xóa toàn bộ sản phẩm khỏi giỏ hàng --%>
-                        <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal" data-target="#deleteCart">
+                        <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal"
+                                data-target="#deleteCart">
                             Làm trống giỏ hàng
                         </button>
                     </div>
@@ -269,7 +271,7 @@
                 %>
                 <tr>
                     <td class="text-left"><img class="mr-5" src="<%=image %>" alt="<%=name %>"
-                                                  style="width: 50px;">
+                                               style="width: 50px;">
                         <a
                                 href="./detail?type=<%=type%>&id=<%=id%>"><%=name%>
                         </a>
@@ -281,9 +283,13 @@
                     <td class="align-middle">
                         <div class="input-group quantity mx-auto"
                              style="width: 300px;justify-content: center ; align-items: center">
-                            <button  value="<%=id%>" title="<%=type%>"  class="p-2 border mr-3 decre" style="cursor: pointer">-</button>
+                            <button value="<%=id%>" title="<%=type%>" class="p-2 border mr-3 decre"
+                                    style="cursor: pointer">-
+                            </button>
                             <span id="quantity"><%=cartProduct.getQuantity()%></span>
-                            <button value="<%=id%>" title="<%=type%>"  class="p-2 border ml-3 incre" style="cursor: pointer">+</button>
+                            <button value="<%=id%>" title="<%=type%>" class="p-2 border ml-3 incre"
+                                    style="cursor: pointer">+
+                            </button>
 
                         </div>
                     </td>
@@ -330,15 +336,52 @@
         </div>
 
 
+        <%-- Xác nhận xóa mã giảm giá --%>
+        <script>
+            function confirmRemoveDiscount() {
+                var result = confirm('Bạn có chắc muốn xóa mã giảm giá này chứ?');
+                if (result) {
+                    location.href = 'removeDiscount';
+                }
+            }
+        </script>
+
+
         <div class="col-lg-4">
-            <form class="mb-5" action="">
+            <%-- Thông báo cho việc mã giảm giá bị xóa --%>
+            <% String message = (String) session.getAttribute("message"); %>
+            <% if (message != null) { %>
+            <p style="color: green;"><%= message %>
+            </p>
+            <% session.removeAttribute("message"); %>
+            <% } %>
+
+            <%-- Thông báo cho việc nhập mã giảm giá --%>
+            <% String discountError = (String) session.getAttribute("discountError"); %>
+            <% String discountSuccess = (String) session.getAttribute("discountSuccess"); %>
+
+            <% if (discountError != null) { %>
+            <p style="color: red;"><%= discountError %>
+            </p>
+            <% session.removeAttribute("discountError"); %>
+            <% } %>
+
+            <% if (discountSuccess != null) { %>
+            <p style="color: green;"><%= discountSuccess %>
+            </p>
+            <% session.removeAttribute("discountSuccess"); %>
+            <% } %>
+
+            <form action="applyDiscount" method="post">
                 <div class="input-group">
-                    <input type="text" class="form-control p-4" placeholder="Mã Giảm Giá">
+                    <input type="text" class="form-control p-4" name="discountCode" placeholder="Mã Giảm Giá">
                     <div class="input-group-append">
-                        <button class="btn btn-primary">Áp Dụng Mã</button>
+                        <button type="submit" class="btn btn-primary">Áp Dụng Mã</button>
                     </div>
                 </div>
             </form>
+
+
             <div class="card border-secondary mb-5">
                 <div class="card-header bg-secondary border-0">
                     <h4 class="font-weight-semi-bold m-0">Tóm Tắt Giỏ Hàng</h4>
@@ -349,15 +392,25 @@
                         <h6 class="font-weight-medium"><%=vndFormat.format(cart.totalPrice())%>
                         </h6>
                     </div>
+
+                    <%-- Hiển thị mã giảm giá được áp --%>
+                    <% if (cart.getAppliedDiscount() != null) { %>
                     <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Phí Vận Chuyển</h6>
-                        <h6 class="font-weight-medium">30.000 VNĐ</h6>
+                        <h6 class="font-weight-medium">Mã <%= cart.getAppliedDiscount().getDescription() %> được áp
+                            dụng.
+                        </h6>
+                        <%-- Nút xóa mã giảm giá ra khỏi tổng tiền --%>
+                        <button type="button" class="close" aria-label="Close" onclick="confirmRemoveDiscount();">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <% } %>
+
                 </div>
                 <div class="card-footer border-secondary bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
                         <h5 class="font-weight-bold">Tổng Cộng</h5>
-                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.totalPrice() + 30000)%>
+                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.totalPrice())%>
                         </h5>
                     </div>
                     <a href="checkout">
@@ -368,7 +421,6 @@
                 </div>
             </div>
         </div>
-
 
     </div>
 </div>
@@ -497,13 +549,13 @@
     })
 </script>
 <script>
-    const inrceArr =Array.from(document.querySelectorAll(".incre"))
+    const inrceArr = Array.from(document.querySelectorAll(".incre"))
     const derceArr = Array.from(document.querySelectorAll(".decre"))
 
     const quantity = document.querySelector("#quantity");
     let value = +quantity.innerHTML;
-    inrceArr.forEach((inrce)=>{
-        inrce.addEventListener("click",()=>{
+    inrceArr.forEach((inrce) => {
+        inrce.addEventListener("click", () => {
             value++;
             quantity.innerHTML = value;
             const type = inrce.title;
@@ -527,35 +579,35 @@
             xhr.send();
         })
     })
-   derceArr.forEach((derce)=>{
-       derce.addEventListener("click",()=>{
-           if(value <=1){
-               return;
-           }
-           value--;
+    derceArr.forEach((derce) => {
+        derce.addEventListener("click", () => {
+            if (value <= 1) {
+                return;
+            }
+            value--;
 
-           quantity.innerHTML = value;
-           const type = derce.title;
-           const id = derce.value
-           const xhr = new XMLHttpRequest();
-           const url = `http://localhost:8080/demoProject_war/delete-cart-item?type=${type}&idProduct=${id}`;
+            quantity.innerHTML = value;
+            const type = derce.title;
+            const id = derce.value
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:8080/demoProject_war/delete-cart-item?type=${type}&idProduct=${id}`;
 
-           xhr.open("POST", url, true);
+            xhr.open("POST", url, true);
 
-           xhr.onload = function () {
-               if (xhr.status === 200) {
-                   const data = JSON.parse(xhr.responseText);
-                   alert(data.message);
-                   location.reload();
-               } else if (xhr.status === 500) {
-                   const data = JSON.parse(xhr.responseText);
-                   alert(data.message);
-               }
-           };
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                    location.reload();
+                } else if (xhr.status === 500) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                }
+            };
 
-           xhr.send();
-       })
-   })
+            xhr.send();
+        })
+    })
 </script>
 </body>
 

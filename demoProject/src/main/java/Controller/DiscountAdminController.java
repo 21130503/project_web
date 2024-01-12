@@ -36,6 +36,7 @@ public class DiscountAdminController extends HttpServlet {
         HttpSession session = req.getSession();
 
         String action = req.getParameter("action");
+        //Tạo thêm mã giảm giá mới
         if ("addDiscount".equals(action)) {
             int code = Integer.parseInt(req.getParameter("code"));
             String description = req.getParameter("description");
@@ -51,13 +52,6 @@ public class DiscountAdminController extends HttpServlet {
                 return;
             }
 
-            //Tên có thể trùng ko sao cả sẽ phần biệt bằng code
-//            // Kiểm tra xem TÊN mã giảm giá đã tồn tại chưa
-//            if (discountDAO.checkDiscountExist(description)) {
-//                session.setAttribute("errorMessage", "Tên mã giảm giá này đã tồn tại");
-//                resp.sendRedirect("./discountAdmin");
-//                return;
-//            }
 
             // Tạo đối tượng Discount và thêm vào cơ sở dữ liệu
             Discount discount = new Discount();

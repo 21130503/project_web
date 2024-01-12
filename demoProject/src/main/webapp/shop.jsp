@@ -346,7 +346,8 @@
                             <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
 
-                            <button  title="<%=album.getType()%>" value="<%=album.getIdAlbum()%>" href="" class="btn btn-sm text-dark p-0 addCart"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            <button  title="<%=album.getType()%>" value="<%=album.getIdAlbum()%>"
+                                     href="" class="btn btn-sm text-dark p-0 addCart"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
                                 vào giỏ</button>
 
                         </div>

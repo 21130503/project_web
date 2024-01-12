@@ -92,7 +92,7 @@
             </a>
             <a href="./cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge"><%=cart.getTotal()%></span>
+                <span class="badge"><%=cart.total()%></span>
             </a>
         </div>
     </div>

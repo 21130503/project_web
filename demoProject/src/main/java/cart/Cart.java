@@ -2,6 +2,7 @@ package cart;
 
 import DAO.ProductDAO;
 import nhom26.Album;
+import nhom26.Discount;
 import nhom26.OddImage;
 
 import java.util.HashMap;
@@ -10,6 +11,8 @@ import java.util.Map;
 
 public class Cart {
     Map<String, CartProduct> data = new HashMap<>();
+
+    private Discount appliedDiscount;
 
     public Map<String, CartProduct> getData() {
         return this.data;
@@ -20,13 +23,21 @@ public class Cart {
     public Cart() {
     }
 
+    public Discount getAppliedDiscount() {
+        return appliedDiscount;
+    }
+
+    public void setAppliedDiscount(Discount discount) {
+        this.appliedDiscount = discount;
+    }
+
     public boolean add(String type, String idMap, int id) {
         System.out.println("idMap: " + idMap);
         if (data.containsKey(idMap)) {
             CartProduct cartProduct = data.get(idMap);
             int quantity = cartProduct.getQuantity();
             cartProduct.setQuantity(++quantity);
-            return  true;
+            return true;
 
         } else {
             if ("odd".equals(type)) {
@@ -43,19 +54,19 @@ public class Cart {
         }
         return false;
     }
-    public boolean removeCart(String idMap){
-        if(!data.containsKey(idMap)){
-            return  false;
+
+    public boolean removeCart(String idMap) {
+        if (!data.containsKey(idMap)) {
+            return false;
 
         }
         CartProduct cartProduct = data.get(idMap);
         int quantity = cartProduct.getQuantity();
         System.out.println(quantity);
-        if(quantity <=1){
-            return  false;
-        }
-        else{
-            cartProduct.setQuantity(quantity-1);
+        if (quantity <= 1) {
+            return false;
+        } else {
+            cartProduct.setQuantity(quantity - 1);
             return true;
         }
     }
@@ -76,11 +87,19 @@ public class Cart {
         data.clear();
         return true;
     }
-    public int totalPrice(){
+
+    public int totalPrice() {
         int totalPrice = 0;
-        for(CartProduct cartProduct :getData().values()){
-            totalPrice += cartProduct.getQuantity()*cartProduct.price();
+        for (CartProduct cartProduct : getData().values()) {
+            totalPrice += cartProduct.getQuantity() * cartProduct.price();
         }
-        return  totalPrice;
+
+        // Áp dụng giảm giá nếu có
+        if (appliedDiscount != null) {
+            double discountAmount = (double) totalPrice * appliedDiscount.getDiscountValue();
+            totalPrice -= discountAmount;
+        }
+
+        return totalPrice;
     }
 }
