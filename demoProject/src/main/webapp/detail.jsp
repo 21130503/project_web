@@ -4,6 +4,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.awt.*" %>
 <%@ page import="nhom26.*" %>
+<%@ page import="favourite.Favourite" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -32,6 +33,7 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
 </head>
 
 <body>
@@ -47,6 +49,8 @@
     ArrayList<Feedback> listFeedback = request.getAttribute("feedback") == null ? new ArrayList<>() : (ArrayList<Feedback>) request.getAttribute("feedback");
     int totalFeedbackStar = request.getAttribute("totalStar") == null ? 0 : (int) request.getAttribute("totalStar");
     double avgFeedbackStar = request.getAttribute("avgStar") == null ? 0 : (double) request.getAttribute("avgStar");
+    ArrayList<OddImage> listSuggestedOddImage = (ArrayList<OddImage>) request.getAttribute("suggestedOdd");
+    ArrayList<Album> listSuggestedAlbum = (ArrayList<Album>) request.getAttribute("suggestedAlbum");
     if (type.equals("album")) {
         album = (Album) request.getAttribute("detail");
         name = album.getName();
@@ -83,7 +87,10 @@
 
 %>
 
-
+<%
+    Favourite  favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
@@ -106,9 +113,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart.jsp" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -154,9 +161,9 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index.html" class="nav-item nav-link active">Trang chủ</a>
-                        <a href="shop.jsp" class="nav-item nav-link">Cửa hàng</a>
-                        <a href="donhangcuaban.jsp" class="nav-item nav-link">Đơn hàng của bạn</a>
+                        <a href="./index" class="nav-item nav-link active">Trang chủ</a>
+                        <a href="./shop" class="nav-item nav-link">Cửa hàng</a>
+                        <a href="./donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -211,8 +218,10 @@
 </div>
 <!-- Page Header End -->
 <div class="d-flex align-items-center justify-content-center">
-    <h5 class="text-danger"><%=errActive%></h5>
-    <h5 class="text-danger"><%=errVerify%></h5>
+    <h5 class="text-danger"><%=errActive%>
+    </h5>
+    <h5 class="text-danger"><%=errVerify%>
+    </h5>
 </div>
 
 <!-- Shop Detail Start -->
@@ -227,7 +236,7 @@
                 <h3 class="font-weight-semi-bold"><%=name%>
                 </h3>
                 <div class="option">
-                    <button class="btn border"><i class="fas fa-heart text-primary"></i></button>
+                    <button id="btn-favourite" title="<%=type%>" value="<%=id%>" class="btn border"><i class="fas fa-heart text-primary"></i></button>
                     <button class="btn border "><i class="fas fa-shopping-cart text-primary"></i></button>
                 </div>
             </div>
@@ -407,106 +416,66 @@
     <div class="row px-xl-5">
         <div class="col">
             <div class="owl-carousel related-carousel">
+                <%if (listSuggestedAlbum.size() > 0 && "album".equals(type)) {%>
+                <%for (Album album1 : listSuggestedAlbum) {%>
                 <div class="card product-item border-0">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/cat.avif" alt="">
+                        <img class="img-fluid w-100 image-view" src="<%=album1.getListImage().get(0)%>" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Ablum mèo</h6>
+                        <h6 class="text-truncate mb-3"><%=album1.getName()%></h6>
                         <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
+                            <h6><%=vndFormat.format(album1.getPrice() - album1.getDiscount())%></h6>
                             <h6 class="text-muted ml-2">
-                                <del>200.000VNĐ</del>
+                                <del><%=vndFormat.format(album1.getPrice())%></del>
                             </h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                        <a href="./detail?type=album&id=<%=album1.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
                             tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
                 </div>
+                <%
+                        }
+                    }
+                %>
+
+            </div>
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+                <%if (listSuggestedOddImage.size() > 0 && "odd".equals(type)) {%>
+                <%for (OddImage oddImage1 : listSuggestedOddImage) {%>
                 <div class="card product-item border-0">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/dog.avif" alt="">
+                        <img class="img-fluid w-100 image-view" src="<%=oddImage1.getImage()%>" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Ablum chó</h6>
+                        <h6 class="text-truncate mb-3"><%=oddImage1.getName()%></h6>
                         <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
+                            <h6><%=vndFormat.format(oddImage1.getPrice() - oddImage1.getDiscount())%></h6>
                             <h6 class="text-muted ml-2">
-                                <del>200.000VNĐ</del>
+                                <del><%=vndFormat.format(oddImage1.getPrice())%></del>
                             </h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                        <a href="./detail?type=odd&id=<%=oddImage1.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
                             tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
                 </div>
-                <div class="card product-item border-0">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/car.avif" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Album Car</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2">
-                                <del>500.000VNĐ</del>
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
-                            tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-                <div class="card product-item border-0">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/anime.avif" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Hoạt hình tuyển tập</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2">
-                                <del>50.000VNĐ</del>
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
-                            tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-                <div class="card product-item border-0">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="img/animal.avif" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Thế giới động vật</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2">
-                                <del>70.000VNĐ</del>
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
-                            tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
+                <%
+                        }
+                    }
+                %>
+
             </div>
         </div>
     </div>
@@ -608,6 +577,35 @@
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
 <script src="./js/user.js"></script>
+<script>
+    const  idProduct = <%=id%>
+</script>
+<script>
+    const favouriteBtn = document.getElementById('btn-favourite');
+    console.log(favouriteBtn)
+    const type = favouriteBtn.title;
+    console.log(idProduct)
+    favouriteBtn.addEventListener("click", ()=>{
+        const xhr = new XMLHttpRequest();
+        const url = `http://localhost:8080/demoProject_war/favourite?type=<%=type%>&idProduct=<%=id%>`;
+
+        xhr.open("POST", url, true);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                location.reload();
+            } else if (xhr.status === 500) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                // window.location.href="http://localhost:8080/demoProject_war/favourite"
+            }
+        };
+
+        xhr.send();
+    })
+</script>
 </body>
 
 </html>

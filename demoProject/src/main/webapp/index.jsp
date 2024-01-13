@@ -6,6 +6,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="nhom26.Album" %>
 <%@ page import="java.util.Random" %>
+<%@ page import="favourite.Favourite" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -36,6 +37,7 @@
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/common.css">
     <%--    axios--%>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"
@@ -49,13 +51,18 @@
     ArrayList<OddImage> listOddNew = request.getAttribute("listOddNew") == null ? new ArrayList<>() : (ArrayList<OddImage>) request.getAttribute("listOddNew");
     ArrayList<Album> listAlbumNew = request.getAttribute("listAlbumNew") == null ? new ArrayList<>() : (ArrayList<Album>) request.getAttribute("listAlbumNew");
     ArrayList<OddImage> listOddImageOrder = request.getAttribute("listOddImageOrder") == null ? new ArrayList<>() : (ArrayList<OddImage>) request.getAttribute("listOddImageOrder");
+    ArrayList<Album> listAlbumOrder = request.getAttribute("listAlbumOrder") == null ? new ArrayList<>() : (ArrayList<Album>) request.getAttribute("listAlbumOrder");
     Random random = new Random();
-    int albumRan = random.nextInt(0,listAlbumNew.size());
+    int albumRan = random.nextInt(0, listAlbumNew.size());
     Album albumSlide = listAlbumNew.get(albumRan);
     int oddRan = random.nextInt(0, listOddImageOrder.size());
     OddImage oddImageSlide = listOddImageOrder.get(oddRan);
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
+%>
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if(favourite ==null) favourite = new Favourite();
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -79,9 +86,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart.jsp" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -109,7 +116,7 @@
                     <p>Chưa có topic nào</p>
                     <%} else {%>
                     <%for (Topic topic : listTopic) {%>
-                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
+                    <a href="./pTopic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
                     </a>
                     <%}%>
                     <%}%>
@@ -127,7 +134,7 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
                         <a href="./index" class="nav-item nav-link active">Trang chủ</a>
-                        <a href="shop.jsp" class="nav-item nav-link">Cửa hàng</a>
+                        <a href="./shop" class="nav-item nav-link">Cửa hàng</a>
                         <a href="./donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
@@ -155,7 +162,7 @@
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
@@ -171,8 +178,10 @@
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                             <div class="p-3" style="max-width: 700px;">
                                 <h4 class="text-light text-uppercase font-weight-medium mb-3">Ảnh bán chạy</h4>
-                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%=oddImageSlide.getName()%></h3>
-                                <a href="./detail?type=odd&id=<%=oddImageSlide.getIdOddImage()%>" class="btn btn-light py-2 px-3">Xem ngay</a>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%=oddImageSlide.getName()%>
+                                </h3>
+                                <a href="./detail?type=odd&id=<%=oddImageSlide.getIdOddImage()%>"
+                                   class="btn btn-light py-2 px-3">Xem ngay</a>
                             </div>
                         </div>
                     </div>
@@ -181,8 +190,10 @@
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                             <div class="p-3" style="max-width: 700px;">
                                 <h4 class="text-light text-uppercase font-weight-medium mb-3">Album mới nhất</h4>
-                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%=albumSlide.getName()%></h3>
-                                <a href="./detail?type=album&id=<%=albumSlide.getIdAlbum()%>" class="btn btn-light py-2 px-3">Xem ngay</a>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%=albumSlide.getName()%>
+                                </h3>
+                                <a href="./detail?type=album&id=<%=albumSlide.getIdAlbum()%>"
+                                   class="btn btn-light py-2 px-3">Xem ngay</a>
                             </div>
                         </div>
                     </div>
@@ -223,30 +234,19 @@
 
 
 <!-- Offer Start -->
-<!-- <div class="container-fluid offer pt-5">
-    <div class="row px-xl-5">
-        <div class="col-md-6 pb-4">
-            <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
-                <img src="img/offer-1.png" alt="">
-                <div class="position-relative" style="z-index: 1;">
-                    <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
-                    <h1 class="mb-4 font-weight-semi-bold">Spring Collection</h1>
-                    <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 pb-4">
-            <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
-                <img src="img/offer-2.png" alt="">
-                <div class="position-relative" style="z-index: 1;">
-                    <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
-                    <h1 class="mb-4 font-weight-semi-bold">Winter Collection</h1>
-                    <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
-                </div>
+<div class="container-fluid">
+    <div class="col-md-12 pt-4 pb-4 d-flex justify-content-around align-items-center  bg-secondary">
+        <img style="height: 300px;" src="img/sale.jpg" alt="">
+        <div class=" text-center text-md-right text-white mb-2 py-5 px-5">
+            <div class="" style="z-index: 1;">
+                <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
+                <h1 class="mb-4 font-weight-semi-bold">Spring Collection</h1>
+                <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
             </div>
         </div>
     </div>
-</div> -->
+
+
 <!-- Offer End -->
 
 
@@ -257,25 +257,29 @@
     </div>
     <div class="row px-xl-5 pb-3">
         <%if (listOddImageOrder.size() == 0) {%>
-            <div></div>
+        <div></div>
         <%} else {%>
         <%for (OddImage oddImage : listOddImageOrder) {%>
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="<%=oddImage.getImage()%>" alt="<%=oddImage.getName()%>">
+                    <img class="img-fluid w-100 image-view" src="<%=oddImage.getImage()%>" alt="<%=oddImage.getName()%>">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"><%=oddImage.getName()%></h6>
+                    <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
+                    </h6>
                     <div class="d-flex justify-content-center">
-                        <h6><%=oddImage.getPrice() - oddImage.getDiscount()%></h6>
+                        <h6><%=vndFormat.format(oddImage.getPrice() - oddImage.getDiscount())%>
+                        </h6>
                         <h6 class="text-muted ml-2">
-                            <del><%=oddImage.getPrice()%></del>
+                            <del><%=vndFormat.format(oddImage.getPrice())%>
+                            </del>
                         </h6>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i
+                            class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
                     <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
                         vào giỏ</a>
                 </div>
@@ -460,27 +464,40 @@
         <h2 class="section-title px-5"><span class="px-2">Bộ sưu tập bán chạy</span></h2>
     </div>
     <div class="row px-xl-5 pb-3">
+        <%if (listAlbumOrder.size() == 0) {%>
+        <div></div>
+        <%} else {%>
+        <%for (Album album : listAlbumOrder) {%>
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/pepole.avif" alt="">
+                    <img class="img-fluid w-100 image-view" src="<%=album.getListImage().get(0)%>" alt="">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hoạt động con người</h6>
+                    <h6 class="text-truncate mb-3"><%=album.getName()%>
+                    </h6>
                     <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
+                        <h6><%=vndFormat.format(album.getPrice() - album.getDiscount())%>
+                        </h6>
                         <h6 class="text-muted ml-2">
-                            <del>100.000 VNĐ</del>
+                            <del><%=vndFormat.format(album.getPrice())%>
+                            </del>
                         </h6>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                    <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i
+                            class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
                     <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
                         vào giỏ</a>
                 </div>
             </div>
         </div>
+        <%
+                }
+            }
+        %>
+
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
@@ -643,7 +660,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div style="height: 337px;" class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img style="height: 164px;object-fit: cover" class="img-fluid w-100" src="<%=oddImage.getImage()%>"
+                    <img class="img-fluid w-100 image-view" src="<%=oddImage.getImage()%>"
                          alt="">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
@@ -846,7 +863,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div style="height: 337px;" class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img style="height: 164px;object-fit: cover" class="img-fluid w-100"
+                    <img  class="img-fluid w-100 image-view"
                          src="<%=album.getListImage().get(0)%>" alt="">
                 </div>
                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">

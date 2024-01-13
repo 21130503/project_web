@@ -24,31 +24,32 @@ public class DetailController extends HttpServlet {
         String type = req.getParameter("type");
         ProductDAO productDAO = new ProductDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
-        if (productDAO.getOddImageById(id) == null || productDAO.getAlbumById(id) == null) {
-            resp.sendRedirect("404.jsp");
-            return;
-        } else {
-            if (type.equals("album")) {
-                Album album = productDAO.getAlbumById(id);
-                req.setAttribute("detail", album);
-                req.setAttribute("type", "album");
-                req.setAttribute("feedback", feedbackDAO.getAllFeedbackForAlbumById(id));
-                req.setAttribute("totalStar", feedbackDAO.countRatingAlbum(id));
-                req.setAttribute("avgStar", feedbackDAO.AvgRatingAlbum(id));
-            } else if (type.equals("odd")) {
-                OddImage oddImage = productDAO.getOddImageById(id);
-                req.setAttribute("detail", oddImage);
-                req.setAttribute("type", "odd");
-                req.setAttribute("feedback", feedbackDAO.getAllFeedbackForOddImageById(id));
-                req.setAttribute("totalStar", feedbackDAO.countRatingOddImage(id));
-                req.setAttribute("avgStar", feedbackDAO.AvgRatingOddImage(id));
 
-            }
-            TopicDAO topicDAO = new TopicDAO();
-            req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
-            req.getRequestDispatcher("detail.jsp").forward(req, resp);
-            return;
+        if (type.equals("album")) {
+            Album album = productDAO.getAlbumById(id);
+            req.setAttribute("detail", album);
+            req.setAttribute("type", "album");
+            req.setAttribute("feedback", feedbackDAO.getAllFeedbackForAlbumById(id));
+            req.setAttribute("totalStar", feedbackDAO.countRatingAlbum(id));
+            req.setAttribute("avgStar", feedbackDAO.AvgRatingAlbum(id));
+
+        } else if (type.equals("odd")) {
+            OddImage oddImage = productDAO.getOddImageById(id);
+            req.setAttribute("detail", oddImage);
+            req.setAttribute("type", "odd");
+            req.setAttribute("feedback", feedbackDAO.getAllFeedbackForOddImageById(id));
+            req.setAttribute("totalStar", feedbackDAO.countRatingOddImage(id));
+            req.setAttribute("avgStar", feedbackDAO.AvgRatingOddImage(id));
+
 
         }
+        TopicDAO topicDAO = new TopicDAO();
+        req.setAttribute("suggestedOdd", productDAO.getTop8ddImageNew());
+        req.setAttribute("suggestedAlbum", productDAO.getTop8AlbumNew());
+        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
+        req.getRequestDispatcher("detail.jsp").forward(req, resp);
+        return;
+
     }
+
 }

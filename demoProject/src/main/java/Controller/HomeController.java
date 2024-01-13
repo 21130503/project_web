@@ -24,6 +24,7 @@ public class HomeController extends HttpServlet {
         req.setAttribute("listAlbumNew", productDAO.getTop8AlbumNew());
         req.setAttribute("listOddNew",productDAO.getTop8ddImageNew());
         req.setAttribute("listOddImageOrder", orderDAO.getTop8OddImageOrder());
+        req.setAttribute("listAlbumOrder", orderDAO.getTop8OAlbumOrder());
         req.getRequestDispatcher("index.jsp").forward(req,resp);
     }
 }

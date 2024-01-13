@@ -42,7 +42,7 @@ public class EditOddImageController extends HttpServlet {
             req.getRequestDispatcher("EditOddImage.jsp").forward(req, resp);
             return;
         }
-        if(productDAO.checkOddNameExistForUpdate(idOddImage,nameOddImage)){
+        if(productDAO.checkOddNameExist(nameOddImage)){
             req.setAttribute("listNameTopic", topicDAO.getAllNamesTopic());
             req.setAttribute("errName" , "Tên đã tồn tại");
             req.setAttribute("oddImage",productDAO.getOddImageByIdForAdminUpdate(Integer.parseInt(idOddImage)));

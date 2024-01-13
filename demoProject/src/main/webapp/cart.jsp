@@ -6,6 +6,9 @@
 <%@ page import="nhom26.Topic" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="favourite.Favourite" %>
+<%@ page import="nhom26.OddImage" %>
+<%@ page import="nhom26.Album" %>
 
 <%
     Cart cart = (Cart) session.getAttribute("cart");
@@ -14,9 +17,12 @@
     }
 
     Locale vnLocal = new Locale("vi", "VN");
-    DecimalFormat vndFormat = new DecimalFormat("#,### VND");
+    DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
-
+<%
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if (favourite == null) favourite = new Favourite();
+%>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -49,6 +55,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body>
@@ -57,6 +64,7 @@
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
 %>
+
 
 <!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
@@ -80,13 +88,13 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border" title="Yêu thích">
+            <a href="./favourite" class="btn border" title="Yêu thích">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
             <a href="cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge"><%=cart.gettotal()%></span>
+                <span class="badge"><%=cart.total()%></span>
             </a>
         </div>
     </div>
@@ -160,6 +168,7 @@
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
                             <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
@@ -195,84 +204,216 @@
     <div class="row px-xl-5">
 
         <div class="col-lg-8 table-responsive mb-5">
-            <% if (cart.gettotal() > 0) { %>
+            <% if (cart.total() > 0) { %>
             <table class="table table-bordered text-center mb-0">
                 <thead class="bg-secondary text-dark">
-                <tr>
+
+                <%--Thông báo lỗi khi cố giảm số lượng sản phẩm xuống dưới 1--%>
+                <% if (session.getAttribute("errorMessage") != null) { %>
+                <div class="alert alert-warning">
+                    <%= session.getAttribute("errorMessage") %>
+                </div>
+                <% session.removeAttribute("errorMessage"); %> <%--Xóa thông báo khi tải lại trang--%>
+                <% } %>
+
+
+                <%-- Khi có sản phẩm trong giỏ --%>
+                <div class="align-middle" style="display: flex;justify-content: space-between">
+                    <div class="cols-md-6 mb-4">
+                        <a href="./shop" style="display: flex;justify-content: center">
+                            <button class="btn btn-block btn-primary"
+                                    style="width: 100%">Mua sắm tiếp
+                            </button>
+                        </a>
+                    </div>
+                    <div class="cols-md-6 mb-4">
+                        <%--Nút xóa toàn bộ sản phẩm khỏi giỏ hàng --%>
+                        <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal"
+                                data-target="#deleteCart">
+                            Làm trống giỏ hàng
+                        </button>
+                    </div>
+                </div>
+
+                <tr class="align-middle">
                     <th>Sản Phẩm</th>
                     <th>Giá</th>
                     <th>Số lượng</th>
+                    <th>Thành tiền</th>
                     <th>Xóa</th>
                 </tr>
                 </thead>
                 <tbody class="align-middle">
-                <% for (Map.Entry<Integer, CartProduct> entry : cart.getData().entrySet()) {
-                    CartProduct cartProduct = entry.getValue();
-                    String productName;
-                    String productImage;
-                    int productPrice;
 
-                    // Xác định sản phẩm là OddImage hay Album
-                    if (cartProduct.getOddImage() != null) {
-                        productName = cartProduct.getOddImage().getName();
-                        productImage = cartProduct.getOddImage().getImage();
-                        productPrice = cartProduct.getOddImage().getPrice();
-                    } else {
-                        productName = cartProduct.getAlbum().getName();
-                        productImage = cartProduct.getAlbum().getListImage().get(0);
-                        productPrice = cartProduct.getAlbum().getPrice();
+                <%-- Dữ liệu cho cart --%>
+                <%
+                    String name = null, type = null, image = null;
+                    int id = 0, price = 0, discount = 0;
+                %>
+                <% for (Map.Entry<String, CartProduct> entry : cart.getData().entrySet()) {
+                    CartProduct cartProduct = entry.getValue();
+                    if (cartProduct.getObject() instanceof OddImage) {
+                        id = ((OddImage) cartProduct.getObject()).getIdOddImage();
+                        price = ((OddImage) cartProduct.getObject()).getPrice();
+                        discount = ((OddImage) cartProduct.getObject()).getDiscount();
+                        name = ((OddImage) cartProduct.getObject()).getName();
+                        type = ((OddImage) cartProduct.getObject()).getType();
+                        image = ((OddImage) cartProduct.getObject()).getImage();
+                    }
+                    if (cartProduct.getObject() instanceof Album) {
+                        id = ((Album) cartProduct.getObject()).getIdAlbum();
+                        price = ((Album) cartProduct.getObject()).getPrice();
+                        discount = ((Album) cartProduct.getObject()).getDiscount();
+                        name = ((Album) cartProduct.getObject()).getName();
+                        type = ((Album) cartProduct.getObject()).getType();
+                        image = ((Album) cartProduct.getObject()).getListImage().get(0);
                     }
                 %>
                 <tr>
-                    <td class="align-middle"><img src="<%=productImage %>" alt="<%=productName %>"
-                                                  style="width: 50px;"></td>
-                    <td class="align-middle"><%=vndFormat.format(productPrice)%>
+                    <td class="text-left"><img class="mr-5" src="<%=image %>" alt="<%=name %>"
+                                               style="width: 50px;">
+                        <a
+                                href="./detail?type=<%=type%>&id=<%=id%>"><%=name%>
+                        </a>
                     </td>
-                    <td class="align-middle"><%=cartProduct.getQuantity()%>
+
+                    <td class="align-middle"><%=vndFormat.format(price - discount)%>
                     </td>
+
                     <td class="align-middle">
-                        <!-- Thêm link hoặc hành động để xóa sản phẩm từ giỏ hàng -->
-                        <button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button>
+                        <div class="input-group quantity mx-auto"
+                             style="width: 300px;justify-content: center ; align-items: center">
+                            <button value="<%=id%>" title="<%=type%>" class="p-2 border mr-3 decre"
+                                    style="cursor: pointer">-
+                            </button>
+                            <span id="quantity"><%=cartProduct.getQuantity()%></span>
+                            <button value="<%=id%>" title="<%=type%>" class="p-2 border ml-3 incre"
+                                    style="cursor: pointer">+
+                            </button>
+
+                        </div>
                     </td>
+
+                    <td class="align-middle"><%=vndFormat.format(price - discount)%>
+                    </td>
+
+                    <td class="align-middle">
+
+                        <button type="submit" id="btnRemove" value="<%=id%>" title="<%=type%>"
+                                class="btnRemove btn btn-sm btn-primary">
+                            <i class="fa fa-times"></i>
+                        </button>
+
+                    </td>
+
                 </tr>
                 <% } %>
                 </tbody>
             </table>
             <% } else { %>
-            <p>Giỏ hàng trống.</p>
+            <%-- Khi không có sản phẩm trong giỏ --%>
+            <div class="">
+                <div class="text-center mb-4">
+                    <h2 class="section px-5"><span
+                    >Bạn chưa mua sản phẩm nào.</span></h2>
+                </div>
+
+                <div class="" style="justify-content: center; display: flex">
+                    <img class="align-middle" style="width: 16%; margin-top: 40px" src="./asset/remove-from-cart.png"
+                         alt="ảnh giỏ hàng">
+                </div>
+
+                <div class="text-center" style="margin-top: 40px; ">
+                    <a href="./shop" style="display: flex;justify-content: center">
+                        <button class="btn btn-block btn-primary my-3 py-3"
+                                style="width: 50%">Mua sắm
+                        </button>
+                    </a>
+                </div>
+
+            </div>
             <% } %>
         </div>
 
 
+        <%-- Xác nhận xóa mã giảm giá --%>
+        <script>
+            function confirmRemoveDiscount() {
+                var result = confirm('Bạn có chắc muốn xóa mã giảm giá này chứ?');
+                if (result) {
+                    location.href = 'removeDiscount';
+                }
+            }
+        </script>
+
+
         <div class="col-lg-4">
-            <form class="mb-5" action="">
+            <%-- Thông báo cho việc mã giảm giá bị xóa --%>
+            <% String message = (String) session.getAttribute("message"); %>
+            <% if (message != null) { %>
+            <p style="color: green;"><%= message %>
+            </p>
+            <% session.removeAttribute("message"); %>
+            <% } %>
+
+            <%-- Thông báo cho việc nhập mã giảm giá --%>
+            <% String discountError = (String) session.getAttribute("discountError"); %>
+            <% String discountSuccess = (String) session.getAttribute("discountSuccess"); %>
+
+            <% if (discountError != null) { %>
+            <p style="color: red;"><%= discountError %>
+            </p>
+            <% session.removeAttribute("discountError"); %>
+            <% } %>
+
+            <% if (discountSuccess != null) { %>
+            <p style="color: green;"><%= discountSuccess %>
+            </p>
+            <% session.removeAttribute("discountSuccess"); %>
+            <% } %>
+
+            <form action="applyDiscount" method="post">
                 <div class="input-group">
-                    <input type="text" class="form-control p-4" placeholder="Mã Giảm Giá">
+                    <input type="text" class="form-control p-4" name="discountCode" placeholder="Mã Giảm Giá">
                     <div class="input-group-append">
-                        <button class="btn btn-primary">Áp Dụng Mã</button>
+                        <button type="submit" class="btn btn-primary">Áp Dụng Mã</button>
                     </div>
                 </div>
             </form>
+
+
             <div class="card border-secondary mb-5">
                 <div class="card-header bg-secondary border-0">
                     <h4 class="font-weight-semi-bold m-0">Tóm Tắt Giỏ Hàng</h4>
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-3 pt-1">
-                        <h6 class="font-weight-medium">Tổng phụ</h6>
-                        <h6 class="font-weight-medium">300.000 VNĐ</h6>
+                        <h6 class="font-weight-medium">Tổng Tiền Các Sản Phẩm</h6>
+                        <h6 class="font-weight-medium"><%=vndFormat.format(cart.totalPrice())%>
+                        </h6>
                     </div>
+
+                    <%-- Hiển thị mã giảm giá được áp --%>
+                    <% if (cart.getAppliedDiscount() != null) { %>
                     <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Phí Vận Chuyển</h6>
-                        <h6 class="font-weight-medium">30.000 VNĐ</h6>
+                        <h6 class="font-weight-medium">Mã <%= cart.getAppliedDiscount().getDescription() %> được áp
+                            dụng.
+                        </h6>
+                        <%-- Nút xóa mã giảm giá ra khỏi tổng tiền --%>
+                        <button type="button" class="close" aria-label="Close" onclick="confirmRemoveDiscount();">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <% } %>
+
                 </div>
                 <div class="card-footer border-secondary bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
                         <h5 class="font-weight-bold">Tổng Cộng</h5>
-                        <h5 class="font-weight-bold">330.000 VNĐ</h5>
+                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.totalPrice())%>
+                        </h5>
                     </div>
-                    <a href="checkout.jsp">
+                    <a href="checkout">
                         <button class="btn btn-block btn-primary my-3 py-3">Tiến Hành Thanh
                             Toán
                         </button>
@@ -280,6 +421,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 <!-- Cart End -->
@@ -348,6 +490,26 @@
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+<%--Confirm delete--%>
+<div id="deleteCart" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xóa toàn bộ giỏ hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa toàn bộ không ? </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-cart" type="button" class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- JavaScript Libraries -->
@@ -362,6 +524,91 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
+<script src="js/removeSession.js"></script>
+<script> removeSession("cart")</script>
+<script>
+    const btnRemoveAll = document.querySelector("#btn-delete-cart");
+    btnRemoveAll.addEventListener("click", () => {
+        const xhr = new XMLHttpRequest();
+        const url = `http://localhost:8080/demoProject_war/cart`;
+        xhr.open("DELETE", url, true);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                location.reload();
+            } else if (xhr.status === 500) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                // window.location.href="http://localhost:8080/demoProject_war/favourite"
+            }
+        };
+
+        xhr.send();
+    })
+</script>
+<script>
+    const inrceArr = Array.from(document.querySelectorAll(".incre"))
+    const derceArr = Array.from(document.querySelectorAll(".decre"))
+
+    const quantity = document.querySelector("#quantity");
+    let value = +quantity.innerHTML;
+    inrceArr.forEach((inrce) => {
+        inrce.addEventListener("click", () => {
+            value++;
+            quantity.innerHTML = value;
+            const type = inrce.title;
+            const id = inrce.value
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:8080/demoProject_war/cart?type=${type}&idProduct=${id}`;
+
+            xhr.open("POST", url, true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                    location.reload();
+                } else if (xhr.status === 500) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                }
+            };
+
+            xhr.send();
+        })
+    })
+    derceArr.forEach((derce) => {
+        derce.addEventListener("click", () => {
+            if (value <= 1) {
+                return;
+            }
+            value--;
+
+            quantity.innerHTML = value;
+            const type = derce.title;
+            const id = derce.value
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:8080/demoProject_war/delete-cart-item?type=${type}&idProduct=${id}`;
+
+            xhr.open("POST", url, true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                    location.reload();
+                } else if (xhr.status === 500) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                }
+            };
+
+            xhr.send();
+        })
+    })
+</script>
 </body>
 
 </html>
