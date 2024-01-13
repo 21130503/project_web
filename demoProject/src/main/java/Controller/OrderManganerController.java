@@ -1,13 +1,16 @@
 package Controller;
 
 import DAO.OrderDAO;
+import nhom26.Order;
 
+import javax.print.attribute.standard.MediaSizeName;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @WebServlet(name = "OrderManganerController", value = "/orderManager")
 public class OrderManganerController extends HttpServlet {
@@ -19,12 +22,16 @@ public class OrderManganerController extends HttpServlet {
         String optionValue = req.getParameter("option");
         System.out.println(optionValue);
         if(optionValue == null || "all".equals(optionValue)) {
-            req.setAttribute("listOrder", orderDAO.getAllOrderOddImageForAdmin());
+            ArrayList<Order> orders = new ArrayList<>( orderDAO.getAllOrderOddImageForAdmin());
+            orders.addAll(orderDAO.getAllOrderAlbumForAdmin());
+            req.setAttribute("listOrder",orders);
             req.getRequestDispatcher("quanlidonhang.jsp").forward(req, resp);
             return;
         }
         else{
-            req.setAttribute("listOrder", orderDAO.getAllOrderOddImageForByStatus(optionValue));
+            ArrayList<Order> orders  = new ArrayList<>(orderDAO.getAllOrderOddImageForByStatus(optionValue));
+            orders.addAll(orderDAO.getAllOrderAlbumForByStatus(optionValue));
+            req.setAttribute("listOrder", orders);
             req.getRequestDispatcher("quanlidonhang.jsp").forward(req,resp);
             return;
         }

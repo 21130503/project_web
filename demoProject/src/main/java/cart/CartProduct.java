@@ -4,23 +4,12 @@ import nhom26.Album;
 import nhom26.OddImage;
 
 public class CartProduct {
-    private int quantity;
-    private OddImage oddImage;
-    private Album album;
+     int quantity=1;
+     Object object;
 
-    public CartProduct(int quantity, OddImage oddImage, Album album) {
+    public CartProduct(int quantity, Object object) {
         this.quantity = quantity;
-        this.oddImage = oddImage;
-        this.album = album;
-    }
-
-    public void increQuantity(int quantity) {
-        this.quantity += quantity;
-    }
-
-    public void decreQuantity(int quantity) {
-        this.quantity -= quantity;
-        if (this.quantity <= 0) this.quantity += quantity;
+        this.object = object;
     }
 
     public int getQuantity() {
@@ -31,20 +20,27 @@ public class CartProduct {
         this.quantity = quantity;
     }
 
-    public OddImage getOddImage() {
-        return oddImage;
+    public Object getObject() {
+        return object;
     }
 
-    public void setOddImage(OddImage oddImage) {
-        this.oddImage = oddImage;
+    public void setObject(Object object) {
+        this.object = object;
     }
-
-    public Album getAlbum() {
-        return album;
+    public  int increase(){
+        return quantity++;
     }
-
-    public void setAlbum(Album album) {
-        this.album = album;
+    public int reduce(){
+       return  quantity > 1? quantity--:quantity;
     }
-
+    public int price(){
+        int price = 0;
+        if(object instanceof  Album){
+            price = ((Album) object).getPrice() -((Album) object).getDiscount();
+        }
+        if (object instanceof  OddImage){
+            price = ((OddImage) object).getPrice() - ((OddImage) object).getDiscount();
+        }
+        return  price;
+    }
 }

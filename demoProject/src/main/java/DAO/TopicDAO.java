@@ -44,14 +44,18 @@ public class TopicDAO {
         }
         return false;
     }
-    public ArrayList<Topic> getAllTopics(){
+    public ArrayList<Topic> getAllTopics(int page,int recSize){
         Connection connection = null;
+        int startIndex = (page-1)*recSize;
         ArrayList<Topic> listTopic = new ArrayList<Topic>();
         try{
             connection = Connect.getConnection();
             // Câu truy vấn lấy dữ liệu topic
-            String getAllTopic = "select idTopic , name, interfaceImage, isShow from topic";
+            String getAllTopic = "select idTopic , name, interfaceImage, isShow from topic LIMIT ? OFFSET ?";
             PreparedStatement preparedStatementGetTopic = connection.prepareStatement(getAllTopic);
+            preparedStatementGetTopic.setInt(1,recSize);
+            preparedStatementGetTopic.setInt(2,startIndex);
+
             ResultSet resultSetGetTopic = preparedStatementGetTopic.executeQuery();
             while (resultSetGetTopic.next()) {
                 Topic topic = new Topic();
@@ -331,5 +335,23 @@ public class TopicDAO {
             Connect.closeConnection(connection);
         }
         return false;
+    }
+    public int totalTopic(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idTopic) as total from Topic";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
     }
 }

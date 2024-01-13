@@ -58,9 +58,9 @@
     String errPriceAlbum = request.getAttribute("errPriceAlbum") == null ? "" : (String) request.getAttribute("errPriceAlbum");
     String errDescriptionAlbum = request.getAttribute("errDescriptionAlbum") == null ? "" : (String) request.getAttribute("errDescriptionAlbum");
     String errImageForAlbum = request.getAttribute("errImageForAlbum") == null ? "" : (String) request.getAttribute("errImageForAlbum");
-    String errNameExist =  request.getAttribute("errNameExist") == null ? "" : (String) request.getAttribute("errNameExist");
+    String errNameExist = request.getAttribute("errNameExist") == null ? "" : (String) request.getAttribute("errNameExist");
 
-    ArrayList<String> listNamesTopic = request.getAttribute("listNamesTopic") == null ? new ArrayList<>() :(ArrayList<String>) request.getAttribute("listNamesTopic");
+    ArrayList<String> listNamesTopic = request.getAttribute("listNamesTopic") == null ? new ArrayList<>() : (ArrayList<String>) request.getAttribute("listNamesTopic");
     ArrayList<OddImage> listOddImage = (ArrayList<OddImage>) request.getAttribute("listOddImage");
     ArrayList<Album> listAlbum = null;
     Object attribute = request.getAttribute("listAlbum");
@@ -75,8 +75,8 @@
     DecimalFormat vndFormat = new DecimalFormat("#,### VND");
 %>
 <%
-    String albumStr  ="Danh sách album" ;
-    String oddStr =  "Danh sách ảnh lẻ";
+    String albumStr = "Danh sách album";
+    String oddStr = "Danh sách ảnh lẻ";
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -148,14 +148,16 @@
                 </thead>
                 <tbody class="align-middle">
                 <%if (listAlbum.size() == 0) {%>
-                    <tr>
-                        <td>Chưa có album nào</td>
-                    </tr>
+                <tr>
+                    <td>Chưa có album nào</td>
+                </tr>
                 <%} else {%>
                 <%for (Album album : listAlbum) {%>
-                <%boolean showAlbum = album.isShow();
+                <%
+                    boolean showAlbum = album.isShow();
                     String eyeIconClass = showAlbum ? "fa-regular fa-eye" : "fa-regular fa-eye-slash";
-                    String title = showAlbum ? "Ẩn" : "Bán lại";%>
+                    String title = showAlbum ? "Ẩn" : "Bán lại";
+                %>
                 <tr>
                     <td class="text-left"><img class="mr-5"
                                                src=<%=album.getListImage().get(album.getListImage().size()-1) ==null ? "" :album.getListImage().get(album.getListImage().size()-1) %> alt=""
@@ -169,10 +171,12 @@
                         <p class="text-center"><%=album.getBelongTopic()%>
                         </p>
                     </td>
-                    <td class="align-middle"><a title="<%=title%>" class="btn btn-sm btn-primary" data-id=<%=album.getIdAlbum()%> data-toggle="modal" data-target="#showAlbum" ><i class="<%= eyeIconClass %>"></i></a></td>
+                    <td class="align-middle"><a title="<%=title%>" class="btn btn-sm btn-primary"
+                                                data-id=<%=album.getIdAlbum()%> data-toggle="modal"
+                                                data-target="#showAlbum"><i class="<%= eyeIconClass %>"></i></a></td>
 
                     <td class="align-middle">
-                        <a href="album?q=<%=album%>/edit" class="btn btn-sm btn-primary"><i
+                        <a href="album?q=<%=album.getIdAlbum()%>/edit" class="btn btn-sm btn-primary"><i
                                 class="fa-solid fa-pen"></i></a>
                     </td>
                     <td class="align-middle">
@@ -202,7 +206,9 @@
                 </thead>
                 <tbody class="align-middle">
                 <%if (listAlbum == null || listAlbum.size() == 0) {%>
-                <tr> <td>Chưa có ảnh lẻ nào</td></tr>
+                <tr>
+                    <td>Chưa có ảnh lẻ nào</td>
+                </tr>
                 <%} else {%>
                 <%for (OddImage odd : listOddImage) {%>
                 <%
@@ -222,10 +228,12 @@
                         <p class="text-center"><%=odd.getBelongTopic()%>
                         </p>
                     </td>
-                    <td class="align-middle"><a title="<%=title%>" class="btn btn-sm btn-primary" data-id=<%=odd.getIdOddImage()%> data-toggle="modal" data-target="#showOddImage" ><i class="<%= eyeIconClass %>"></i></a></td>
+                    <td class="align-middle"><a title="<%=title%>" class="btn btn-sm btn-primary"
+                                                data-id=<%=odd.getIdOddImage()%> data-toggle="modal"
+                                                data-target="#showOddImage"><i class="<%= eyeIconClass %>"></i></a></td>
                     <td class="align-middle">
                         <a href="oddImage?q=<%=odd.getIdOddImage()%>/edit"
-                                class="btn btn-sm btn-primary" id="btn-change"><i class="fa-solid fa-pen"></i></a>
+                           class="btn btn-sm btn-primary" id="btn-change"><i class="fa-solid fa-pen"></i></a>
                     </td>
                     <td class="align-middle">
                         <button data-id="<%=odd.getIdOddImage()%>" data-toggle="modal" data-target="#deleteOdd"
@@ -237,16 +245,25 @@
                 </tbody>
             </table>
         </div>
+        <div class="col-lg-12 mt-4 mb-4 justify-content-center">
+            <div id="paginationContainer">
+                <a href="#" class="btn-primary p-2 mr-2 " id="prevPage">Trang trước</a>
+                <span id="currentPage">1</span>
+                <a href="#" class="btn-primary p-2 ml-2" id="nextPage">Trang sau</a>
+            </div>
+        </div>
         <div class="col-lg-6 table-responsive mb-5">
             <div class="card-header bg-secondary border-0">
                 <h6 class="font-weight-semi-bold m-0">Thêm album mới </h6>
             </div>
-            <form class="mb-5  mt-4" action="./album"  method="post" id="formAlbum" enctype="multipart/form-data" accept-charset="UTF-8">
+            <form class="mb-5  mt-4" action="./album" method="post" id="formAlbum" enctype="multipart/form-data"
+                  accept-charset="UTF-8">
                 <div class="input-group d-flex justify-content-between mt-3">
                     <select class="form-control p-3 h-100 w-100" name="nameTopic">
                         <option value="">Vui lòng chọn chủ đề</option>
-                        <%for (String nameTopic :  listNamesTopic){%>
-                        <option value="<%=nameTopic%>"><%=nameTopic%></option>
+                        <%for (String nameTopic : listNamesTopic) {%>
+                        <option value="<%=nameTopic%>"><%=nameTopic%>
+                        </option>
                         <%}%>
                     </select>
                     <p class="show-message text-danger mt-2">
@@ -255,37 +272,44 @@
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-4">
-                    <input name="nameAlbum" type="text" id="name-album" class="form-control p-3 w-100" placeholder="Tên bộ sưu tập">
+                    <input name="nameAlbum" type="text" id="name-album" class="form-control p-3 w-100"
+                           placeholder="Tên bộ sưu tập">
                     <p class="show-message text-danger mt-2">
-                       <%= errNameAlbum%>
+                        <%= errNameAlbum%>
                         <%=errNameExist%>
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
                     <input name="price" type="number" id="price-album" class="form-control p-3 w-100" placeholder="Giá">
                     <p class="show-message text-danger mt-2">
-                       <%= errPriceAlbum%>
+                        <%= errPriceAlbum%>
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input name="discount" value="0" type="number" id="discount-album" class="form-control p-3 w-100" placeholder="Giảm giá">
+                    <input name="discount" value="0" type="number" id="discount-album" class="form-control p-3 w-100"
+                           placeholder="Giảm giá">
                     <p class="show-message text-danger mt-2">
                         <%= errDiscountAlbum%>
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <textarea name="description" cols="30" rows="5" class="form-control w-100" placeholder="Mô tả sản phẩm"></textarea>
+                    <textarea name="description" cols="30" rows="5" class="form-control w-100"
+                              placeholder="Mô tả sản phẩm"></textarea>
                     <p class="show-message text-danger mt-2">
                         <%= errDescriptionAlbum%>
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input type="file" accept="image/*" multiple style="height: 100%;" id="upload-img"
-                           class="form-control p-3 w-100" placeholder="Tải ảnh lên" name="listImg">
+                    <input type="file" accept="image/*" style="height: 100%;" class="form-control p-3 w-100 upload-img"
+                           placeholder="Tải ảnh lên" name="listImg">
                     <p class="show-message text-danger mt-2">
                         <%= errImageForAlbum%>
                     </p>
                 </div>
+                <div id="dynamic-input-container"></div>
+
+
+                <!-- Container to dynamically append new input -->
                 <div id="show-upload-img" class="input-group d-flex  mt-3">
 
                 </div>
@@ -298,13 +322,14 @@
             <div class="card-header bg-secondary border-0">
                 <h6 class="font-weight-semi-bold m-0">Thêm ảnh lẻ mới</h6>
             </div>
-            <form class="mb-5  mt-4" id="form-odd" method="post" action="./oddImage"  enctype="multipart/form-data">
+            <form class="mb-5  mt-4" id="form-odd" method="post" action="./oddImage" enctype="multipart/form-data">
                 <div class="input-group d-flex justify-content-between mt-3">
-<%--                    <input type="text" id="idbts-odd" class="form-control p-3" placeholder="Thuộc chủ đề">--%>
+                    <%--                    <input type="text" id="idbts-odd" class="form-control p-3" placeholder="Thuộc chủ đề">--%>
                     <select class="form-control p-3 h-100 w-100" name="nameTopic" id="">
                         <option value="">Vui lòng chọn chủ đề</option>
-                        <%for (String nameTopic :  listNamesTopic){%>
-                            <option value="<%=nameTopic%>"><%=nameTopic%></option>
+                        <%for (String nameTopic : listNamesTopic) {%>
+                        <option value="<%=nameTopic%>"><%=nameTopic%>
+                        </option>
                         <%}%>
                     </select>
                     <p class="show-message text-danger mt-2">
@@ -313,7 +338,8 @@
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-4">
-                    <input name="nameImg" type="text" id="name-odd" class="form-control p-3 w-100" placeholder="Tên ảnh">
+                    <input name="nameImg" type="text" id="name-odd" class="form-control p-3 w-100"
+                           placeholder="Tên ảnh">
                     <p class="show-message text-danger mt-2">
                         <%= errNameImg%>
                         <%=errNameOddExist%>
@@ -327,13 +353,15 @@
 
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <input name="discount" value="0" type="number" id="discount-odd" class="form-control p-3 w-100" placeholder="Giảm giá">
+                    <input name="discount" value="0" type="number" id="discount-odd" class="form-control p-3 w-100"
+                           placeholder="Giảm giá">
                     <p class="show-message text-danger mt-2">
                         <%=errDiscount%>
                     </p>
                 </div>
                 <div class="input-group d-flex justify-content-between mt-3">
-                    <textarea name="description" id="message" cols="30" rows="5" class="form-control w-100" placeholder="Mô tả sản phẩm"></textarea>
+                    <textarea name="description" id="message" cols="30" rows="5" class="form-control w-100"
+                              placeholder="Mô tả sản phẩm"></textarea>
                     <p class="show-message text-danger mt-2">
                         <%= errDescription%>
                     </p>
@@ -499,8 +527,8 @@
 <script>
     Dialog("#deleteOdd", '#btn-delete-odd-image', "/product/deleteOddImage", 'idOddImage', 'delete')
     Dialog("#deleteAlbum", '#btn-delete-album', "/product/deleteAlbum", 'idAlbum', 'delete')
-    Dialog("#showOddImage","#btn-hidden-odd","/product/editShowOddImage", "idOddImage", "put")
-    Dialog("#showAlbum","#btn-hidden-album","/product/editShowAlbum", "idAlbum", "put")
+    Dialog("#showOddImage", "#btn-hidden-odd", "/product/editShowOddImage", "idOddImage", "put")
+    Dialog("#showAlbum", "#btn-hidden-album", "/product/editShowAlbum", "idAlbum", "put")
 </script>
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -515,5 +543,60 @@
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
 </body>
+<script>
+    $(document).ready(function () {
+        // Lắng nghe sự kiện thay đổi trên input file
+        $(document).on('change', '.upload-img', function () {
+            // Kiểm tra xem có file được chọn hay không
+            if (this.files.length > 0) {
+                // Sao chép input hiện tại và thêm vào container
+                var newInput = $(this).clone();
+                $('#dynamic-input-container').append(newInput);
+
+                // Reset giá trị của input mới để không ảnh hưởng đến input trước đó
+                newInput.val('');
+
+                // Thêm sự kiện thay đổi cho input mới (nếu cần)
+                newInput.on('change', function () {
+                    // Xử lý sự kiện khi có thay đổi trên input mới
+                });
+            }
+        });
+    });
+</script>
+<script>
+    function loadPage(pageNumber) {
+        $.ajax({
+            type: "GET",
+            url: "./product",
+            data: { page: pageNumber },
+            success: function (data) {
+                $("#itemContainer").html(data);
+            },
+            error: function () {
+                alert("Lỗi khi tải dữ liệu trang.");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        // Mặc định, tải trang đầu tiên khi trang web được nạp
+        loadPage(1);
+
+        // Bắt sự kiện click trên liên kết "Trang trước"
+        $(document).on("click", "a#prevPage", function (event) {
+            event.preventDefault();
+            var currentPage = parseInt($("#currentPage").val());
+            loadPage(currentPage - 1);
+        });
+
+        // Bắt sự kiện click trên liên kết "Trang sau"
+        $(document).on("click", "a#nextPage", function (event) {
+            event.preventDefault();
+            var currentPage = parseInt($("#currentPage").val());
+            loadPage(currentPage + 1);
+        });
+    });
+</script>
 
 </html>

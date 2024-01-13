@@ -2,65 +2,104 @@ package cart;
 
 import DAO.ProductDAO;
 import nhom26.Album;
+import nhom26.Discount;
 import nhom26.OddImage;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Cart {
-    Map<Integer, CartProduct> data = new HashMap<>();
+    Map<String, CartProduct> data = new HashMap<>();
 
-    public Map<Integer, CartProduct> getData() {
+    private Discount appliedDiscount;
+
+    public Map<String, CartProduct> getData() {
         return this.data;
     }
 
-    public boolean addProduct(Object product, int quantity) {
-        int productId;
-        CartProduct cartProduct;
+    ProductDAO productDAO = new ProductDAO();
 
-        if (product instanceof OddImage) {
-            OddImage oddImage = (OddImage) product;
-            productId = oddImage.getIdOddImage();
-        } else if (product instanceof Album) {
-            Album album = (Album) product;
-            productId = album.getIdAlbum();
-        } else {
-            return false; // Nếu sản phẩm không phải OddImage hoặc Album
-        }
-
-        if (data.containsKey(productId)) {
-            cartProduct = data.get(productId);
-            cartProduct.increQuantity(quantity);
-        } else {
-            cartProduct = new CartProduct(quantity, (product instanceof OddImage) ?
-                    (OddImage) product : null, (product instanceof Album) ? (Album) product : null);
-        }
-
-        data.put(productId, cartProduct);
-        return true;
+    public Cart() {
     }
 
-
-    public boolean remove(int id) {
-        if (!data.containsKey(id)) return false;
-        data.remove(id);
-        return true;
+    public Discount getAppliedDiscount() {
+        return appliedDiscount;
     }
 
-    //Tính tổng giá trị của giỏ hàng
-    public int getTotalPrice() {
-        int totalPrice = 0;
-        for (CartProduct cartProduct : data.values()) {
-            if (cartProduct.getOddImage() != null) {
-                totalPrice += cartProduct.getQuantity() * cartProduct.getOddImage().getPrice();
-            } else if (cartProduct.getAlbum() != null) {
-                totalPrice += cartProduct.getQuantity() * cartProduct.getAlbum().getPrice();
+    public void setAppliedDiscount(Discount discount) {
+        this.appliedDiscount = discount;
+    }
+
+    public boolean add(String type, String idMap, int id) {
+        System.out.println("idMap: " + idMap);
+        if (data.containsKey(idMap)) {
+            CartProduct cartProduct = data.get(idMap);
+            int quantity = cartProduct.getQuantity();
+            cartProduct.setQuantity(++quantity);
+            return true;
+
+        } else {
+            if ("odd".equals(type)) {
+                OddImage oddImage = productDAO.getOddImageById(id);
+                data.put(idMap, new CartProduct(1, oddImage));
+                return true;
+
+            }
+            if ("album".equals(type)) {
+                Album album = productDAO.getAlbumById(id);
+                data.put(idMap, new CartProduct(1, album));
+                return true;
             }
         }
-        return totalPrice;
+        return false;
     }
 
-    public int gettotal() {
+    public boolean removeCart(String idMap) {
+        if (!data.containsKey(idMap)) {
+            return false;
+
+        }
+        CartProduct cartProduct = data.get(idMap);
+        int quantity = cartProduct.getQuantity();
+        System.out.println(quantity);
+        if (quantity <= 1) {
+            return false;
+        } else {
+            cartProduct.setQuantity(quantity - 1);
+            return true;
+        }
+    }
+
+    public int total() {
         return data.size();
+    }
+
+    public boolean remove(String idMap) {
+        if (!data.containsKey(idMap)) {
+            return false;
+        }
+        data.remove(idMap);
+        return true;
+    }
+
+    public boolean removeAll() {
+        data.clear();
+        return true;
+    }
+
+    public int totalPrice() {
+        int totalPrice = 0;
+        for (CartProduct cartProduct : getData().values()) {
+            totalPrice += cartProduct.getQuantity() * cartProduct.price();
+        }
+
+        // Áp dụng giảm giá nếu có
+        if (appliedDiscount != null) {
+            double discountAmount = (double) totalPrice * appliedDiscount.getDiscountValue();
+            totalPrice -= discountAmount;
+        }
+
+        return totalPrice;
     }
 }

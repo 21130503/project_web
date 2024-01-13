@@ -133,9 +133,9 @@
                     <td class="align-middle"><%=order.getIdByer()%></td>
                     <td class="align-middle"><%=order.getReceiver()%></td>
                     <td class="align-middle"><%=order.getPhoneNumber()%></td>
-                    <td class="align-middle"><%=order.getNameProduct()%></td>
+                    <td class="align-middle"><a href="./detail?type=<%=order.getType()%>&id=<%=order.getIdProduct()%>"><%=order.getNameProduct()%></a></td>
                     <td class="align-middle"><%=order.getQuantity()%></td>
-                    <td class="align-middle"><%=order.getStatus()%></td>
+                    <td class="align-middle"><a href="./editShip?q=<%=order.getIdOrder()%>&type=<%=order.getType()%>"><%=order.getStatus()%></a></td>
                     <td class="align-middle"><%=order.getAddress()%></td>
                     <td class="align-middle"><%=vndFormat.format(order.getTotalPrice())%></td>
                     <td class="align-middle">
@@ -158,7 +158,7 @@
 <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
     <div class="row px-xl-5 pt-5">
         <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-            <a href="index.jsp" class="text-decoration-none">
+            <a href="./index" class="text-decoration-none">
                 <h1 class="logo" style="height: 60px; text-align: start; margin-top: -16px;">Nhóm 26</h1>
             </a>
             <p>Shop Nhóm 26 - Điểm đến đáng tin cậy cho các loại ảnh bản quyền, với sự đa dạng và phong phú trong

@@ -48,6 +48,7 @@
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
             (ArrayList<Topic>) request.getAttribute("listTopic");
     ArrayList<Order> listOrder = request.getAttribute("Order") == null ? new ArrayList<>() : (ArrayList<Order>) request.getAttribute("Order");
+    ArrayList<Order> listOrderAlbum = request.getAttribute("OrderAlbum") == null ? new ArrayList<>() : (ArrayList<Order>) request.getAttribute("OrderAlbum");
 %>
 <%
     Locale vnLocal = new Locale("vi", "VN");
@@ -58,7 +59,11 @@
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
+<<<<<<< HEAD
             <a href="index" class="text-decoration-none">
+=======
+            <a href="./index" class="text-decoration-none">
+>>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -79,7 +84,7 @@
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge">0</span>
             </a>
-            <a href="cart" class="btn border" title="Giỏ hàng">
+            <a href="cart.jsp" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge">0</span>
             </a>
@@ -121,10 +126,14 @@
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <a href="index" class="text-decoration-none d-block d-lg-none">
 =======
                 <a href="./index" class="text-decoration-none d-block d-lg-none">
 >>>>>>> d68c03236a8fdf27d2a78f702eab60d762eb0701
+=======
+                <a href="./index" class="text-decoration-none d-block d-lg-none">
+>>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -185,7 +194,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
         <h1 class="font-weight-semi-bold text-uppercase mb-3">Đơn hàng của bạn</h1>
         <div class="d-inline-flex">
-            <p class="m-0"><a href="index">Trang chủ</a></p>
+            <p class="m-0"><a href="index.jsp">Trang chủ</a></p>
             <p class="m-0 px-2">-</p>
             <p class="m-0">Đơn hàng của bạn</p>
         </div>
@@ -220,7 +229,7 @@
                 <%for(Order order : listOrder){%>
                     <tr>
                         <td class="align-middle"><%= order.getIdOrder()%></td>
-                        <td class="align-middle"><%= order.getNameProduct()%></td>
+                        <td class="align-middle"><a href="./detail?type=<%=order.getType()%>&id=<%=order.getIdProduct()%>"><%= order.getNameProduct()%></a></td>
                         <td class="align-middle"><%= order.getQuantity()%></td>
                         <td class="align-middle"><%= order.getReceiver()%></td>
                         <td class="align-middle"><%= order.getPhoneNumber()%></td>
@@ -238,7 +247,7 @@
                         </td>
                 </tr>
                 <%}%>
-                <%}%>
+               <%}%>
 
 
                 </tbody>

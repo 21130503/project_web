@@ -100,6 +100,12 @@ public class OrderController extends HttpServlet {
                 return;
             }
         }
+        if("album".equals(type)){
+            if(orderDAO.insertOrderAlbum(Integer.parseInt(idProduct),user.getId(),receiver,phoneNumber,Integer.parseInt(quantity),totalPrice,address )){
+                resp.sendRedirect(URL);
+                return;
+            }
+        }
 
     }
 

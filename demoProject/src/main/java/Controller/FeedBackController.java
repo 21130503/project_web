@@ -39,6 +39,14 @@ public class FeedBackController extends HttpServlet {
             resp.sendRedirect("login.jsp");
             return;
         }
+        //  Xử lí mua hàng rồi mới được bình luận
+        if(!orderDAO.checkUserOrderOddImage(user.getId(), id) || !orderDAO.checkUserOrderAlbum(user.getId(), id)){
+            HttpSession session1 = req.getSession();
+            session1.setAttribute("errMess", "Bạn chưa mua sản phẩm này ");
+            session1.setMaxInactiveInterval(60);
+            resp.sendRedirect(URL);
+            return;
+        }
 
 //        Xử lí value rỗng
         if (content.trim().length() == 0 && star == null) {
@@ -50,14 +58,6 @@ public class FeedBackController extends HttpServlet {
             return;
         }
 
-//        Chưa xử lí mua hàng rồi mới được bình luận
-        if(!orderDAO.checkUserOrderOddImage(user.getId(), id)){
-            HttpSession session1 = req.getSession();
-            session1.setAttribute("errMess", "Bạn chưa mua sản phẩm này ");
-            session1.setMaxInactiveInterval(60);
-            resp.sendRedirect(URL);
-            return;
-        }
 //        thỏa điều kiện thì mới cho insert
 //
         if (type.equals("album")) {

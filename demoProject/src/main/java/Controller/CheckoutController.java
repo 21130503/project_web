@@ -20,8 +20,6 @@ public class CheckoutController extends HttpServlet {
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
-        req.setAttribute("listAlbumNew", topicDAO.getAllTopics());
-        req.setAttribute("listOddNew", topicDAO.getAllTopics());
 
         req.getRequestDispatcher("checkout.jsp").forward(req, resp);
     }
