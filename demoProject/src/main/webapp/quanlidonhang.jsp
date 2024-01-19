@@ -47,7 +47,7 @@
 <!-- Topbar Start -->
 <%
     int totalPage = (int) request.getAttribute("totalPage");
-    int currentPage = (int) request.getAttribute("totalPage");
+    int currentPage = (int) request.getAttribute("currentPage");
 %>
 <div class="container-fluid">
 
@@ -105,9 +105,10 @@
         <form action="./orderManager" id="myForm">
             <p><input type="radio" class="" name="option" value="all"> Tất cả</p>
             <p><input type="radio" class="" name="option" value="Đang chuẩn bị"> Đang chuẩn bị</p>
-            <p><input type="radio" class="" name="option" value="Đã giao cho đơn vị vận chuyển"> Đã giao cho đơn vị vận chuyển</p>
-            <p><input type="radio"  class="" name="option" value="Đang vận chuyển"> Đang vận chuyển</p>
-            <p><input type="radio"  class="" name="option" value="Đã giao"> Đã giao</p>
+            <p><input type="radio" class="" name="option" value="Đã giao cho đơn vị vận chuyển"> Đã giao cho đơn vị vận
+                chuyển</p>
+            <p><input type="radio" class="" name="option" value="Đang vận chuyển"> Đang vận chuyển</p>
+            <p><input type="radio" class="" name="option" value="Đã giao"> Đã giao</p>
             <p><input type="radio" class="" name="option" value="Đã hủy"> Đã hủy</p>
         </form>
     </div>
@@ -129,28 +130,42 @@
                 </tr>
                 </thead>
                 <tbody class="align-middle">
-                <%if(listOrder.size() ==0){%>
-                <%}else{%>
-                <%for(Order order : listOrder){%>
+                <%if (listOrder.size() == 0) {%>
+                <%} else {%>
+                <%for (Order order : listOrder) {%>
                 <%
                     String href = "cart".equals(order.getType()) ? "#" : ("./detail?type=" + order.getType() + "&id=" + order.getIdProduct());
                 %>
                 <tr>
-                    <td class="align-middle"><%=order.getIdOrder()%></td>
-                    <td class="align-middle"><%=order.getIdByer()%></td>
-                    <td class="align-middle"><%=order.getReceiver()%></td>
-                    <td class="align-middle"><%=order.getPhoneNumber()%></td>
-                    <td class="align-middle"><a href="<%=href%>"><%=order.getNameProduct()%></a></td>
-                    <td class="align-middle"><%=order.getQuantity()%></td>
-                    <td class="align-middle"><a href="./editShip?q=<%=order.getIdOrder()%>&type=<%=order.getType()%>"><%=order.getStatus()%></a></td>
-                    <td class="align-middle"><%=order.getAddress()%></td>
-                    <td class="align-middle"><%=vndFormat.format(order.getTotalPrice())%></td>
+                    <td class="align-middle"><%=order.getIdOrder()%>
+                    </td>
+                    <td class="align-middle"><%=order.getIdByer()%>
+                    </td>
+                    <td class="align-middle"><%=order.getReceiver()%>
+                    </td>
+                    <td class="align-middle"><%=order.getPhoneNumber()%>
+                    </td>
+                    <td class="align-middle"><a href="<%=href%>"><%=order.getNameProduct()%>
+                    </a></td>
+                    <td class="align-middle"><%=order.getQuantity()%>
+                    </td>
+                    <td class="align-middle"><a
+                            href="./editShip?q=<%=order.getIdOrder()%>&type=<%=order.getType()%>"><%=order.getStatus()%>
+                    </a></td>
+                    <td class="align-middle"><%=order.getAddress()%>
+                    </td>
+                    <td class="align-middle"><%=vndFormat.format(order.getTotalPrice())%>
+                    </td>
                     <td class="align-middle">
-                        <button data-id="<%=order.getIdOrder()%>" value="<%=order.getType()%>" data-toggle="modal" data-target="#deleteOrderAdmin"  class="btn btn-sm btn-primary">
-                               <i class="fa fa-times"></i></button>
+                        <button data-id="<%=order.getIdOrder()%>" value="<%=order.getType()%>" data-toggle="modal"
+                                data-target="#deleteOrderAdmin" class="btn btn-sm btn-primary">
+                            <i class="fa fa-times"></i></button>
                     </td>
                 </tr>
-                <%}}%>
+                <%
+                        }
+                    }
+                %>
 
                 </tbody>
             </table>
@@ -162,12 +177,11 @@
                             <span class="sr-only">Quay lại</span>
                         </a>
                     </li>
-                    <%for(int i=1 ; i<=totalPage;i++){%>
-                    <%String s = currentPage==i ? "active": "";%>
-                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./orderManager?page=<%=i%>"><%=i%></a></li>
+                    <%for (int i = 1; i <= totalPage; i++) {%>
+                    <%String s = currentPage == i ? "active" : "";%>
+                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./orderManager?page=<%=i%>"><%=i%>
+                    </a></li>
                     <%}%>
-                    <%--                            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
-                    <%--                            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -291,7 +305,7 @@
                 $.ajax({
                     type: "GET",
                     url: "http://localhost:8080/demoProject_war/orderManager",
-                    data: { option: actionValue },
+                    data: {option: actionValue},
                     success: function (data) {
                         $("#listOrderContainer").empty();
                         // Xử lý phản hồi từ server và hiển thị tại trang
@@ -321,7 +335,7 @@
             if (type === "album") {
                 where = "/order/album"
             }
-            if(type ==="cart"){
+            if (type === "cart") {
                 where = "/order/cart"
             }
         })
