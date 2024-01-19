@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class UserDAO {
     public boolean checkEmailExist(String email) {
@@ -204,5 +205,111 @@ public class UserDAO {
         finally {
             Connect.closeConnection(connection);
         }
+    }
+    public User getUserById(String id){
+        Connection connect = null;
+        User user = new User();
+        try {
+            connect = Connect.getConnection();
+            String sql = "SELECT idUser,email,name,isVerifyEmail,isAdmin,isActive,createdAt from user WHERE idUser =?";
+            PreparedStatement preparedStatement = connect.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                user.setId(resultSet.getInt("idUser"));
+                user.setEmail(resultSet.getString("email"));
+                user.setUsername(resultSet.getString("name"));
+                user.setVerifyEmail(resultSet.getBoolean("isVerifyEmail"));
+                user.setActive(resultSet.getBoolean("isActive"));
+                user.setAdmin(resultSet.getBoolean("isAdmin"));
+                user.setCreatedAt(resultSet.getDate("createdAt"));
+                return  user;
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connect);
+        }
+        return  user;
+    }
+    public ArrayList<User> getUserByName(String name){
+        Connection connection= null;
+        ArrayList<User> listUser = new ArrayList<>();
+        ArrayList<User> res = new ArrayList<User>();
+        try{
+            connection = Connect.getConnection();
+            String getAllUser = "select idUser, email,name, isVerifyEmail, isActive, isAdmin, createdAt from user where  name like ?";
+            PreparedStatement preparedStatementGetUser= connection.prepareStatement(getAllUser);
+            preparedStatementGetUser.setString(1,"%" + name+"%");
+            ResultSet resultSetGetUser = preparedStatementGetUser.executeQuery();
+            while (resultSetGetUser.next()) {
+                User user = new User();
+                user.setId(resultSetGetUser.getInt("idUser"));
+                user.setEmail(resultSetGetUser.getString("email"));
+                user.setUsername(resultSetGetUser.getString("name"));
+                user.setVerifyEmail(resultSetGetUser.getBoolean("isVerifyEmail"));
+                user.setActive(resultSetGetUser.getBoolean("isActive"));
+                user.setAdmin(resultSetGetUser.getBoolean("isAdmin"));
+                user.setCreatedAt(resultSetGetUser.getDate("createdAt"));
+                listUser.add(user);
+            }
+            for (User user : listUser) {
+                if(!user.isAdmin()){
+                    res.add(user);
+                }
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return res;
+    }
+    public int getCount(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idUser) as total from user ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
+    }
+    public int getCountThisMonth(){
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idUser) as total from user where year(createdAt) = ? and month(createdAt) = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,currentYear);
+            preparedStatement.setInt(2,currentMonth);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
     }
 }

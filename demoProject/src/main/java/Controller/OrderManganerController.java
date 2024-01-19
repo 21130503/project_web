@@ -29,11 +29,23 @@ public class OrderManganerController extends HttpServlet {
         OrderDAO orderDAO = new OrderDAO();
         String optionValue = req.getParameter("option");
         System.out.println(optionValue);
+        int page =1;
+        int recSize = 2;
+        if(req.getParameter("page")!=null){
+            page = Integer.parseInt(req.getParameter("page"));
+        }
+        int totalOddOrder = orderDAO.totalOddOrder("oddImageOrder");
+        int totalAlbumOrder = orderDAO.totalOddOrder("albumOrder");
+        int totalCartOrder = orderDAO.totalOddOrder("cartOrder");
+        int max = Math.max(totalCartOrder, Math.max(totalOddOrder, totalAlbumOrder));
+        int totalPage = (int) Math.ceil((double) max/recSize);
         if(optionValue == null || "all".equals(optionValue)) {
-            ArrayList<Order> orders = new ArrayList<>( orderDAO.getAllOrderOddImageForAdmin());
-            orders.addAll(orderDAO.getAllOrderAlbumForAdmin());
-            orders.addAll(orderDAO.getAllCartOrderForAdmin());
+            ArrayList<Order> orders = new ArrayList<>( orderDAO.getAllOrderOddImageForAdmin( page, recSize));
+            orders.addAll(orderDAO.getAllOrderAlbumForAdmin( page, recSize));
+            orders.addAll(orderDAO.getAllCartOrderForAdmin( page, recSize));
             req.setAttribute("listOrder",orders);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlidonhang.jsp").forward(req, resp);
             return;
         }
@@ -42,6 +54,8 @@ public class OrderManganerController extends HttpServlet {
             orders.addAll(orderDAO.getAllOrderAlbumForByStatus(optionValue));
             orders.addAll(orderDAO.getAllCartOrderForByStatus(optionValue));
             req.setAttribute("listOrder", orders);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlidonhang.jsp").forward(req,resp);
             return;
         }

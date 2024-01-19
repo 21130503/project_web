@@ -5,17 +5,23 @@ import Services.Connect;
 import nhom26.Album;
 import nhom26.OddImage;
 import nhom26.Order;
+import nhom26.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 
 public class OrderDAO {
     java.util.Date utilDate = new java.util.Date();
     java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
     ProductDAO productDAO = new ProductDAO();
+    Calendar calendar = Calendar.getInstance();
+    int currentYear = calendar.get(Calendar.YEAR);
+    int currentMonth = calendar.get(Calendar.MONTH) + 1;
 
     public boolean insertOrderOdd(int idOddImage, int idUser,String receiver ,String phoneNumber ,int quantity, int totalPrice, String address) {
         Connection connection = null;
@@ -372,14 +378,17 @@ public class OrderDAO {
         return  list8AlbumOrder;
     }
 //    for admin
-public ArrayList<Order> getAllOrderOddImageForAdmin() {
+public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
     Connection connection = null;
     ArrayList<Order> listOrder = new ArrayList<>();
     ProductDAO productDAO = new ProductDAO();
+    int startIndex  = (page-1)*recSize;
     try {
         connection = Connect.getConnection();
-        String sql = "select idOrder, idOddImage,idUser,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from oddImageOrder";
+        String sql = "select idOrder, idOddImage,idUser,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from oddImageOrder LIMIT ? OFFSET ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1,recSize);
+        preparedStatement.setInt(2,startIndex);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             Order order = new Order();
@@ -404,14 +413,17 @@ public ArrayList<Order> getAllOrderOddImageForAdmin() {
     }
     return  listOrder;
 }
-    public ArrayList<Order> getAllCartOrderForAdmin() {
+    public ArrayList<Order> getAllCartOrderForAdmin(int page,int recSize) {
         Connection connection = null;
         ArrayList<Order> listOrder = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
+        int startIndex  = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idOrder, name,idUser,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from CartOrder";
+            String sql = "select idOrder, name,idUser,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from CartOrder  LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,recSize);
+            preparedStatement.setInt(2,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();
@@ -435,14 +447,17 @@ public ArrayList<Order> getAllOrderOddImageForAdmin() {
         }
         return  listOrder;
     }
-    public ArrayList<Order> getAllOrderAlbumForAdmin() {
+    public ArrayList<Order> getAllOrderAlbumForAdmin(int page,int recSize) {
         Connection connection = null;
         ArrayList<Order> listOrder = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
+        int startIndex  = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idOrder, idAlbum,idUser,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from AlbumOrder";
+            String sql = "select idOrder, idAlbum,idUser,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from AlbumOrder  LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,recSize);
+            preparedStatement.setInt(2,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();
@@ -702,10 +717,11 @@ public ArrayList<Order> getAllOrderOddImageForAdmin() {
         Connection connection= null;
         try{
             connection = Connect.getConnection();
-            String sql = "update OddImageOrder set status= ? where idOrder = ?";
+            String sql = "update OddImageOrder set status= ? ,purchareDate = ? where idOrder = ?";
             PreparedStatement preparedStatement =connection.prepareStatement(sql);
             preparedStatement.setString(1, status);
-            preparedStatement.setString(2,idOrder);
+            preparedStatement.setDate(2,sqlDate);
+            preparedStatement.setString(3,idOrder);
             int check = preparedStatement.executeUpdate();
             if(check > 0){
                 return  true;
@@ -722,10 +738,11 @@ public ArrayList<Order> getAllOrderOddImageForAdmin() {
         Connection connection= null;
         try{
             connection = Connect.getConnection();
-            String sql = "update AlbumOrder set status= ? where idOrder = ?";
+            String sql = "update AlbumOrder set status= ? , purchare= ? where idOrder = ?";
             PreparedStatement preparedStatement =connection.prepareStatement(sql);
             preparedStatement.setString(1, status);
-            preparedStatement.setString(2,idOrder);
+            preparedStatement.setDate(2,sqlDate);
+            preparedStatement.setString(3,idOrder);
             int check = preparedStatement.executeUpdate();
             if(check > 0){
                 return  true;
@@ -738,4 +755,445 @@ public ArrayList<Order> getAllOrderOddImageForAdmin() {
         }
         return false;
     }
+    public int totalOddOrder(String table){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from "+ table;
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
+    }
+    public int getOddTotalPrice(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select sum(totalPrice) as total from OddImageOrder where status like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã giao%");
+            ResultSet resultSet =  preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
+    }
+    public int getOddTotalPriceThisMonth(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select sum(totalPrice) as total from OddImageOrder where status like ? and year(purchareDate) =? and month(purchareDate) = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã giao%");
+            preparedStatement.setInt(2,currentYear);
+            preparedStatement.setInt(3,currentMonth);
+            ResultSet resultSet =  preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
+    }
+    public int getAlbumTotalPrice(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select sum(totalPrice) as total from AlbumOrder where status like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã giao%");
+            ResultSet resultSet =  preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
+    }
+    public int getAlbumTotalPriceThisMonth(){
+
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select sum(totalPrice) as total from AlbumOrder where status like ? and year(purchareDate) =? and month(purchareDate) = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã giao%");
+            preparedStatement.setInt(2,currentYear);
+            preparedStatement.setInt(3,currentMonth);
+            ResultSet resultSet =  preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  0;
+
+
+
+    }
+//    Đơn hàng đã hủy
+    public  int getOddCanceled(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from OddImageOrder where  status like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã hủy%");
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getOddCanceledThisMonth(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from OddImageOrder where  status like ? and year(purchareDate)=? and month(purchareDate)=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã hủy%");
+            preparedStatement.setInt(2,currentYear);
+            preparedStatement.setInt(3,currentMonth);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getAlbumCanceled(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from AlbumOrder where  status like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã hủy%");
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getAlbumCanceledThisMonth(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from AlbumOrder where  status like ? and year(purchareDate) = ? and month(purchareDate) = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã hủy%");
+            preparedStatement.setInt(2,currentYear);
+            preparedStatement.setInt(3,currentMonth);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getCartCanceled(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from CartOrder where  status like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã hủy%");
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getCartCanceledThisMonth(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from CartOrder where  status like ? and year(purchareDate) = ? and month(purchareDate) = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%Đã hủy%");
+            preparedStatement.setInt(2,currentYear);
+            preparedStatement.setInt(3,currentMonth);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+//    Tổng đơn đã đăt;
+    public  int getTotalOddOrder(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select COUNT(idOrder) as total from OddImageOrder";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getTotalOddOrderThisMonth(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from OddImageOrder where year(purchareDate) = ? and month(purchareDate) = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,currentYear);
+            preparedStatement.setInt(2,currentMonth);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getTotalAlbumOrder(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from AlbumOrder";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getTotalAlbumOrderThisMonth(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from AlbumOrder where year(purchareDate) = ? and month(purchareDate) = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,currentYear);
+            preparedStatement.setInt(2,currentMonth);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getTotalCartOrder(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select COUNT(idOrder) as total from CartOrder ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public  int getTotalCartOrderThisMonth(){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from CartOrder where year(purchareDate) = ? and month(purchareDate) = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,currentYear);
+            preparedStatement.setInt(2,currentMonth);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                return res.getInt("total");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+
+
+    public int getTotalCancel(){
+        return  this.getOddCanceled() + this.getAlbumCanceled() + this.getCartCanceled();
+    }
+    public int getTotalCancelThisMonth(){
+        return  this.getCartCanceledThisMonth() + this.getAlbumCanceledThisMonth() + this.getOddCanceledThisMonth();
+    }
+
+    public int getTotalOrder(){
+        return this.getTotalAlbumOrder()+ this.getTotalOddOrder() + this.getTotalCartOrder();
+    }
+    public int getTotalOrderThisMonth(){
+        return this.getTotalAlbumOrderThisMonth() + this.getTotalCartOrderThisMonth() + this.getTotalOddOrderThisMonth();
+    }
+
+
+    public HashMap<User,Integer> getUserCancelOddHigh(){
+        Connection connection = null;
+        HashMap<User, Integer> map = new HashMap<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = " select user.idUser , user.name, count(oddimageorder.idOrder) as total from user join oddimageorder on user.idUser = oddimageorder.idUser where oddimageorder.status like ? group by  user.idUser, user.name";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,"%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                User user = new User();
+                user.setId(resultSet.getInt("idUser"));
+                user.setUsername(resultSet.getString("name"));
+                map.put(user, resultSet.getInt("total"));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  map;
+    }
+    public HashMap<User,Integer> getUserCancelAlbumHigh(){
+        Connection connection = null;
+        HashMap<User, Integer> map = new HashMap<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = " select user.idUser , user.name, count(albumOrder.idOrder) as total from user join albumOrder on user.idUser = albumOrder.idUser where albumOrder.status like ? group by  user.idUser, user.name";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,"%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                User user = new User();
+                user.setId(resultSet.getInt("idUser"));
+                user.setUsername(resultSet.getString("name"));
+                map.put(user, resultSet.getInt("total"));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  map;
+    }
+    public HashMap<User,Integer> getUserCancelCartHigh(){
+        Connection connection = null;
+        HashMap<User, Integer> map = new HashMap<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = " select user.idUser  , user.name, count(cartOrder.idOrder) as total from user join cartOrder on user.idUser = cartOrder.idUser where cartOrder.status like ? group by  user.idUser, user.name";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,"%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                User user = new User();
+                user.setId(resultSet.getInt("idUser"));
+                user.setUsername(resultSet.getString("name"));
+                map.put(user, resultSet.getInt("total"));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  map;
+    }
 }
+
+
