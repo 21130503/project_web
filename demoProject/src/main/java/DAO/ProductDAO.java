@@ -832,12 +832,12 @@ public class ProductDAO {
     }
 
 
+    
     //Lấy ra danh sách Album sau khi lọc theo giá tiền
     public List<Album> getFilteredAlbums(int page, int recSize, int minPrice, int maxPrice) {
         Connection connection = null;
         List<Album> listAlbum = new ArrayList<>();
         int start = (page - 1) * recSize;
-
         try {
             connection = Connect.getConnection();
             String sql = "SELECT * FROM album WHERE price BETWEEN ? AND ? LIMIT ?, ?";
@@ -865,13 +865,11 @@ public class ProductDAO {
         return listAlbum;
     }
 
-
     //Lấy ra danh sách OddImage sau khi lọc theo giá tiền
     public List<OddImage> getFilteredOddImages(int page, int recSize, int minPrice, int maxPrice) {
         Connection connection = null;
         List<OddImage> listOddImage = new ArrayList<>();
         int start = (page - 1) * recSize;
-
         try {
             connection = Connect.getConnection();
             String sql = "SELECT * FROM oddImage WHERE price BETWEEN ? AND ? LIMIT ?, ?";
@@ -898,7 +896,6 @@ public class ProductDAO {
         }
         return listOddImage;
     }
-
 
     //Tính tổng số item để phân trang
     public int totalFilteredItems(int minPrice, int maxPrice) {
