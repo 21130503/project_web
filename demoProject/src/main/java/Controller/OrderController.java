@@ -96,13 +96,13 @@ public class OrderController extends HttpServlet {
         int totalPrice = Integer.parseInt(quantity) * Integer.parseInt(price);
         if("odd".equals(type)){
             if(orderDAO.insertOrderOdd(Integer.parseInt(idProduct),user.getId(),receiver,phoneNumber,Integer.parseInt(quantity),totalPrice,address )){
-                resp.sendRedirect(URL);
+                resp.sendRedirect("./donhangcuaban");
                 return;
             }
         }
         if("album".equals(type)){
             if(orderDAO.insertOrderAlbum(Integer.parseInt(idProduct),user.getId(),receiver,phoneNumber,Integer.parseInt(quantity),totalPrice,address )){
-                resp.sendRedirect(URL);
+                resp.sendRedirect("./donhangcuaban");
                 return;
             }
         }

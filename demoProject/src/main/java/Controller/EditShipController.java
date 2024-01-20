@@ -25,6 +25,9 @@ public class EditShipController extends HttpServlet {
         if("odd".equals(type)){
             order = orderDAO.getOrderOddEdit(q);
         }
+        if("cart".equals(type)){
+            order  =orderDAO.getOrderCartEdit(q);
+        }
         req.setAttribute("order", order);
         req.getRequestDispatcher("EditShip.jsp").forward(req,resp);
 
@@ -45,8 +48,15 @@ public class EditShipController extends HttpServlet {
                 return;
             }
         }
-        if("album".equals(type)){
+        else if("album".equals(type)){
             if(orderDAO.updateAlbumStatus(idOrder,newStatus)){
+                resp.sendRedirect("product");
+                return;
+            }
+        }
+
+        else if("cart".equals(type)){
+            if(orderDAO.updateCartStatus(idOrder, newStatus)){
                 resp.sendRedirect("product");
                 return;
             }

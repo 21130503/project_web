@@ -55,7 +55,7 @@
 
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="./index.html" class="text-decoration-none">
+            <a href="admin.jsp" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -146,7 +146,7 @@
 <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
     <div class="row px-xl-5 pt-5">
         <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-            <a href="./index.html" class="text-decoration-none">
+            <a href="admin.jsp" class="text-decoration-none">
                 <h1 class="logo" style="height: 60px; text-align: start; margin-top: -16px;">Nhóm 26</h1>
             </a>
             <p>Shop Nhóm 26 - Điểm đến đáng tin cậy cho các loại ảnh bản quyền, với sự đa dạng và phong phú trong
@@ -161,7 +161,7 @@
                 <div class="col-md-6 mb-5" style="padding-left: 70px;">
                     <h5 class="font-weight-bold text-dark mb-4">Di Chuyển Nhanh</h5>
                     <div class="d-flex flex-column justify-content-start">
-                        <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Trang
+                        <a class="text-dark mb-2" href="admin.jsp"><i class="fa fa-angle-right mr-2"></i>Trang
                             chủ</a>
                         <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Của
                             hàng</a>

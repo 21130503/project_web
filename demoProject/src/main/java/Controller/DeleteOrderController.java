@@ -62,6 +62,28 @@ public class DeleteOrderController extends HttpServlet {
                 }
             }
         }
+        else if ("/cart".equals(path)) {
+            if(!"Đang chuẩn bị".equals(orderDAO.getStatusCartOrderById(idOrder))){
+                jsonObject.put("status", 500);
+                jsonObject.put("message", "Không thể hủy đơn hàng");
+                resp.setContentType("application/json");
+                resp.getWriter().write(jsonObject.toString());
+            }
+            else{
+                if(orderDAO.deleteCartOrder(idOrder)){
+                    jsonObject.put("status", 200);
+                    jsonObject.put("message", "Hủy đơn thành công");
+                    resp.setContentType("application/json");
+                    resp.getWriter().write(jsonObject.toString());
+                }
+                else{
+                    jsonObject.put("status", 500);
+                    jsonObject.put("message", "Hủy đơn thất bại");
+                    resp.setContentType("application/json");
+                    resp.getWriter().write(jsonObject.toString());
+                }
+            }
+        }
 
     }
 }
