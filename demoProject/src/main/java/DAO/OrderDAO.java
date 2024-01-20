@@ -712,7 +712,35 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
         }
         return order;
     }
+    public Order getOrderCartEdit(String idOrder){
+        Connection connection = null;
+        Order order = new Order();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select idOrder,name, receiver ,totalPrice, phoneNumber, address, status from CartOrder where idOrder = ? and status not like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,idOrder);
+            preparedStatement.setString(2,"%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                order.setIdOrder(resultSet.getInt("idOrder"));
+                order.setReceiver(resultSet.getString("receiver"));
+                order.setPhoneNumber(resultSet.getString("phoneNumber"));
+                order.setAddress(resultSet.getString("address"));
+                order.setStatus(resultSet.getString("status"));
+                order.setTotalPrice(resultSet.getInt("totalPrice"));
+                order.setType("cart");
+                order.setNameProduct(resultSet.getString("name"));
+            }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return order;
+    }
     public  boolean updateOddStatus(String idOrder,String status){
         Connection connection= null;
         try{
@@ -738,7 +766,28 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
         Connection connection= null;
         try{
             connection = Connect.getConnection();
-            String sql = "update AlbumOrder set status= ? , purchare= ? where idOrder = ?";
+            String sql = "update AlbumOrder set status= ? , purchareDate= ? where idOrder = ?";
+            PreparedStatement preparedStatement =connection.prepareStatement(sql);
+            preparedStatement.setString(1, status);
+            preparedStatement.setDate(2,sqlDate);
+            preparedStatement.setString(3,idOrder);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0){
+                return  true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return false;
+    }
+    public  boolean updateCartStatus(String idOrder,String status){
+        Connection connection= null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update AlbumOrder set status= ? , purchareDate= ? where idOrder = ?";
             PreparedStatement preparedStatement =connection.prepareStatement(sql);
             preparedStatement.setString(1, status);
             preparedStatement.setDate(2,sqlDate);

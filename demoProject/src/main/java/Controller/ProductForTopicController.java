@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 @WebServlet(name = "ProductForTopicController",value = "/pTopic")
 public class ProductForTopicController extends HttpServlet {
@@ -26,10 +27,19 @@ public class ProductForTopicController extends HttpServlet {
         ProductDAO productDAO = new ProductDAO();
         String nameTopic = req.getParameter("q");
         String type = req.getParameter("type");
-        System.out.println(type);
+        String path = req.getServletPath();
+        int page = 1;
+        int recSize = 5;
+        if(req.getParameter("page") !=null){
+            page = Integer.parseInt(req.getParameter("page"));
+        }
         int idTopic = topicDAO.getIdTopicByName(nameTopic);
-        ArrayList<Integer> listIdAlbum = belongDAO.listIdAlbumBelongTopic(String.valueOf(idTopic));
-        ArrayList<Integer> listIdOdd= belongDAO.listIdOddImageBelongTopic(String.valueOf(idTopic));
+        int totalOdd = belongDAO.getCountOddByIdTopic(idTopic);
+        int totalAlbum = belongDAO.getCountAlbumByIdTopic(idTopic);
+        int max = Math.max(totalAlbum,totalOdd);
+        int totalPage = (int) Math.ceil((double) max/recSize);
+        ArrayList<Integer> listIdAlbum = belongDAO.listIdAlbumBelongTopicPagination(String.valueOf(idTopic),page,recSize);
+        ArrayList<Integer> listIdOdd= belongDAO.listIdOddImageBelongTopicPagination(String.valueOf(idTopic), page, recSize);
         ArrayList<OddImage> listOdd = new ArrayList<>();
         ArrayList<Album> listAlbum = new ArrayList<>();
         for (int id : listIdOdd){
@@ -54,6 +64,10 @@ public class ProductForTopicController extends HttpServlet {
         req.setAttribute("listAlbum",listAlbum);
         req.setAttribute("listOddImage",listOdd);
         req.setAttribute("listTopic",topicDAO.getAllTopicsForClient());
+        System.out.println("Line 65: " + page);
+        req.setAttribute("currentPage" , page );
+        req.setAttribute("totalPage", totalPage);
+        req.setAttribute("nameTopic", nameTopic);
         req.getRequestDispatcher("Topic.jsp").forward(req,resp);
     }
 }
