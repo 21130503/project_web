@@ -404,7 +404,7 @@
                                     </div>
                                     <div class="col-5 col-sm-7 col-xl-8 p-0">
                                         <h4 class="mb-1 mb-sm-0">Chuương trình ưu đãi?</h4>
-                                        <p class="mb-0 font-weight-normal d-none d-sm-block">Tạo mã giảm giá để kích thích người mua!</p>
+                                        <a href="./discountAdmin" class="mb-0 font-weight-normal d-none d-sm-block">Tạo mã giảm giá để kích thích người mua!</a>
                                     </div>
                                     <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
                         <span>
