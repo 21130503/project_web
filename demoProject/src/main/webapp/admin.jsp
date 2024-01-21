@@ -36,7 +36,7 @@
     int newUser = (int) request.getAttribute("userNew");
 //    Tổng thu nhập
     int totalPrice = (int) request.getAttribute("totalPrice");
-    int  priceThisMonth =(int) request.getAttribute("priceThisMonth");
+    int priceThisMonth = (int) request.getAttribute("priceThisMonth");
 
 //    Tổng đơn hủy
     int totalCancel = (int) request.getAttribute("totalCancel");
@@ -46,7 +46,7 @@
     int totalOrderThisMonth = (int) request.getAttribute("totalOrderThisMonth");
 
 //    Người dùng hủy đơn cao;
-    HashMap<User ,Integer> mapUserCancelHigh = (HashMap<User, Integer>) request.getAttribute("mapUserCancelHigh");
+    HashMap<User, Integer> mapUserCancelHigh = (HashMap<User, Integer>) request.getAttribute("mapUserCancelHigh");
 %>
 <%
     Locale vnLocal = new Locale("vi", "VN");
@@ -147,50 +147,50 @@
                     <span class="menu-title">Quản lí người dùng</span>
                 </a>
             </li>
-<!--            <li class="nav-item menu-items">-->
-<!--                <a class="nav-link" href="pages/charts/chartjs.html">-->
-<!--              <span class="menu-icon">-->
-<!--                <i class="mdi mdi-chart-bar"></i>-->
-<!--              </span>-->
-<!--                    <span class="menu-title">Charts</span>-->
-<!--                </a>-->
-<!--            </li>-->
-<!--            <li class="nav-item menu-items">-->
-<!--                <a class="nav-link" href="pages/icons/mdi.html">-->
-<!--              <span class="menu-icon">-->
-<!--                <i class="mdi mdi-contacts"></i>-->
-<!--              </span>-->
-<!--                    <span class="menu-title">Icons</span>-->
-<!--                </a>-->
-<!--            </li>-->
-<!--            <li class="nav-item menu-items">-->
-<!--                <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">-->
-<!--              <span class="menu-icon">-->
-<!--                <i class="mdi mdi-security"></i>-->
-<!--              </span>-->
-<!--                    <span class="menu-title">User Pages</span>-->
-<!--                    <i class="menu-arrow"></i>-->
-<!--                </a>-->
-<!--                <div class="collapse" id="auth">-->
-<!--                    <ul class="nav flex-column sub-menu">-->
-<!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>-->
-<!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>-->
-<!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/login.html"> Login </a></li>-->
-<!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/register.html"> Register </a></li>-->
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            </li>-->
-<!--            <li class="nav-item menu-items">-->
-<!--                <a class="nav-link"-->
-<!--                   href="http://www.bootstrapdash.com/demo/corona-free/jquery/documentation/documentation.html">-->
-<!--              <span class="menu-icon">-->
-<!--                <i class="mdi mdi-file-document-box"></i>-->
-<!--              </span>-->
-<!--                    <span class="menu-title">Documentation</span>-->
-<!--                </a>-->
-<!--            </li>-->
+            <!--            <li class="nav-item menu-items">-->
+            <!--                <a class="nav-link" href="pages/charts/chartjs.html">-->
+            <!--              <span class="menu-icon">-->
+            <!--                <i class="mdi mdi-chart-bar"></i>-->
+            <!--              </span>-->
+            <!--                    <span class="menu-title">Charts</span>-->
+            <!--                </a>-->
+            <!--            </li>-->
+            <!--            <li class="nav-item menu-items">-->
+            <!--                <a class="nav-link" href="pages/icons/mdi.html">-->
+            <!--              <span class="menu-icon">-->
+            <!--                <i class="mdi mdi-contacts"></i>-->
+            <!--              </span>-->
+            <!--                    <span class="menu-title">Icons</span>-->
+            <!--                </a>-->
+            <!--            </li>-->
+            <!--            <li class="nav-item menu-items">-->
+            <!--                <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">-->
+            <!--              <span class="menu-icon">-->
+            <!--                <i class="mdi mdi-security"></i>-->
+            <!--              </span>-->
+            <!--                    <span class="menu-title">User Pages</span>-->
+            <!--                    <i class="menu-arrow"></i>-->
+            <!--                </a>-->
+            <!--                <div class="collapse" id="auth">-->
+            <!--                    <ul class="nav flex-column sub-menu">-->
+            <!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a>-->
+            <!--                        </li>-->
+            <!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>-->
+            <!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>-->
+            <!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/login.html"> Login </a></li>-->
+            <!--                        <li class="nav-item"><a class="nav-link" href="pages/samples/register.html"> Register </a></li>-->
+            <!--                    </ul>-->
+            <!--                </div>-->
+            <!--            </li>-->
+            <!--            <li class="nav-item menu-items">-->
+            <!--                <a class="nav-link"-->
+            <!--                   href="http://www.bootstrapdash.com/demo/corona-free/jquery/documentation/documentation.html">-->
+            <!--              <span class="menu-icon">-->
+            <!--                <i class="mdi mdi-file-document-box"></i>-->
+            <!--              </span>-->
+            <!--                    <span class="menu-title">Documentation</span>-->
+            <!--                </a>-->
+            <!--            </li>-->
         </ul>
     </nav>
     <!-- partial -->
@@ -258,7 +258,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                              aria-labelledby="messageDropdown">
-                                <h6 class="p-3 mb-0">Tin nhắn</h6>
+                            <h6 class="p-3 mb-0">Tin nhắn</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
@@ -404,11 +404,12 @@
                                     </div>
                                     <div class="col-5 col-sm-7 col-xl-8 p-0">
                                         <h4 class="mb-1 mb-sm-0">Chuương trình ưu đãi?</h4>
-                                        <a href="./discountAdmin" class="mb-0 font-weight-normal d-none d-sm-block">Tạo mã giảm giá để kích thích người mua!</a>
+                                        <p class="mb-0 font-weight-normal d-none d-sm-block">Tạo mã giảm giá để kích
+                                            thích người mua!</p>
                                     </div>
                                     <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
                         <span>
-                          <a href="https://www.bootstrapdash.com/product/corona-admin-template/" target="_blank"
+                          <a href="./discountAdmin"
                              class="btn btn-outline-light btn-rounded get-started-btn">Tạo mã ngay</a>
                         </span>
                                     </div>
@@ -424,8 +425,11 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <div class="d-flex align-items-center align-self-start">
-                                            <h3 class="mb-0"><%=totalUser%></h3>
-                                            <p class="text-success ml-2 mb-0 font-weight-medium" title="Tháng này">+<%=newUser%></p>
+                                            <h3 class="mb-0"><%=totalUser%>
+                                            </h3>
+                                            <p class="text-success ml-2 mb-0 font-weight-medium" title="Tháng này">
+                                                +<%=newUser%>
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -444,8 +448,11 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <div class="d-flex align-items-center align-self-start">
-                                            <h3 class="mb-0"><%=totalOrder%></h3>
-                                            <p class="text-success ml-2 mb-0 font-weight-medium" title="Tháng này">+<%=totalOrderThisMonth%></p>
+                                            <h3 class="mb-0"><%=totalOrder%>
+                                            </h3>
+                                            <p class="text-success ml-2 mb-0 font-weight-medium" title="Tháng này">
+                                                +<%=totalOrderThisMonth%>
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -464,8 +471,11 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <div class="d-flex align-items-center align-self-start">
-                                            <h3 class="mb-0"><%=vndFormat.format(totalPrice)%></h3>
-                                            <p class="text-success ml-2 mb-0 font-weight-medium" title="Tháng này"><%=vndFormat.format(priceThisMonth)%></p>
+                                            <h3 class="mb-0"><%=vndFormat.format(totalPrice)%>
+                                            </h3>
+                                            <p class="text-success ml-2 mb-0 font-weight-medium"
+                                               title="Tháng này"><%=vndFormat.format(priceThisMonth)%>
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -484,8 +494,11 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <div class="d-flex align-items-center align-self-start">
-                                            <h3 class="mb-0"><%=totalCancel%></h3>
-                                            <p class="text-success ml-2 mb-0 font-weight-medium" title="Tháng này">+<%=totalCancelThisMonth%></p>
+                                            <h3 class="mb-0"><%=totalCancel%>
+                                            </h3>
+                                            <p class="text-success ml-2 mb-0 font-weight-medium" title="Tháng này">
+                                                +<%=totalCancelThisMonth%>
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -710,7 +723,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <%for(Map.Entry<User, Integer> entry : mapUserCancelHigh.entrySet()){%>
+                                        <%for (Map.Entry<User, Integer> entry : mapUserCancelHigh.entrySet()) {%>
                                         <% User user1 = entry.getKey();%>
                                         <tr>
                                             <td>
@@ -720,16 +733,20 @@
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td><%=user1.getId()%></td>
+                                            <td><%=user1.getId()%>
+                                            </td>
                                             <td>
                                                 <img src="assets/images/faces/face1.jpg" alt="image"/>
                                                 <span class="pl-2"><%=user1.getUsername()%></span>
                                             </td>
-                                            <td><%=entry.getValue()%></td>
+                                            <td><%=entry.getValue()%>
+                                            </td>
 
                                             <td>
-                                                <%String s = entry.getValue() >=5 ? "Chặn" : "Cảnh cáo";%>
-                                                <div class="badge badge-outline-success"><a href="./user?q=<%=user1.getId()%>"><%=s%></a></div>
+                                                <%String s = entry.getValue() >= 5 ? "Chặn" : "Cảnh cáo";%>
+                                                <div class="badge badge-outline-success"><a
+                                                        href="./user?q=<%=user1.getId()%>"><%=s%>
+                                                </a></div>
                                             </td>
                                         </tr>
                                         <%}%>

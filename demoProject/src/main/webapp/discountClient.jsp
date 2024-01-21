@@ -1,12 +1,8 @@
-<%@ page import="nhom26.User" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="nhom26.Topic" %>
-<%@ page import="java.util.List" %>
-<%@ page import="nhom26.OddImage" %>
-<%@ page import="nhom26.Album" %>
+<%@ page import="nhom26.*" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <%--<%@page contentType="text/html" pageEncoding="UTF-8"%>--%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html lang="en">
 
 <head>
@@ -16,14 +12,17 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js" integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"
+            integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
     <link rel="stylesheet" href="./css/shop.css">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -34,13 +33,22 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/logo.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <%--    Xử lí --%>
     <link rel="stylesheet" href="./css/common.css">
 
 </head>
 
 <body>
+<%
+    int count = (int) session.getAttribute("count");
+    Set<Discount> codes = (Set<Discount>) session.getAttribute("codes");
+    if(codes == null) codes = new HashSet<>();
+    String disable = count > 0 ? "" : "disabled";
+    Discount code = request.getAttribute("code") !=null ? (Discount) request.getAttribute("code") : new Discount();
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
@@ -82,7 +90,6 @@
 <!-- Topbar End -->
 
 
-
 <!-- Page Header Start -->
 <div class="container-fluid bg-secondary mb-5">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
@@ -97,13 +104,30 @@
 <div class="container-fluid pt-5">
     <div class="row px-xl-5">
         <div class="col-lg-8">
-            <div class="alert alert-success"></div>
+            <div class="d-flex align-items-center justify-content-center alert alert-success p2">
+                <span><%=3-count%>/3</span>
+            </div>
             <div class="d-flex justify-content-center align-items-center">
-                <button class="btn btn-primary ">Quay</button>
+                <button class="btn btn-primary " id="turn" <%=disable%>> Quay</button>
             </div>
         </div>
         <div class="col-lg-4">
-            <h2>Mã giảm giá bạn đang có</h2>
+            <h4 class="font-weight-semi-bold text-uppercase mb-4">Mã giảm giá bạn đang có</h4>
+            <div class="listCode">
+                <%if (codes.size() == 0) {%>
+                <p class="text-center">Bạn chưa có mã giảm giá nào</p>
+                <%} else {%>
+                <%Iterator<Discount> interator = codes.iterator();%>
+                <%while (interator.hasNext()) {%>
+                <%Discount discount = interator.next();%>
+                <div class="d-flex p-2 justify-content-between align-items-center">
+                    <h6><%=discount.getCode()%></h6>
+                    <%  String formattedString = String.format("%.0f%%", discount.getDiscountValue() * 100);%>
+                    <p><%=formattedString%></p>
+                </div>
+                <%}%>
+                <%}%>
+            </div>
         </div>
     </div>
 </div>
@@ -147,15 +171,16 @@
                     <form action="">
                         <div class="form-group">
                             <input type="text" class="form-control border-0 py-4" placeholder="Tên của bạn"
-                                   required="required" />
+                                   required="required"/>
                         </div>
                         <div class="form-group">
                             <input type="email" class="form-control border-0 py-4" placeholder="Email của bạn"
-                                   required="required" />
+                                   required="required"/>
                         </div>
                         <div>
                             <button class="btn btn-primary btn-block border-0 py-3" type="submit">Đăng ký
-                                ngay!</button>
+                                ngay!
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -202,6 +227,19 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
+<script>
+    const btn = document.querySelector("#turn");
+    btn.addEventListener("click", () => {
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/demoProject_war/discount",
+            success: ()=>{
+                window.location.reload()
+            }
+        });
+    })
+
+</script>
 </body>
 
 </html>
