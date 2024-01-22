@@ -8,6 +8,7 @@ public class Discount {
     private String description;
     private double discountValue;
     private Date expiryDate;
+    private int count;
 
     public Discount() {
 
@@ -45,4 +46,11 @@ public class Discount {
         this.expiryDate = expirydate;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }
