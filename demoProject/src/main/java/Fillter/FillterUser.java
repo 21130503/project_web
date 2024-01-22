@@ -1,20 +1,16 @@
 package Fillter;
 
-import nhom26.User;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-
-@WebFilter(value = "/admin")
-public class FilterAdmin implements javax.servlet.Filter {
-
+@WebFilter(value = "/user")
+public class FillterUser implements  javax.servlet.Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-            }
+
+    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -26,6 +22,7 @@ public class FilterAdmin implements javax.servlet.Filter {
             filterChain.doFilter(servletRequest,servletResponse);
         }
         else{
+            System.out.println("chuyen huong");
             httpResponse.sendRedirect("404.jsp");
         }
     }
@@ -34,6 +31,4 @@ public class FilterAdmin implements javax.servlet.Filter {
     public void destroy() {
 
     }
-
-
 }

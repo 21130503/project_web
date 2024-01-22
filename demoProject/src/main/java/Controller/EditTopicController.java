@@ -66,7 +66,7 @@ public class EditTopicController extends HttpServlet {
             req.getRequestDispatcher("EditTopic.jsp").forward(req,resp);
             return;
         }
-        if(topicDAO.checkNameTopicExistForUpdate(idTopic,nameTopic)){
+        if(topicDAO.checkNameTopicExist(nameTopic)){
             req.setAttribute("errNameTopic", "Tên topic đã tồn tại");
             req.setAttribute("topic", topicDAO.getTopicById(idTopic));
             req.getRequestDispatcher("EditTopic.jsp").forward(req,resp);
