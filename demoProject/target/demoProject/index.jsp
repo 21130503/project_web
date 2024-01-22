@@ -242,9 +242,9 @@
         <img style="height: 300px;" src="img/sale.jpg" alt="">
         <div class=" text-center text-md-right text-white mb-2 py-5 px-5">
             <div class="" style="z-index: 1;">
-                <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
-                <h1 class="mb-4 font-weight-semi-bold">Spring Collection</h1>
-                <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                <h5 class="text-uppercase text-primary mb-3">Mã giảm giá dành cho bạn</h5>
+                <h1 class="mb-4 font-weight-semi-bold">Mùa xuân, giá sốc !</h1>
+                <a href="./discount" class="btn btn-outline-primary py-md-2 px-md-3">Lấy ngay</a>
             </div>
         </div>
     </div>

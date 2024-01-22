@@ -293,7 +293,9 @@
                                placeholder="Số điện thoại">
                         <p class="text-danger"><%=errPhoneNumber%>
                         </p>
-
+                        <label for="discount">Mã giảm giá(nếu có): </label>
+                        <input type="number" id="discount" class="mt-1 mb-1  d-block p-2" name="discount"
+                               placeholder="Mã giảm giá(nếu có)">
                     </div>
                     <div class="address mt-2">
                         <select name="nameCity" id="nameCity" class="mt-3 p-2" style="width: 250px">

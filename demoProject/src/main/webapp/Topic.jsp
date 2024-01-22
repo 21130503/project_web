@@ -278,6 +278,11 @@
                         </div>
                     </div>
                 </div>
+                <%if(listOddImage.size() ==0 && listAlbum.size() == 0){%>
+                    <div class="col-12  ">
+                        <h1 class="d-flex align-items-center justify-content-center font-weight-semi-bold text-uppercase">Chưa có sản phẩm nào</h1>
+                    </div>
+                <%}%>
                 <%if(listOddImage.size() >0){%>
                 <% for (OddImage oddImage : listOddImage) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
