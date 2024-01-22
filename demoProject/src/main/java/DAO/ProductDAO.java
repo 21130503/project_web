@@ -832,6 +832,8 @@ public class ProductDAO {
     }
 
 
+
+
     //Lấy ra danh sách Album sau khi lọc theo giá tiền
     public List<Album> getFilteredAlbums(int page, int recSize, int minPrice, int maxPrice) {
         Connection connection = null;
@@ -860,6 +862,7 @@ public class ProductDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+
         } finally {
             Connect.closeConnection(connection);
         }
@@ -894,6 +897,7 @@ public class ProductDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+
         } finally {
             Connect.closeConnection(connection);
         }
@@ -924,4 +928,5 @@ public class ProductDAO {
         return 0;
     }
 
+    
 }

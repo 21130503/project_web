@@ -132,9 +132,6 @@
         </div>
         <div class="form-group">
             <label for="discountValue">Giá Trị Giảm (%):</label>
-            <%--            <input type="number" class="form-control" id="discountValue" name="discountValue"--%>
-            <%--                   value="<%= String.format("%.0f%%", discount.getDiscountValue() * 100.0) %>" min="1" max="100"--%>
-            <%--                   required>--%>
             <input type="number" class="form-control" id="discountValue" name="discountValue"
                    value="<%= (int)(discount.getDiscountValue() * 100.0) %>" min="1" max="100" required>
         </div>
