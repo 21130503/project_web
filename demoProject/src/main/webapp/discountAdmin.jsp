@@ -47,6 +47,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
@@ -137,6 +138,7 @@
             <th>Mô Tả</th>
             <th>Giá Trị Giảm</th>
             <th>Ngày Hết Hạn</th>
+            <th>Còn Lại</th>
             <th>Hành Động Khác</th>
         </tr>
         </thead>
@@ -153,6 +155,8 @@
             <td><%= String.format("%.0f%%", discount.getDiscountValue() * 100.0) %> Tổng hóa đơn
             </td>
             <td><%= discount.getExpiryDate() != null ? discount.getExpiryDate().toString() : "" %>
+            </td>
+            <td><%= discount.getCount() %>
             </td>
             <td>
                 <a href="editDiscount?code=<%= discount.getCode() %>" class="btn btn-primary">Sửa thuộc tính</a>
@@ -190,7 +194,8 @@
     <input type="text" name="description" placeholder="Mô tả - ví dụ: Giảm giá 10%" required lang="vi">
     <input type="number" name="discountValue" placeholder="Giá trị giảm - ví dụ: 10" min="1" required lang="vi">
     <input type="date" name="expiryDate" placeholder="Ngày hết hạn" required lang="vi">
-    <input type="submit" value="Thêm Mã Giảm Giá">
+    <input type="number" name="count" placeholder="Số lần sử dụng còn lại" min="0" required lang="vi">
+    <input type="submit" class="btn btn-success" value="Thêm Mã Mới">
 </form>
 
 <!-- DiscountAdmin End -->
