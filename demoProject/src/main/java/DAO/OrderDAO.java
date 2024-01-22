@@ -23,7 +23,7 @@ public class OrderDAO {
     int currentYear = calendar.get(Calendar.YEAR);
     int currentMonth = calendar.get(Calendar.MONTH) + 1;
 
-    public boolean insertOrderOdd(int idOddImage, int idUser,String receiver ,String phoneNumber ,int quantity, int totalPrice, String address) {
+    public boolean insertOrderOdd(int idOddImage, int idUser,String receiver ,String phoneNumber ,int quantity, double totalPrice, String address) {
         Connection connection = null;
         ProductDAO productDAO = new ProductDAO();
         try {
@@ -35,7 +35,7 @@ public class OrderDAO {
             preparedStatement.setString(3, receiver);
             preparedStatement.setString(4, phoneNumber);
             preparedStatement.setInt(5, quantity);
-            preparedStatement.setInt(6,totalPrice );
+            preparedStatement.setDouble(6,totalPrice );
             preparedStatement.setString(7, "Đang chuẩn bị");
             preparedStatement.setString(8, address);
             preparedStatement.setDate(9, sqlDate);
@@ -50,7 +50,7 @@ public class OrderDAO {
         }
         return false;
     }
-    public boolean insertOrderAlbum(int idAlbum, int idUser,String receiver ,String phoneNumber ,int quantity, int totalPrice, String address) {
+    public boolean insertOrderAlbum(int idAlbum, int idUser,String receiver ,String phoneNumber ,int quantity, double totalPrice, String address) {
         Connection connection = null;
         ProductDAO productDAO = new ProductDAO();
         try {
@@ -62,7 +62,7 @@ public class OrderDAO {
             preparedStatement.setString(3, receiver);
             preparedStatement.setString(4, phoneNumber);
             preparedStatement.setInt(5, quantity);
-            preparedStatement.setInt(6,totalPrice );
+            preparedStatement.setDouble(6,totalPrice );
             preparedStatement.setString(7, "Đang chuẩn bị");
             preparedStatement.setString(8, address);
             preparedStatement.setDate(9, sqlDate);

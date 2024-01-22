@@ -30,6 +30,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body>
@@ -145,7 +146,7 @@
         <div class="d-inline-flex">
             <p class="m-0"><a href="./index">Trang Chủ</a></p>
             <p class="m-0 px-2">-</p>
-            <p class="m-0">Cửa Hàng</p>
+            <p class="m-0">Tìm kiếm</p>
         </div>
     </div>
 </div>
@@ -225,12 +226,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 pb-1 bg-secondary"><h4 class="text-center text-primary font-weight-bold"><%=listAlbum.size()%> kết quả cho album</h4></div>
+                <div class="col-12 pb-1 mb-4 "><h4 class="font-weight-semi-bold text-uppercase p-2 bg-secondary text-center  font-weight-bold "><%=listAlbum.size()%> Kết quả cho album</h4></div>
                 <%for (Album album : listAlbum) {%>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" src="<%=album.getListImage().get(0)%>" alt="">
+                            <img class="img-fluid image-view" src="<%=album.getListImage().get(0)%>" alt="">
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3"><%=album.getName()%>
@@ -256,13 +257,13 @@
                     </div>
                 </div>
                 <%}%>
-                <div class="col-12 pb-1 bg-secondary"><h4 class="text-center text-primary font-weight-bold"><%=listOdd.size()%> kết cho ảnh lẻ</h4>
+                <div class="col-12 pb-1 mb-4"><h4 class="font-weight-semi-bold text-uppercase p-2 bg-secondary text-center font-weight-bold "><%=listOdd.size()%> kết cho ảnh lẻ</h4>
                 </div>
                 <%for (OddImage oddImage : listOdd) {%>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" src="<%=oddImage.getImage()%>" alt="">
+                            <img class="img-fluid image-view" src="<%=oddImage.getImage()%>" alt="">
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3"><%=oddImage.getName()%></h6>

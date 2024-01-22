@@ -241,10 +241,10 @@ public class ProductDAO {
         int startIndex = (page-1)* recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage limit ?  offset ?";
+            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage LIMIT ?  OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,recSize);
-            preparedStatement.setInt(2,recSize);
+            preparedStatement.setInt(2,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 OddImage oddImage = new OddImage();

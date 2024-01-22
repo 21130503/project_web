@@ -1,12 +1,8 @@
-<%@ page import="nhom26.User" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="nhom26.Topic" %>
-<%@ page import="java.util.List" %>
-<%@ page import="nhom26.OddImage" %>
-<%@ page import="nhom26.Album" %>
+<%@ page import="nhom26.*" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <%--<%@page contentType="text/html" pageEncoding="UTF-8"%>--%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html lang="en">
 
 <head>
@@ -16,14 +12,17 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js" integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"
+            integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
     <link rel="stylesheet" href="./css/shop.css">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -34,7 +33,9 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/logo.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <%--    Xử lí --%>
     <link rel="stylesheet" href="./css/common.css">
 
@@ -42,16 +43,11 @@
 
 <body>
 <%
-    Album album = request.getAttribute("album") == null ? new Album() :  (Album) request.getAttribute("album");
-    ArrayList<String> listTopic = (ArrayList<String>) request.getAttribute("listNameTopic");
-//    Invalidate
-    String errName = request.getAttribute("errName") == null ? "" : (String) request.getAttribute("errName");
-    String errPrice =  request.getAttribute("errPrice") == null ? "" : (String) request.getAttribute("errPrice");
-    String errDiscount =  request.getAttribute("errDiscount") == null ? "" : (String) request.getAttribute("errDiscount");
-    String errDescription=  request.getAttribute("errDescription") == null ? "" : (String) request.getAttribute("errDescription");
-    String errDelete=  request.getAttribute("errDelete") == null ? "" : (String) request.getAttribute("errDelete");
-
-
+    int count = (int) session.getAttribute("count");
+    Set<Discount> codes = (Set<Discount>) session.getAttribute("codes");
+    if(codes == null) codes = new HashSet<>();
+    String disable = count > 0 ? "" : "disabled";
+    Discount code = request.getAttribute("code") !=null ? (Discount) request.getAttribute("code") : new Discount();
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -94,11 +90,10 @@
 <!-- Topbar End -->
 
 
-
 <!-- Page Header Start -->
 <div class="container-fluid bg-secondary mb-5">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-        <h1 class="font-weight-semi-bold text-uppercase mb-3">Chỉnh sửa album</h1>
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Lấy mã giảm giá</h1>
     </div>
 </div>
 <!-- Page Header End -->
@@ -107,57 +102,34 @@
 <!-- Cart Start -->
 
 <div class="container-fluid pt-5">
-    <form action="./editAlbum" method="post" enctype="multipart/form-data">
-        <input name="idAlbum" type="hidden" value="<%=album.getIdAlbum()%>">
-        <div class="form-group">
-            <label for="nameTopicInput">Thuộc chủ đề</label>
-            <select class="form-control select-topic"  name="nameTopic" id="nameTopicInput">
-                <option value="<%=album.getBelongTopic()%>" ><%=album.getBelongTopic()%></option>
-                <%for (String nameTopic : listTopic){%>
-                <option value="<%=nameTopic%>"><%=nameTopic%></option>
-                <%}%>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="nameInput">Tên sản phẩm</label>
-            <input value="<%=album.getName()%>" id="nameInput" name="nameAlbum" type="text" class="form-control"  aria-describedby="emailHelp" placeholder="Tên sản phẩm">
-            <small id="errName" class="form-text  text-danger"><%=errName%></small>
-        </div>
-        <div class="form-group">
-            <label for="priceTopicInput">Giá</label>
-            <input value="<%=album.getPrice()%>" id="priceTopicInput" name="price" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Giá">
-            <small id="errPrice" class="form-text  text-danger"><%=errPrice%></small>
-        </div>
-        <div class="form-group">
-            <label for="discountTopicInput">Giảm giá</label>
-            <input value="<%=album.getDiscount()%>" id="discountTopicInput" name="discount" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Giảm giá">
-            <small id="errDiscount" class="form-text  text-danger"><%=errDiscount%></small>
-        </div>
-        <div class="form-group">
-            <label for="desTopicInput">Mô tả sản phẩm</label>
-            <textarea value="<%=album.getDescription()%>" id="desTopicInput" rows="3" name="description" type="number" class="form-control"  aria-describedby="emailHelp" placeholder="Mô tả sản phẩm"></textarea>
-            <small id="errDes" class="form-text text-danger"><%=errDescription%></small>
-        </div>
-        <div class="input-group d-flex justify-content-between mt-3">
-            <input type="file" accept="image/*" style="height: 100%;" class="form-control p-3 w-100 upload-img"
-                   placeholder="Tải ảnh lên" name="listImg">
-        </div>
-        <div id="dynamic-input-container"></div>
-        <input name="deleteImage" id="deleteImage" value="" type="hidden"></input>
-        <small id="errDelete" class="form-text text-danger"><%=errDelete%></small>
-        <div class="d-flex flex-wrap">
-            <%for(String src : album.getListImage()){%>
-            <div class="position-relative image_wrapper">
-                <img class="mt-5 ml-2 image-in-album" style="width: 400px; height: 400px; object-fit: cover" src="<%=src%>" alt="">
-                <div  class="position-absolute delete-image" >
-                    <span><i class="fa-solid fa-xmark"></i></span>
-                </div>
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center justify-content-center alert alert-success p2">
+                <span><%=3-count%>/3</span>
             </div>
-            <%}%>
-
+            <div class="d-flex justify-content-center align-items-center">
+                <button class="btn btn-primary " id="turn" <%=disable%>> Quay</button>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary mt-4">Cập nhật</button>
-    </form>
+        <div class="col-lg-4">
+            <h4 class="font-weight-semi-bold text-uppercase mb-4">Mã giảm giá bạn đang có</h4>
+            <div class="listCode">
+                <%if (codes.size() == 0) {%>
+                <p class="text-center">Bạn chưa có mã giảm giá nào</p>
+                <%} else {%>
+                <%Iterator<Discount> interator = codes.iterator();%>
+                <%while (interator.hasNext()) {%>
+                <%Discount discount = interator.next();%>
+                <div class="d-flex p-2 justify-content-between align-items-center">
+                    <h6><%=discount.getCode()%></h6>
+                    <%  String formattedString = String.format("%.0f%%", discount.getDiscountValue() * 100);%>
+                    <p><%=formattedString%></p>
+                </div>
+                <%}%>
+                <%}%>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Cart End -->
 
@@ -199,15 +171,16 @@
                     <form action="">
                         <div class="form-group">
                             <input type="text" class="form-control border-0 py-4" placeholder="Tên của bạn"
-                                   required="required" />
+                                   required="required"/>
                         </div>
                         <div class="form-group">
                             <input type="email" class="form-control border-0 py-4" placeholder="Email của bạn"
-                                   required="required" />
+                                   required="required"/>
                         </div>
                         <div>
                             <button class="btn btn-primary btn-block border-0 py-3" type="submit">Đăng ký
-                                ngay!</button>
+                                ngay!
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -255,43 +228,18 @@
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
 <script>
-    // xử lí chỉnh sửa
-    const deleteList = document.querySelectorAll(".delete-image");
-    const imageList =  document.querySelectorAll(".image_wrapper");
-
-    //convert
-    const deleteArray = Array.from(deleteList)
-    const imageArray = Array.from(imageList)
-    const imageDelete= []
-    console.log(deleteList)
-    console.log(imageList)
-
-    // for
-    deleteArray.forEach((item, index)=>{
-        item.addEventListener("click", ()=>{
-            item.parentNode.removeChild(item);
-
-            // Xóa phần tử .image_wrapper tương ứng
-            const imageWrapper = imageArray[index];
-            if (imageWrapper) {
-                const  image = imageWrapper.querySelector(".image-in-album")
-                const path = new  URL(image.src).pathname
-                // Tìm vị trí của "/images"
-                var indexOfImages = path.indexOf("/images");
-                if (indexOfImages !== -1) {
-                    // Lấy phần từ "/images" đến hết
-                    var pathFromImagesToEnd = path.substring(indexOfImages);
-
-                  imageDelete.push(pathFromImagesToEnd)
-                    $("#deleteImage").val(JSON.stringify(imageDelete))
-                }
-                console.log(imageDelete)
-                imageWrapper.parentNode.removeChild(imageWrapper);
+    const btn = document.querySelector("#turn");
+    btn.addEventListener("click", () => {
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/demoProject_war/discount",
+            success: ()=>{
+                window.location.reload()
             }
-        })
+        });
     })
+
 </script>
-<script src="js/uploadAlbum.js"></script>
 </body>
 
 </html>
