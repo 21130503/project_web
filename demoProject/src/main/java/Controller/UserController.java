@@ -29,6 +29,17 @@ public class UserController extends HttpServlet {
         }
         else{
             UserDAO userDAO = new UserDAO();
+            String q = req.getParameter("q");
+            if(q!=null){
+                ArrayList<User> list = new ArrayList<>(userDAO.getUserByName(q));
+                if(userDAO.getUserById(q).getUsername() != null){
+
+                    list.add(userDAO.getUserById(q));
+                }
+                req.setAttribute("listUser",list);
+                req.getRequestDispatcher("quanlinguoidung.jsp").forward(req,resp);
+                return;
+            }
             req.setAttribute("listUser", userDAO.getAllUsers());
             req.getRequestDispatcher("quanlinguoidung.jsp").forward(req,resp);
         }

@@ -47,7 +47,8 @@ public class ShopController extends HttpServlet {
             int page = 1;
             int totalOdd = productDAO.totalOdd();
             int totalAlbum = productDAO.totalAlbum();
-            int totalPage = (int) Math.ceil((totalAlbum + totalOdd) / recSize);
+            int max = Math.max(totalAlbum, totalOdd);
+            int totalPage = (int) Math.ceil((double) (max) / recSize);
             String type = req.getParameter("type");
             if (req.getParameter("page") != null) {
                 page = Integer.parseInt(req.getParameter("page"));

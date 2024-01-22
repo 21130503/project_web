@@ -36,25 +36,32 @@ public class ProductController extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user") == null ? null : (User) session.getAttribute("user");
 //        // Kiểm tra quyền và chuyển hướng
-        if(user == null || !user.isAdmin() ) {
+        if (user == null || !user.isAdmin()) {
             System.out.println("redirect");
-            resp.sendRedirect( "404.jsp");
+            resp.sendRedirect("404.jsp");
             return;
-        }
-        else if (user.isAdmin()) {
+        } else if (user.isAdmin()) {
             System.out.println("GET");
-            int page = 0;
-            if(req.getParameter("page") !=null){
+            int page = 1;
+            int recSize = 5;
+            if (req.getParameter("page") != null) {
 
-                page= Integer.parseInt(req.getParameter("page"));
+                page = Integer.parseInt(req.getParameter("page"));
             }
-            int pageSize = 5; // Số lượng mục trên mỗi trang
-            int start = (page - 1) * pageSize;
-            System.out.println(page);
-        req.setAttribute("listAlbum", productDAO.getAllAlbum(start,pageSize));
-        req.setAttribute("listOddImage", productDAO.getAllOddImage());
-        req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
-        req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
+            int totalAlbum = productDAO.totalAlbum();
+            int totalOdd = productDAO.totalOdd();
+            int totalPage = 0;
+            if (totalAlbum > totalOdd) {
+                totalPage = (int) Math.ceil((double) totalAlbum / recSize);
+            } else {
+                totalPage = (int) Math.ceil((double) totalOdd / recSize);
+            }
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(page, recSize));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(page, recSize));
+            req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPage", totalPage);
+            req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
         }
 
     }
