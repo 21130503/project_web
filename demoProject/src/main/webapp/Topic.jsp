@@ -9,6 +9,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="DAO.OrderDAO" %>
 <%@ page import="favourite.Favourite" %>
+<%@ page import="cart.Cart" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -41,6 +42,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body id="listProduct">
@@ -63,6 +65,14 @@
 <%
     Favourite favourite = (Favourite) session.getAttribute("favourite");
     if(favourite ==null) favourite = new Favourite();
+    Cart cart = (Cart) session.getAttribute("cart");
+    if(cart==null) cart= new Cart();
+%>
+<%
+//    Pagination
+    int currentPage = (int)request.getAttribute("currentPage");
+    int totalPage= (int)request.getAttribute("totalPage");
+    String nameTopic = (String) request.getAttribute("nameTopic");
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -91,7 +101,7 @@
             </a>
             <a href="cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=cart.total()%></span>
             </a>
         </div>
     </div>
@@ -268,12 +278,17 @@
                         </div>
                     </div>
                 </div>
+                <%if(listOddImage.size() ==0 && listAlbum.size() == 0){%>
+                    <div class="col-12  ">
+                        <h1 class="d-flex align-items-center justify-content-center font-weight-semi-bold text-uppercase">Chưa có sản phẩm nào</h1>
+                    </div>
+                <%}%>
                 <%if(listOddImage.size() >0){%>
                 <% for (OddImage oddImage : listOddImage) { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100"
+                            <img class="img-fluid image-view"
 
                                  src="<%=oddImage.getImage()%>"
 
@@ -292,10 +307,11 @@
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-                            <a href="./add-cart?idProduct=<%=oddImage.getIdOddImage()%>&type=odd"
-                               class="btn btn-sm text-dark p-0">
-                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
-                            </a>
+                            <button title="<%=oddImage.getType()%>" value="<%=oddImage.getIdOddImage()%>"
+                                    class="btn btn-sm text-dark p-0 addCart"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                                vào giỏ
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -308,7 +324,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100"
+                            <img class="img-fluid image-view"
                                  src="<%=album.getListImage().get(0)%>" alt="">
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
@@ -326,10 +342,11 @@
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
-                            <a href="./add-cart?idProduct=<%=album.getIdAlbum()%>&type=album"
-                               class="btn btn-sm text-dark p-0">
-                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ
-                            </a>
+                            <button title="<%=album.getType()%>" value="<%=album.getIdAlbum()%>"
+                                    class="btn btn-sm text-dark p-0 addCart"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                                vào giỏ
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -337,7 +354,7 @@
                 <%}%>
 
                 <div class="col-12 pb-1">
-                    <nav aria-label="Page navigation">
+                    <nav aria-label="Page navigation" class="mt-5">
                         <ul class="pagination justify-content-center mb-3">
                             <li class="page-item disabled">
                                 <a class="page-link" href="#" aria-label="Previous">
@@ -345,9 +362,12 @@
                                     <span class="sr-only">Quay lại</span>
                                 </a>
                             </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <%for(int i=1 ; i<=totalPage;i++){%>
+                            <%String s = currentPage==i ? "active": "";%>
+                            <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./pTopic?q=<%=nameTopic%>&page=<%=i%>"><%=i%></a></li>
+                            <%}%>
+                            <%--                            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
+                            <%--                            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
@@ -477,6 +497,7 @@
         });
     })
 </script>
+<script src="./js/addCart.js"></script>
 </body>
 
 </html>

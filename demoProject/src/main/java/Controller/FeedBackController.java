@@ -40,7 +40,14 @@ public class FeedBackController extends HttpServlet {
             return;
         }
         //  Xử lí mua hàng rồi mới được bình luận
-        if(!orderDAO.checkUserOrderOddImage(user.getId(), id) || !orderDAO.checkUserOrderAlbum(user.getId(), id)){
+        if( "odd".equals(type )&&!orderDAO.checkUserOrderOddImage(user.getId(), id) ){
+            HttpSession session1 = req.getSession();
+            session1.setAttribute("errMess", "Bạn chưa mua sản phẩm này ");
+            session1.setMaxInactiveInterval(60);
+            resp.sendRedirect(URL);
+            return;
+        }
+        if( "album".equals(type )&&!orderDAO.checkUserOrderAlbum(user.getId(), id) ){
             HttpSession session1 = req.getSession();
             session1.setAttribute("errMess", "Bạn chưa mua sản phẩm này ");
             session1.setMaxInactiveInterval(60);

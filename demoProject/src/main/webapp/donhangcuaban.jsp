@@ -4,6 +4,8 @@
 <%@ page import="nhom26.Order" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="cart.Cart" %>
+<%@ page import="favourite.Favourite" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -54,6 +56,12 @@
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
+<%
+    Cart cart = (Cart) session.getAttribute("cart");
+    Favourite favourite = (Favourite) session.getAttribute("favourite");
+    if(cart ==null) cart = new Cart();
+    if(favourite == null) favourite= new Favourite();
+%>
 <!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -76,13 +84,13 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border" title="Yêu thích">
+            <a href="./favourite" class="btn border" title="Yêu thích">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=favourite.total()%></span>
             </a>
-            <a href="cart.jsp" class="btn border" title="Giỏ hàng">
+            <a href="./cart" class="btn border" title="Giỏ hàng">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=cart.total()%></span>
             </a>
         </div>
     </div>
@@ -135,8 +143,8 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
-                                <a href="checkout" class="dropdown-item">Thanh toán</a>
+                                <a href="./cart" class="dropdown-item">Giỏ hàng</a>
+                                <a href="./checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
                         <a href="contact" class="nav-item nav-link ">Liên hệ</a>
@@ -159,7 +167,7 @@
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
@@ -211,31 +219,43 @@
                 </tr>
                 </thead>
                 <tbody class="align-middle">
-                <%if(listOrder.size() == 0){%>
+                <%if (listOrder.size() == 0) {%>
 
-                <%}else{%>
-                <%for(Order order : listOrder){%>
-                    <tr>
-                        <td class="align-middle"><%= order.getIdOrder()%></td>
-                        <td class="align-middle"><a href="./detail?type=<%=order.getType()%>&id=<%=order.getIdProduct()%>"><%= order.getNameProduct()%></a></td>
-                        <td class="align-middle"><%= order.getQuantity()%></td>
-                        <td class="align-middle"><%= order.getReceiver()%></td>
-                        <td class="align-middle"><%= order.getPhoneNumber()%></td>
-                         <td class="align-middle">
-                              <%= order.getPurchareDate()%>
-                        </td>
-                        <td class="align-middle">
-                            <%= order.getStatus()%>
-                        </td>
-                        <td class="align-middle td-address" title="<%= order.getAddress()%>"><%= order.getAddress()%></td>
-                        <td><%=vndFormat.format(order.getTotalPrice())%></td>
-                        <td class="align-middle">
-                            <button data-id="<%=order.getIdOrder()%>" data-toggle="modal" data-target="#deleteOrder"  class="btn btn-sm btn-primary"><i
-                                    class="fa fa-times"></i></button>
-                        </td>
+                <%} else {%>
+                <%for (Order order : listOrder) {%>
+                <tr>
+                    <td class="align-middle"><%= order.getIdOrder()%>
+                    </td>
+                    <td class="align-middle"><a
+                            <%
+                                String href = "cart".equals(order.getType()) ? "./cart" : ("./detail?type=" + order.getType() + "&id=" + order.getIdProduct());
+                            %>
+                           <a href="<%=href%>"><%= order.getNameProduct()%>
+                    </a></td>
+                    <td class="align-middle"><%= order.getQuantity()%>
+                    </td>
+                    <td class="align-middle"><%= order.getReceiver()%>
+                    </td>
+                    <td class="align-middle"><%= order.getPhoneNumber()%>
+                    </td>
+                    <td class="align-middle">
+                        <%= order.getPurchareDate()%>
+                    </td>
+                    <td class="align-middle">
+                        <%= order.getStatus()%>
+                    </td>
+                    <td class="align-middle td-address" title="<%= order.getAddress()%>"><%= order.getAddress()%>
+                    </td>
+                    <td><%=vndFormat.format(order.getTotalPrice())%>
+                    </td>
+                    <td class="align-middle">
+                        <button data-id="<%=order.getIdOrder()%>" value="<%=order.getType()%>" data-toggle="modal"
+                                data-target="#deleteOrder" class="btn btn-sm btn-primary"><i
+                                class="fa fa-times"></i></button>
+                    </td>
                 </tr>
                 <%}%>
-               <%}%>
+                <%}%>
 
 
                 </tbody>
@@ -327,9 +347,47 @@
 
 <script src="js/Dialog.js"></script>
 <script>
-    Dialog("#deleteOrder","#btn-delete-order","/order/odd","idOrder", "delete")
-    Dialog()
+    // Dialog("#deleteOrder","#btn-delete-order","/order/odd","idOrder", "delete")
+    let where;
+    document.addEventListener("DOMContentLoaded", () => {
+        $("#deleteOrder").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            let type = button.val()
+            id = button.data('id')// Extract info from data-* attributes
+            if (type === "odd") {
+                where = "/order/odd"
+            }
+            if (type === "album") {
+                where = "/order/album"
+            }
+            if(type === "cart"){
+                where = "/order/cart"
+            }
+        })
+        const btnDelete = document.querySelector("#btn-delete-order")
+        btnDelete.addEventListener('click', async () => {
+
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:8080/demoProject_war/${where}?idOrder=${id}`;
+
+            xhr.open('DELETE', url, true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                    location.reload();
+                } else if (xhr.status === 500) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                }
+            };
+
+            xhr.send();
+        })
+    })
 </script>
+
 
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
