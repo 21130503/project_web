@@ -27,10 +27,13 @@ public class OrderManganerController extends HttpServlet {
             return;
         }
         OrderDAO orderDAO = new OrderDAO();
-        String optionValue = req.getParameter("option");
+        String optionValue = "all";
+        if(req.getParameter("option")!=null){
+            optionValue = req.getParameter("option");
+        }
         System.out.println(optionValue);
         int page =1;
-        int recSize = 2;
+        int recSize = 5;
         if(req.getParameter("page")!=null){
             page = Integer.parseInt(req.getParameter("page"));
         }
@@ -46,6 +49,7 @@ public class OrderManganerController extends HttpServlet {
             req.setAttribute("listOrder",orders);
             req.setAttribute("currentPage", page);
             req.setAttribute("totalPage", totalPage);
+            req.setAttribute("type", optionValue);
             req.getRequestDispatcher("quanlidonhang.jsp").forward(req, resp);
             return;
         }
@@ -56,6 +60,7 @@ public class OrderManganerController extends HttpServlet {
             req.setAttribute("listOrder", orders);
             req.setAttribute("currentPage", page);
             req.setAttribute("totalPage", totalPage);
+            req.setAttribute("type", optionValue);
             req.getRequestDispatcher("quanlidonhang.jsp").forward(req,resp);
             return;
         }

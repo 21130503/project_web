@@ -5,6 +5,7 @@
 <%@ page import="java.awt.*" %>
 <%@ page import="nhom26.*" %>
 <%@ page import="favourite.Favourite" %>
+<%@ page import="cart.Cart" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -90,6 +91,8 @@
 <%
     Favourite  favourite = (Favourite) session.getAttribute("favourite");
     if(favourite ==null) favourite = new Favourite();
+    Cart  cart = (Cart) session.getAttribute("cart");
+    if(cart ==null) cart = new Cart();
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -119,7 +122,7 @@
             </a>
             <a href="cart.jsp" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=cart.total()%></span>
             </a>
         </div>
     </div>
@@ -237,7 +240,7 @@
                 </h3>
                 <div class="option">
                     <button id="btn-favourite" title="<%=type%>" value="<%=id%>" class="btn border"><i class="fas fa-heart text-primary"></i></button>
-                    <button class="btn border "><i class="fas fa-shopping-cart text-primary"></i></button>
+                    <button id="btn-cart" class="btn border " title="<%=type%>" value="<%=id%>"><i class="fas fa-shopping-cart text-primary"></i></button>
                 </div>
             </div>
             <div class="d-flex mb-3">
@@ -584,12 +587,33 @@
 </script>
 <script>
     const favouriteBtn = document.getElementById('btn-favourite');
+    const cartBtn = document.getElementById('btn-cart');
     console.log(favouriteBtn)
     const type = favouriteBtn.title;
     console.log(idProduct)
     favouriteBtn.addEventListener("click", ()=>{
         const xhr = new XMLHttpRequest();
         const url = `http://localhost:8080/demoProject_war/favourite?type=<%=type%>&idProduct=<%=id%>`;
+
+        xhr.open("POST", url, true);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                location.reload();
+            } else if (xhr.status === 500) {
+                const data = JSON.parse(xhr.responseText);
+                alert(data.message);
+                // window.location.href="http://localhost:8080/demoProject_war/favourite"
+            }
+        };
+
+        xhr.send();
+    })
+    cartBtn.addEventListener("click", ()=>{
+        const xhr = new XMLHttpRequest();
+        const url = `http://localhost:8080/demoProject_war/cart?type=<%=type%>&idProduct=<%=id%>`;
 
         xhr.open("POST", url, true);
 

@@ -112,7 +112,7 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <h4 class="font-weight-semi-bold text-uppercase mb-4">Mã giảm giá bạn đang có</h4>
+            <h4 class="font-weight-semi-bold text-uppercase mb-4 text-center">Mã giảm giá bạn đang có</h4>
             <div class="listCode">
                 <%if (codes.size() == 0) {%>
                 <p class="text-center">Bạn chưa có mã giảm giá nào</p>
