@@ -53,7 +53,7 @@
     ArrayList<OddImage> listOddImageOrder = request.getAttribute("listOddImageOrder") == null ? new ArrayList<>() : (ArrayList<OddImage>) request.getAttribute("listOddImageOrder");
     ArrayList<Album> listAlbumOrder = request.getAttribute("listAlbumOrder") == null ? new ArrayList<>() : (ArrayList<Album>) request.getAttribute("listAlbumOrder");
     Random random = new Random();
-    int albumRan = random.nextInt(0, listAlbumNew.size());
+    int albumRan = random.nextInt(listAlbumNew.size());
     Album albumSlide = listAlbumNew.get(albumRan);
     int oddRan = random.nextInt(0, listOddImageOrder.size());
     OddImage oddImageSlide = listOddImageOrder.get(oddRan);
@@ -1133,6 +1133,7 @@
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
 <script src="js/user.js"></script>
+    <script src="js/addCart.js"></script>
 </body>
 
 </html>

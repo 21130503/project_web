@@ -59,11 +59,7 @@
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-<<<<<<< HEAD
-            <a href="index" class="text-decoration-none">
-=======
             <a href="./index" class="text-decoration-none">
->>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -125,15 +121,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-<<<<<<< HEAD
-<<<<<<< HEAD
-                <a href="index" class="text-decoration-none d-block d-lg-none">
-=======
                 <a href="./index" class="text-decoration-none d-block d-lg-none">
->>>>>>> d68c03236a8fdf27d2a78f702eab60d762eb0701
-=======
-                <a href="./index" class="text-decoration-none d-block d-lg-none">
->>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">

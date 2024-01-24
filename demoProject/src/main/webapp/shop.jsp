@@ -46,13 +46,8 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
-<<<<<<< HEAD
-    <%--    axios--%>z
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js" integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-=======
     <link rel="stylesheet" href="./css/common.css">
->>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
+
 </head>
 
 <body id="listProduct">
