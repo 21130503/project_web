@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Connect {
-    private static final String URL = "jdbc:mysql://localhost:3306/project?useUnicode=true&characterEncoding=utf8";
+    private static final String URL = "jdbc:mySQL://localhost:3306/project";
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
