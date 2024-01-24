@@ -17,7 +17,7 @@ public class DiscountDAO {
 
         try {
             connection = Connect.getConnection();
-            String sql = "SELECT code, description, discountValue, expiryDate FROM discount WHERE code = ?";
+            String sql = "SELECT code, description, discountValue, expiryDate, count FROM discount WHERE code = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, code);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -28,6 +28,7 @@ public class DiscountDAO {
                 discount.setDescription(resultSet.getString("description"));
                 discount.setDiscountValue(resultSet.getDouble("discountValue"));
                 discount.setExpiryDate(resultSet.getDate("expiryDate"));
+                discount.setCount(resultSet.getInt("count"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -45,7 +46,7 @@ public class DiscountDAO {
 
         try {
             connection = Connect.getConnection();
-            String sql = "SELECT code, description, discountValue, expiryDate FROM discount";
+            String sql = "SELECT code, description, discountValue, expiryDate, count FROM discount";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -55,6 +56,7 @@ public class DiscountDAO {
                 discount.setDescription(resultSet.getString("description"));
                 discount.setDiscountValue(resultSet.getDouble("discountValue"));
                 discount.setExpiryDate(resultSet.getDate("expiryDate"));
+                discount.setCount(resultSet.getInt("count"));
                 discounts.add(discount);
             }
         } catch (SQLException e) {
@@ -70,7 +72,7 @@ public class DiscountDAO {
     //Tạo 1 mã giảm giá mới vào trong csdl
     public boolean addDiscount(Discount discount) {
         try (Connection connection = Connect.getConnection()) {
-            String sql = "INSERT INTO discount (code, description, discountValue, expiryDate) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO discount (code, description, discountValue, expiryDate, count) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, discount.getCode());
             preparedStatement.setString(2, discount.getDescription());
@@ -80,6 +82,7 @@ public class DiscountDAO {
             preparedStatement.setDouble(3, discountValue);
 
             preparedStatement.setDate(4, new java.sql.Date(discount.getExpiryDate().getTime()));
+            preparedStatement.setInt(5, discount.getCount());
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -128,16 +131,17 @@ public class DiscountDAO {
 
 
     //Cập nhật lại 1 mã giảm giá đã tồn tại trong csdl
-    public boolean updateDiscount(String code, String description, double discountValue, LocalDate expiryDate) {
+    public boolean updateDiscount(String code, String description, double discountValue, LocalDate expiryDate, int count) {
         Connection connection = null;
         try {
             connection = Connect.getConnection();
-            String sqlUpdate = "update discount set description = ?, discountValue = ?, expiryDate = ? where code = ?";
+            String sqlUpdate = "update discount set description = ?, discountValue = ?, expiryDate = ?, count = ? where code = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlUpdate);
             preparedStatement.setString(1, description);
             preparedStatement.setDouble(2, discountValue);
             preparedStatement.setDate(3, Date.valueOf(expiryDate));
-            preparedStatement.setString(4, code);
+            preparedStatement.setInt(4, count);
+            preparedStatement.setString(5, code);
 
             int check = preparedStatement.executeUpdate();
             return check > 0;
