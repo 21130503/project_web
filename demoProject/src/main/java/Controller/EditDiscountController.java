@@ -55,9 +55,10 @@ public class EditDiscountController extends HttpServlet {
         String description = req.getParameter("description");
         int discountValue = Integer.parseInt(req.getParameter("discountValue"));
         LocalDate expiryDate = LocalDate.parse(req.getParameter("expiryDate"));
+        int count = Integer.parseInt(req.getParameter("count"));
 
         DiscountDAO discountDAO = new DiscountDAO();
-        boolean success = discountDAO.updateDiscount(code, description, discountValue / 100.0, expiryDate);
+        boolean success = discountDAO.updateDiscount(code, description, discountValue / 100.0, expiryDate, count);
 
         if (success) {
             resp.sendRedirect("discountAdmin");
