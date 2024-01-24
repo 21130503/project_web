@@ -52,19 +52,6 @@
             <button type="submit">Đăng kí</button>
         </div>
     </form>
-    <div class="athoner-register">
-        <span>Hoặc đăng kí với</span>
-        <ul class="list">
-            <li class="item"><a href="" class="link">
-                <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-            </a></li>
-            <li class="item"><a href="" class="link">
-                <img src="./asset/gg.png" alt="" class="img-logo">
-            </a></li>
-        </ul>
-
-
-    </div>
     <div class="signin mt-8">
         <span>Bạn đã có tài khoản ?</span>
         <a href="login.jsp" class="none_decorate">Đăng nhập</a>
