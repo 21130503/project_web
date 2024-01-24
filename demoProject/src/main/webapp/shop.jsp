@@ -279,7 +279,7 @@
                                id="price-4" <%= "600-1000000".equals(selectedPriceRange) ? "checked" : "" %>>
                         <label class="custom-control-label" for="price-4">600k vnđ trở lên</label>
                     </div>
-                    <button type="submit">Lọc</button>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
                 </div>
             </form>
             <!-- Price End -->

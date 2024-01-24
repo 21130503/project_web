@@ -46,6 +46,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
@@ -132,15 +133,18 @@
         <div class="form-group">
             <label for="discountValue">Giá Trị Giảm (%):</label>
             <input type="number" class="form-control" id="discountValue" name="discountValue"
-                   value="<%= String.format("%.0f%%", discount.getDiscountValue() * 100.0) %>" min="1" max="100"
-                   required>
+                   value="<%= (int)(discount.getDiscountValue() * 100.0) %>" min="1" max="100" required>
         </div>
         <div class="form-group">
             <label for="expiryDate">Ngày Hết Hạn:</label>
             <input type="date" class="form-control" id="expiryDate" name="expiryDate"
                    value="<%= discount.getExpiryDate() != null ? discount.getExpiryDate().toString() : "" %>" required>
         </div>
-
+        <div class="form-group">
+            <label for="count">Còn Lại</label>
+            <input type="number" class="form-control" id="count" name="count"
+                   value="<%= discount.getCount()%>" min="0" required>
+        </div>
         <button type="submit" class="btn btn-primary">Cập nhật</button>
     </form>
 </div>
