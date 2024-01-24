@@ -810,7 +810,6 @@ public class ProductDAO {
     }
 
 
-    
     //Lấy ra danh sách Album sau khi lọc theo giá tiền
     public List<Album> getFilteredAlbums(int page, int recSize, int minPrice, int maxPrice) {
         Connection connection = null;
@@ -818,12 +817,13 @@ public class ProductDAO {
         int start = (page - 1) * recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "SELECT * FROM album WHERE price BETWEEN ? AND ? LIMIT ?, ?";
+            String sql = "SELECT * FROM album WHERE isShow = ? AND price BETWEEN ? AND ? LIMIT ?, ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, minPrice);
-            preparedStatement.setInt(2, maxPrice);
-            preparedStatement.setInt(3, start);
-            preparedStatement.setInt(4, recSize);
+            preparedStatement.setString(1, "true");
+            preparedStatement.setInt(2, minPrice);
+            preparedStatement.setInt(3, maxPrice);
+            preparedStatement.setInt(4, start);
+            preparedStatement.setInt(5, recSize);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -833,6 +833,7 @@ public class ProductDAO {
                 album.setPrice(resultSet.getInt("price"));
                 album.setDiscount(resultSet.getInt("discount"));
                 album.setListImage(imageDAO.getAllImageByIdAlbum(resultSet.getInt("idAlbum")));
+                album.setShow(resultSet.getBoolean("isShow"));
                 listAlbum.add(album);
             }
         } catch (SQLException e) {
@@ -850,12 +851,13 @@ public class ProductDAO {
         int start = (page - 1) * recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "SELECT * FROM oddImage WHERE price BETWEEN ? AND ? LIMIT ?, ?";
+            String sql = "SELECT * FROM oddImage WHERE isShow = ? AND price BETWEEN ? AND ? LIMIT ?, ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, minPrice);
-            preparedStatement.setInt(2, maxPrice);
-            preparedStatement.setInt(3, start);
-            preparedStatement.setInt(4, recSize);
+            preparedStatement.setString(1, "true");
+            preparedStatement.setInt(2, minPrice);
+            preparedStatement.setInt(3, maxPrice);
+            preparedStatement.setInt(4, start);
+            preparedStatement.setInt(5, recSize);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -865,6 +867,7 @@ public class ProductDAO {
                 oddImage.setPrice(resultSet.getInt("price"));
                 oddImage.setDiscount(resultSet.getInt("discount"));
                 oddImage.setImage(URL.URL + resultSet.getString("source"));
+                oddImage.setShow(resultSet.getBoolean("isShow"));
                 listOddImage.add(oddImage);
             }
         } catch (SQLException e) {
