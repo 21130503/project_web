@@ -396,7 +396,7 @@
                     <%-- Hiển thị mã giảm giá được áp --%>
                     <% if (cart.getAppliedDiscount() != null) { %>
                     <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Mã <%= cart.getAppliedDiscount().getDescription() %> được áp
+                        <h6 class="font-weight-medium">Mã <h6 class="font-weight-semi-bold"><%= cart.getAppliedDiscount().getDescription() %></h6> được áp
                             dụng.
                         </h6>
                         <%-- Nút xóa mã giảm giá ra khỏi tổng tiền --%>

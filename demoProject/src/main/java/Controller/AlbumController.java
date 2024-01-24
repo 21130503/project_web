@@ -66,64 +66,64 @@ public class AlbumController extends HttpServlet {
         ArrayList<String> listFileNames = new ArrayList<>();
         if (nameTopic == null || nameTopic.trim().isEmpty()) {
             req.setAttribute("errNameTopic_Album", "Vui lòng chọn chủ đề");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
         if (nameAlbum == null || nameAlbum.trim().isEmpty()) {
             req.setAttribute("errNameAlbum", "Vui lòng nhập tên sản phẩm");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
         if (productDAO.checkNameAlbumExist(nameAlbum)) {
             req.setAttribute("errNameExist", "Tên album đã tồn tại");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
         if (price == null || price.trim().isEmpty()) {
             req.setAttribute("errPriceAlbum", "Vui lòng nhập giá sản phẩm");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
         if (Integer.parseInt(price) < 0) {
             req.setAttribute("errPriceAlbum", "Vui lòng nhập lại giá sản phẩm");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
         if (discount == null || discount.trim().isEmpty() || Integer.parseInt(discount) < 0) {
             req.setAttribute("errDiscountAlbum", "Vui lòng nhập giảm giá");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
         if (Integer.parseInt(discount) > Integer.parseInt(price)) {
             req.setAttribute("errPriceAlbum", "Giá giảm không được vượt quá giá sản phẩm");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
         if (description == null || description.trim().isEmpty()) {
             req.setAttribute("errDescriptionAlbum", "Vui lòng nhập mô tả cho sản phẩm sản phẩm");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
@@ -149,8 +149,8 @@ public class AlbumController extends HttpServlet {
         }
         if(listFileNames.size() ==0){
             req.setAttribute("errImageForAlbum", "Vui lòng thêm ảnh cho album");
-            req.setAttribute("listAlbum", productDAO.getAllAlbum());
-            req.setAttribute("listOddImage", productDAO.getAllOddImage());
+            req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
+            req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
         }

@@ -45,6 +45,11 @@
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");%>
 <!-- Topbar Start -->
+<%
+    int totalPage = (int) request.getAttribute("totalPage");
+    int currentPage = (int) request.getAttribute("currentPage");
+    String type = (String) request.getAttribute("type");
+%>
 <div class="container-fluid">
 
     <div class="row align-items-center py-3 px-xl-5">
@@ -101,9 +106,10 @@
         <form action="./orderManager" id="myForm">
             <p><input type="radio" class="" name="option" value="all"> Tất cả</p>
             <p><input type="radio" class="" name="option" value="Đang chuẩn bị"> Đang chuẩn bị</p>
-            <p><input type="radio" class="" name="option" value="Đã giao cho đơn vị vận chuyển"> Đã giao cho đơn vị vận chuyển</p>
-            <p><input type="radio"  class="" name="option" value="Đang vận chuyển"> Đang vận chuyển</p>
-            <p><input type="radio"  class="" name="option" value="Đã giao"> Đã giao</p>
+            <p><input type="radio" class="" name="option" value="Đã giao cho đơn vị vận chuyển"> Đã giao cho đơn vị vận
+                chuyển</p>
+            <p><input type="radio" class="" name="option" value="Đang vận chuyển"> Đang vận chuyển</p>
+            <p><input type="radio" class="" name="option" value="Đã giao"> Đã giao</p>
             <p><input type="radio" class="" name="option" value="Đã hủy"> Đã hủy</p>
         </form>
     </div>
@@ -125,28 +131,66 @@
                 </tr>
                 </thead>
                 <tbody class="align-middle">
-                <%if(listOrder.size() ==0){%>
-                <%}else{%>
-                <%for(Order order : listOrder){%>
+                <%if (listOrder.size() == 0) {%>
+                <%} else {%>
+                <%for (Order order : listOrder) {%>
+                <%
+                    String href = "cart".equals(order.getType()) ? "#" : ("./detail?type=" + order.getType() + "&id=" + order.getIdProduct());
+                %>
                 <tr>
-                    <td class="align-middle"><%=order.getIdOrder()%></td>
-                    <td class="align-middle"><%=order.getIdByer()%></td>
-                    <td class="align-middle"><%=order.getReceiver()%></td>
-                    <td class="align-middle"><%=order.getPhoneNumber()%></td>
-                    <td class="align-middle"><a href="./detail?type=<%=order.getType()%>&id=<%=order.getIdProduct()%>"><%=order.getNameProduct()%></a></td>
-                    <td class="align-middle"><%=order.getQuantity()%></td>
-                    <td class="align-middle"><a href="./editShip?q=<%=order.getIdOrder()%>&type=<%=order.getType()%>"><%=order.getStatus()%></a></td>
-                    <td class="align-middle"><%=order.getAddress()%></td>
-                    <td class="align-middle"><%=vndFormat.format(order.getTotalPrice())%></td>
+                    <td class="align-middle"><%=order.getIdOrder()%>
+                    </td>
+                    <td class="align-middle"><%=order.getIdByer()%>
+                    </td>
+                    <td class="align-middle"><%=order.getReceiver()%>
+                    </td>
+                    <td class="align-middle"><%=order.getPhoneNumber()%>
+                    </td>
+                    <td class="align-middle"><a href="<%=href%>"><%=order.getNameProduct()%>
+                    </a></td>
+                    <td class="align-middle"><%=order.getQuantity()%>
+                    </td>
+                    <td class="align-middle"><a
+                            href="./editShip?q=<%=order.getIdOrder()%>&type=<%=order.getType()%>"><%=order.getStatus()%>
+                    </a></td>
+                    <td class="align-middle"><%=order.getAddress()%>
+                    </td>
+                    <td class="align-middle"><%=vndFormat.format(order.getTotalPrice())%>
+                    </td>
                     <td class="align-middle">
-                        <button data-id="<%=order.getIdOrder()%>" data-toggle="modal" data-target="#deleteOrderAdmin"  class="btn btn-sm btn-primary">
-                               <i class="fa fa-times"></i></button>
+                        <button data-id="<%=order.getIdOrder()%>" value="<%=order.getType()%>" data-toggle="modal"
+                                data-target="#deleteOrderAdmin" class="btn btn-sm btn-primary">
+                            <i class="fa fa-times"></i></button>
                     </td>
                 </tr>
-                <%}}%>
+                <%
+                        }
+                    }
+                %>
 
                 </tbody>
             </table>
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center mb-3">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Quay lại</span>
+                        </a>
+                    </li>
+                    <%for (int i = 1; i <= totalPage; i++) {%>
+                    <%String s = currentPage == i ? "active" : "";%>
+                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./orderManager?option=<%=type%>&page=<%=i%>"><%=i%>
+                    </a></li>
+                    <%}%>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Tiếp</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
     </div>
@@ -173,9 +217,9 @@
                 <div class="col-md-6 mb-5" style="padding-left: 70px;">
                     <h5 class="font-weight-bold text-dark mb-4">Di Chuyển Nhanh</h5>
                     <div class="d-flex flex-column justify-content-start">
-                        <a class="text-dark mb-2" href="index.jsp"><i class="fa fa-angle-right mr-2"></i>Trang
+                        <a class="text-dark mb-2" href="./index"><i class="fa fa-angle-right mr-2"></i>Trang
                             chủ</a>
-                        <a class="text-dark mb-2" href="shop.jsp"><i class="fa fa-angle-right mr-2"></i>Của
+                        <a class="text-dark mb-2" href="./shop"><i class="fa fa-angle-right mr-2"></i>Của
                             hàng</a>
                         <a class="text-dark mb-2" href="albumnew.html"><i class="fa fa-angle-right mr-2"></i>Bộ sưu
                             tập mới</a>
@@ -262,7 +306,7 @@
                 $.ajax({
                     type: "GET",
                     url: "http://localhost:8080/demoProject_war/orderManager",
-                    data: { option: actionValue },
+                    data: {option: actionValue},
                     success: function (data) {
                         $("#listOrderContainer").empty();
                         // Xử lý phản hồi từ server và hiển thị tại trang
@@ -278,9 +322,46 @@
         }
     });
 </script>
-<script src="js/Dialog.js"></script>
 <script>
-    Dialog("#deleteOrderAdmin","#btn-delete-order","/order/odd","idOrder", "delete")
+    // Dialog("#deleteOrder","#btn-delete-order","/order/odd","idOrder", "delete")
+    let where;
+    document.addEventListener("DOMContentLoaded", () => {
+        $("#deleteOrderAdmin").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            let type = button.val()
+            id = button.data('id')// Extract info from data-* attributes
+            if (type === "odd") {
+                where = "/order/odd"
+            }
+            if (type === "album") {
+                where = "/order/album"
+            }
+            if (type === "cart") {
+                where = "/order/cart"
+            }
+        })
+        const btnDelete = document.querySelector("#btn-delete-order")
+        btnDelete.addEventListener('click', async () => {
+
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:8080/demoProject_war/${where}?idOrder=${id}`;
+
+            xhr.open('DELETE', url, true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                    location.reload();
+                } else if (xhr.status === 500) {
+                    const data = JSON.parse(xhr.responseText);
+                    alert(data.message);
+                }
+            };
+
+            xhr.send();
+        })
+    })
 </script>
 </body>
 </html>
