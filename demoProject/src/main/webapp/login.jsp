@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,60 +13,12 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 </head>
 <body>
-<% String err  = (String) request.getAttribute("err") == null ? "" :(String) request.getAttribute("err");%>
-<%--             Đăng nhập bằng facebook--%>
-<script>
-
-    function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
-        console.log('statusChangeCallback');
-        console.log(response);                   // The current login status of the person.
-        if (response.status === 'connected') {   // Logged into your webpage and Facebook.
-            testAPI();
-        } else {                                 // Not logged into your webpage or we are unable to tell.
-            document.getElementById('status').innerHTML = 'Please log ' +
-                'into this webpage.';
-        }
-    }
-
-
-    function checkLoginState() {               // Called when a person is finished with the Login Button.
-        FB.getLoginStatus(function(response) {   // See the onlogin handler
-            statusChangeCallback(response);
-        });
-    }
-
-
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId      : 660399776047066,
-            cookie     : true,                     // Enable cookies to allow the server to access the session.
-            xfbml      : true,                     // Parse social plugins on this webpage.
-            version    : '{api-version}'           // Use this Graph API version for this call.
-        });
-
-
-        FB.getLoginStatus(function(response) {   // Called after the JS SDK has been initialized.
-            statusChangeCallback(response);        // Returns the login status.
-        });
-    };
-
-    function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function(response) {
-            console.log('Successful login for: ' + response.name);
-            document.getElementById('status').innerHTML =
-                'Thanks for logging in, ' + response.name + '!';
-        });
-    }
-
-</script>
-
+<% String err = (String) request.getAttribute("err") == null ? "" : (String) request.getAttribute("err");%>
 <div class="inner">
-    <div id="status">
-    </div>
     <h1 class="logo">Nhóm 26</h1>
     <h3 class="title">Đăng nhập</h3>
-    <p style="text-align: center; color: red; font-weight: bold;"><%=err%></p>
+    <p style="text-align: center; color: red; font-weight: bold;"><%=err%>
+    </p>
     <form action="./login" class="form" method="post">
         <input type="text" placeholder="Email" class="caret" name="email">
         <input type="password" placeholder="Mật khẩu" class="caret" name="password">
@@ -75,21 +27,28 @@
     <div class="athoner-login">
         <span>Hoặc đăng nhập với</span>
         <ul class="list">
-            <li class="item"><a href="" class="link">
-                <img src="./asset/face.png" alt="" class="img-logo" onlogin="checkLoginState();">
-            </a></li>
-            <li class="item"><a href="" class="link">
-                <img src="./asset/gg.png" alt="" class="img-logo">
-            </a></li>
+            <li class="item">
+                <a href="https://www.facebook.com/dialog/oauth?client_id=801476171386686&redirect_uri=http://localhost:8080/demoProject_war/login-facebook"
+                   class="link">
+                    <img src="./asset/face.png" alt="" class="img-logo">
+                </a>
+            </li>
+            <li class="item">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/demoProject_war/login-google&response_type=code
+    &client_id=529302459286-47e0gd36hgu0evknkun46lbsq7ddoalb.apps.googleusercontent.com&approval_prompt=force" class="link">
+                    <img src="./asset/gg.png" alt="" class="img-logo">
+                </a>
+            </li>
         </ul>
     </div>
     <div class="register">
-        <div >
-            <a class="redirect-home" href="index.jsp"><span><i class="fa-solid fa-angle-left"></i></span><span>Trang chủ</span></a>
-            
+        <div>
+            <a class="redirect-home" href="index.jsp"><span><i
+                    class="fa-solid fa-angle-left"></i></span><span>Trang chủ</span></a>
+
         </div>
-       <p class="redirect"> <span>Bạn chưa có tài khoản?</span> <a href="register.jsp">Đăng kí</a> </p>
-       <a href="findEmail.jsp" class="fogot db"> Quên mật khẩu</a>
+        <p class="redirect"><span>Bạn chưa có tài khoản?</span> <a href="register.jsp">Đăng kí</a></p>
+        <a href="findEmail.jsp" class="fogot db"> Quên mật khẩu</a>
     </div>
 </div>
 </body>

@@ -49,8 +49,8 @@ public class UserDAO {
                     String insert = "Insert into User values (?,?,?,?,?,?,?,?)";
                     PreparedStatement preparedStatement1 = connection.prepareStatement(insert);
                     preparedStatement1.setInt(1, maxUserId + 1);
-                    preparedStatement1.setString(2, email);
-                    preparedStatement1.setString(3, username);
+                    preparedStatement1.setString(3, email);
+                    preparedStatement1.setString(2, username);
                     preparedStatement1.setString(4, pass);
                     preparedStatement1.setString(5, "false");
                     preparedStatement1.setString(6, "true");
