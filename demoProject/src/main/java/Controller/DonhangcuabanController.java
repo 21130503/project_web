@@ -33,6 +33,7 @@ public class DonhangcuabanController extends HttpServlet {
         OrderDAO orderDAO = new OrderDAO();
         ArrayList<Order> orders = new ArrayList<>(orderDAO.getAllOrderOddImageForUser(user.getId()));
         orders.addAll(orderDAO.getAllOrderAlbumForUser(user.getId()));
+        orders.addAll(orderDAO.getAllCartOrderForUser(user.getId()));
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.setAttribute("Order",orders);
         req.getRequestDispatcher("donhangcuaban.jsp").forward(req, resp);

@@ -78,12 +78,16 @@
     String albumStr = "Danh sách album";
     String oddStr = "Danh sách ảnh lẻ";
 %>
+<%
+    int totalPage = (int) request.getAttribute("totalPage");
+    int currentPage = (int) request.getAttribute("currentPage");
+%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="index.jsp" class="text-decoration-none">
+            <a href="index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -100,17 +104,17 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="quanlichude.jsp" class="btn border">
+            <a href="./topic" class="btn border">
                 <i class="fa-solid fa-boxes-stacked text-primary"></i>
             </a>
-            <a href="quanlidonhang.jsp" class="btn border">
+            <a href="./orderManager" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
             </a>
-            <a href="quanlinguoidung.jsp" class="btn border">
+            <a href="./user" class="btn border">
                 <i class="fa-regular fa-user text-primary"></i>
 
             </a>
-            <a href="./quanlisanpham.html" class="btn border">
+            <a href="./product" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
             </a>
         </div>
@@ -205,7 +209,7 @@
                 </tr>
                 </thead>
                 <tbody class="align-middle">
-                <%if (listAlbum == null || listAlbum.size() == 0) {%>
+                <%if (listOddImage == null || listOddImage.size() == 0) {%>
                 <tr>
                     <td>Chưa có ảnh lẻ nào</td>
                 </tr>
@@ -244,14 +248,30 @@
                 <%}%>
                 </tbody>
             </table>
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center mb-3">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Quay lại</span>
+                        </a>
+                    </li>
+                    <%for(int i=1 ; i<=totalPage;i++){%>
+                    <%String s = currentPage==i ? "active": "";%>
+                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./product?page=<%=i%>"><%=i%></a></li>
+                    <%}%>
+                    <%--                            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
+                    <%--                            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Tiếp</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <div class="col-lg-12 mt-4 mb-4 justify-content-center">
-            <div id="paginationContainer">
-                <a href="#" class="btn-primary p-2 mr-2 " id="prevPage">Trang trước</a>
-                <span id="currentPage">1</span>
-                <a href="#" class="btn-primary p-2 ml-2" id="nextPage">Trang sau</a>
-            </div>
-        </div>
+
         <div class="col-lg-6 table-responsive mb-5">
             <div class="card-header bg-secondary border-0">
                 <h6 class="font-weight-semi-bold m-0">Thêm album mới </h6>

@@ -7,6 +7,7 @@
 <%@ page import="nhom26.Album" %>
 <%@ page import="java.util.Random" %>
 <%@ page import="favourite.Favourite" %>
+<%@ page import="cart.Cart" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -62,7 +63,9 @@
 %>
 <%
     Favourite favourite = (Favourite) session.getAttribute("favourite");
-    if(favourite ==null) favourite = new Favourite();
+    if (favourite == null) favourite = new Favourite();
+    Cart cart = (Cart) session.getAttribute("cart");
+    if (cart == null) cart = new Cart();
 %>
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -90,9 +93,9 @@
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge"><%=favourite.total()%></span>
             </a>
-            <a href="cart.jsp" class="btn border">
+            <a href="./cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"><%=cart.total()%></span>
             </a>
         </div>
     </div>
@@ -239,900 +242,973 @@
         <img style="height: 300px;" src="img/sale.jpg" alt="">
         <div class=" text-center text-md-right text-white mb-2 py-5 px-5">
             <div class="" style="z-index: 1;">
-                <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
-                <h1 class="mb-4 font-weight-semi-bold">Spring Collection</h1>
-                <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                <h5 class="text-uppercase text-primary mb-3">Mã giảm giá dành cho bạn</h5>
+                <h1 class="mb-4 font-weight-semi-bold">Mùa xuân, giá sốc !</h1>
+                <a href="./discount" class="btn btn-outline-primary py-md-2 px-md-3">Lấy ngay</a>
             </div>
         </div>
     </div>
 
 
-<!-- Offer End -->
+    <!-- Offer End -->
 
 
-<!-- Products Start -->
-<div class="container-fluid pt-5">
-    <div class="text-center mb-4">
-        <h2 class="section-title px-5"><span class="px-2">Ảnh bán chạy</span></h2>
-    </div>
-    <div class="row px-xl-5 pb-3">
-        <%if (listOddImageOrder.size() == 0) {%>
-        <div></div>
-        <%} else {%>
-        <%for (OddImage oddImage : listOddImageOrder) {%>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100 image-view" src="<%=oddImage.getImage()%>" alt="<%=oddImage.getName()%>">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
-                    </h6>
-                    <div class="d-flex justify-content-center">
-                        <h6><%=vndFormat.format(oddImage.getPrice() - oddImage.getDiscount())%>
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Ảnh bán chạy</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <%if (listOddImageOrder.size() == 0) {%>
+            <div></div>
+            <%} else {%>
+            <%for (OddImage oddImage : listOddImageOrder) {%>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100 image-view" src="<%=oddImage.getImage()%>"
+                             alt="<%=oddImage.getName()%>">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
                         </h6>
-                        <h6 class="text-muted ml-2">
-                            <del><%=vndFormat.format(oddImage.getPrice())%>
-                            </del>
-                        </h6>
+                        <div class="d-flex justify-content-center">
+                            <h6><%=vndFormat.format(oddImage.getPrice() - oddImage.getDiscount())%>
+                            </h6>
+                            <h6 class="text-muted ml-2">
+                                <del><%=vndFormat.format(oddImage.getPrice())%>
+                                </del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <button title="<%=oddImage.getType()%>" value="<%=oddImage.getIdOddImage()%>" href=""
+                                class=" addCart btn btn-sm text-dark p-0"><i class="  fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ
+                        </button>
                     </div>
                 </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i
-                            class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
             </div>
-        </div>
-        <%
+            <%
+                    }
                 }
-            }
-        %>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/pepole.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hoạt động con người</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>100.000 VNĐ</del>
-                        </h6>
+            %>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/pepole.avif" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hoạt động con người</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>100.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/animal.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Động vật hoang dã</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/animal.avif" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Động vật hoang dã</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/car.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Đua xe</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/car.avif" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Đua xe</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/dog.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Chú chó đáng yêu</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/dog.avif" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Chú chó đáng yêu</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/cat.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Cô mèo nhí nhảnh</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/cat.avif" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Cô mèo nhí nhảnh</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/natural.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hòa mình với thiên nhiên</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/natural.avif" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hòa mình với thiên nhiên</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/flower.jpg" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hồn nhiên như cây cỏ</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/flower.jpg" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hồn nhiên như cây cỏ</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/anime.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"> Tháng 4 là lời nói dối của em</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/anime.avif" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3"> Tháng 4 là lời nói dối của em</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="container-fluid pt-5">
-    <div class="text-center mb-4">
-        <h2 class="section-title px-5"><span class="px-2">Bộ sưu tập bán chạy</span></h2>
-    </div>
-    <div class="row px-xl-5 pb-3">
-        <%if (listAlbumOrder.size() == 0) {%>
-        <div></div>
-        <%} else {%>
-        <%for (Album album : listAlbumOrder) {%>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100 image-view" src="<%=album.getListImage().get(0)%>" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"><%=album.getName()%>
-                    </h6>
-                    <div class="d-flex justify-content-center">
-                        <h6><%=vndFormat.format(album.getPrice() - album.getDiscount())%>
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Bộ sưu tập bán chạy</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <%if (listAlbumOrder.size() == 0) {%>
+            <div></div>
+            <%} else {%>
+            <%for (Album album : listAlbumOrder) {%>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100 image-view" src="<%=album.getListImage().get(0)%>" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3"><%=album.getName()%>
                         </h6>
-                        <h6 class="text-muted ml-2">
-                            <del><%=vndFormat.format(album.getPrice())%>
-                            </del>
-                        </h6>
+                        <div class="d-flex justify-content-center">
+                            <h6><%=vndFormat.format(album.getPrice() - album.getDiscount())%>
+                            </h6>
+                            <h6 class="text-muted ml-2">
+                                <del><%=vndFormat.format(album.getPrice())%>
+                                </del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <button title="<%=album.getType()%>" value="<%=album.getIdAlbum()%>" href=""
+                                class=" addCart btn btn-sm text-dark p-0"><i class=" fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ
+                        </button>
                     </div>
                 </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i
-                            class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
             </div>
-        </div>
-        <%
+            <%
+                    }
                 }
-            }
-        %>
+            %>
 
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/animal.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Động vật hoang dã</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/animal.avif" alt="">
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/car.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Đua xe</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/dog.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Chú chó đáng yêu</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/cat.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Cô mèo nhí nhảnh</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/natural.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hòa mình với thiên nhiên</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/flower.jpg" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hồn nhiên như cây cỏ</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/anime.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"> Tháng 4 là lời nói dối của em</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Products End -->
-
-
-<!-- Products Start -->
-<div class="container-fluid pt-5">
-    <div class="text-center mb-4">
-        <h2 class="section-title px-5"><span class="px-2">Ảnh mới</span></h2>
-    </div>
-    <div class="row px-xl-5 pb-3">
-        <%for (OddImage oddImage : listOddNew) {%>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div style="height: 337px;" class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100 image-view" src="<%=oddImage.getImage()%>"
-                         alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
-                    </h6>
-                    <div class="d-flex justify-content-center">
-                        <h6><%= vndFormat.format(oddImage.getPrice() - oddImage.getDiscount())%>
-                        </h6>
-                        <h6 class="text-muted ml-2">
-                            <del><%= vndFormat.format(oddImage.getPrice())%>
-                            </del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i
-                            class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <%}%>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/dog.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Chú chó thông minh</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/cat.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hoàng thượng</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/galaxy.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Dải ngân hà</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/car.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Vua xe độ</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/animal.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Những động vật thông minh</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/pepole.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Người cùng khổ</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/anime.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Không lùi bước</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/flower.jpg" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hoa và Em</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid pt-5">
-    <div class="text-center mb-4">
-        <h2 class="section-title px-5"><span class="px-2">Bộ sưu tập mới</span></h2>
-    </div>
-    <div class="row px-xl-5 pb-3">
-        <%for (Album album : listAlbumNew) {%>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div style="height: 337px;" class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img  class="img-fluid w-100 image-view"
-                         src="<%=album.getListImage().get(0)%>" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3"><%=album.getName()%>
-                    </h6>
-                    <div class="d-flex justify-content-center">
-                        <h6><%= vndFormat.format(album.getPrice() - album.getDiscount())%>
-                        </h6>
-                        <h6 class="text-muted ml-2">
-                            <del><%= vndFormat.format(album.getPrice())%>
-                            </del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i
-                            class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <%}%>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/dog.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Chú chó thông minh</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/cat.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hoàng thượng</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/galaxy.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Dải ngân hà</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/car.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Vua xe độ</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/animal.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Những động vật thông minh</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/pepole.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Người cùng khổ</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/anime.avif" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Không lùi bước</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-            <div class="card product-item border-0 mb-4">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="img/flower.jpg" alt="">
-                </div>
-                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 class="text-truncate mb-3">Hoa và Em</h6>
-                    <div class="d-flex justify-content-center">
-                        <h6>500.000 VNĐ</h6>
-                        <h6 class="text-muted ml-2">
-                            <del>500.000 VNĐ</del>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                        vào giỏ</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Products End -->
-
-<!-- Footer Start -->
-<div class="container-fluid bg-secondary text-dark mt-5 pt-5">
-    <div class="row px-xl-5 pt-5">
-        <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-            <a href="index.html" class="text-decoration-none">
-                <h1 class="logo" style="height: 60px; text-align: start; margin-top: -16px;">Nhóm 26</h1>
-            </a>
-            <p>Shop Nhóm 26 - Điểm đến đáng tin cậy cho các loại ảnh bản quyền, với sự đa dạng và phong phú trong
-                tất cả các thể loại. Khi bạn cần ảnh bản quyền. Hãy nhớ "Cần ảnh bản quyền đến với Shop Nhóm 26".
-            </p>
-            <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>ĐH Nông Lâm HCM, Tp.Thủ Đức</p>
-            <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>nhom26@gmail.com</p>
-            <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+010 345 67890</p>
-        </div>
-        <div class="col-lg-8 col-md-12">
-            <div class="row">
-                <div class="col-md-6 mb-5" style="padding-left: 70px;">
-                    <h5 class="font-weight-bold text-dark mb-4">Di Chuyển Nhanh</h5>
-                    <div class="d-flex flex-column justify-content-start">
-                        <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Trang
-                            chủ</a>
-                        <a class="text-dark mb-2" href="shop.jsp"><i class="fa fa-angle-right mr-2"></i>Của
-                            hàng</a>
-                        <a class="text-dark mb-2" href="donhangcuaban.jsp"><i class="fa fa-angle-right mr-2"></i>Đơn
-                            hàng của bạn</a>
-                        <a class="text-dark mb-2" href="cart.jsp"><i class="fa fa-angle-right mr-2"></i>Giỏ
-                            hàng</a>
-                        <a class="text-dark mb-2" href="checkout.jsp"><i class="fa fa-angle-right mr-2"></i>Thanh
-                            toán</a>
-                        <a class="text-dark" href="contact.jsp"><i class="fa fa-angle-right mr-2"></i>Liên hệ</a>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-5">
-                    <h5 class="font-weight-bold text-dark mb-4">Đăng ký mới</h5>
-                    <form action="">
-                        <div class="form-group">
-                            <input type="text" class="form-control border-0 py-4" placeholder="Tên của bạn"
-                                   required="required"/>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Động vật hoang dã</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
                         </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control border-0 py-4" placeholder="Email của bạn"
-                                   required="required"/>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/car.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Đua xe</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
                         </div>
-                        <div>
-                            <button class="btn btn-primary btn-block border-0 py-3" type="submit">Đăng ký
-                                ngay!
-                            </button>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/dog.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Chú chó đáng yêu</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
                         </div>
-                    </form>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/cat.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Cô mèo nhí nhảnh</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/natural.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hòa mình với thiên nhiên</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/flower.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hồn nhiên như cây cỏ</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/anime.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3"> Tháng 4 là lời nói dối của em</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Footer End -->
+    <!-- Products End -->
 
 
-<!-- Back to Top -->
-<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Ảnh mới</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <%for (OddImage oddImage : listOddNew) {%>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div style="height: 337px;" class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100 image-view" src="<%=oddImage.getImage()%>"
+                             alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3"><%=oddImage.getName()%>
+                        </h6>
+                        <div class="d-flex justify-content-center">
+                            <h6><%= vndFormat.format(oddImage.getPrice() - oddImage.getDiscount())%>
+                            </h6>
+                            <h6 class="text-muted ml-2">
+                                <del><%= vndFormat.format(oddImage.getPrice())%>
+                                </del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <button title="<%=oddImage.getType()%>" value="<%=oddImage.getIdOddImage()%>" href=""
+                                class="addCart btn btn-sm text-dark p-0"><i class=" fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <%}%>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/dog.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Chú chó thông minh</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/cat.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hoàng thượng</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/galaxy.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Dải ngân hà</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/car.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Vua xe độ</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/animal.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Những động vật thông minh</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/pepole.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Người cùng khổ</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/anime.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Không lùi bước</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/flower.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hoa và Em</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Bộ sưu tập mới</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <%for (Album album : listAlbumNew) {%>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div style="height: 337px;" class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100 image-view"
+                             src="<%=album.getListImage().get(0)%>" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3"><%=album.getName()%>
+                        </h6>
+                        <div class="d-flex justify-content-center">
+                            <h6><%= vndFormat.format(album.getPrice() - album.getDiscount())%>
+                            </h6>
+                            <h6 class="text-muted ml-2">
+                                <del><%= vndFormat.format(album.getPrice())%>
+                                </del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <button title="<%=album.getType()%>" value="<%=album.getIdAlbum()%>" href=""
+                                class=" addCart btn btn-sm text-dark p-0"><i class="  fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <%}%>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/dog.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Chú chó thông minh</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/cat.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hoàng thượng</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/galaxy.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Dải ngân hà</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/car.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Vua xe độ</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/animal.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Những động vật thông minh</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/pepole.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Người cùng khổ</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/anime.avif" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Không lùi bước</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="img/flower.jpg" alt="">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Hoa và Em</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>500.000 VNĐ</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>500.000 VNĐ</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                            vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
+        <div class="row px-xl-5 pt-5">
+            <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                <a href="admin.jsp" class="text-decoration-none">
+                    <h1 class="logo" style="height: 60px; text-align: start; margin-top: -16px;">Nhóm 26</h1>
+                </a>
+                <p>Shop Nhóm 26 - Điểm đến đáng tin cậy cho các loại ảnh bản quyền, với sự đa dạng và phong phú trong
+                    tất cả các thể loại. Khi bạn cần ảnh bản quyền. Hãy nhớ "Cần ảnh bản quyền đến với Shop Nhóm 26".
+                </p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>ĐH Nông Lâm HCM, Tp.Thủ Đức</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>nhom26@gmail.com</p>
+                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+010 345 67890</p>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="col-md-6 mb-5" style="padding-left: 70px;">
+                        <h5 class="font-weight-bold text-dark mb-4">Di Chuyển Nhanh</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-dark mb-2" href="./index"><i class="fa fa-angle-right mr-2"></i>Trang
+                                chủ</a>
+                            <a class="text-dark mb-2" href="./shop"><i class="fa fa-angle-right mr-2"></i>Của
+                                hàng</a>
+                            <a class="text-dark mb-2" href="./donhangcuaban"><i class="fa fa-angle-right mr-2"></i>Đơn
+                                hàng của bạn</a>
+                            <a class="text-dark mb-2" href="./cart"><i class="fa fa-angle-right mr-2"></i>Giỏ
+                                hàng</a>
+                            <a class="text-dark mb-2" href="./checkout"><i class="fa fa-angle-right mr-2"></i>Thanh
+                                toán</a>
+                            <a class="text-dark" href="./contact"><i class="fa fa-angle-right mr-2"></i>Liên hệ</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-5">
+                        <h5 class="font-weight-bold text-dark mb-4">Đăng ký mới</h5>
+                        <form action="">
+                            <div class="form-group">
+                                <input type="text" class="form-control border-0 py-4" placeholder="Tên của bạn"
+                                       required="required"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control border-0 py-4" placeholder="Email của bạn"
+                                       required="required"/>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary btn-block border-0 py-3" type="submit">Đăng ký
+                                    ngay!
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
 
 
-<!-- JavaScript Libraries -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src="lib/easing/easing.min.js"></script>
-<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-<!-- Contact Javascript File -->
-<script src="mail/jqBootstrapValidation.min.js"></script>
-<script src="mail/contact.js"></script>
 
-<!-- Template Javascript -->
-<script src="js/main.js"></script>
-<script src="js/user.js"></script>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/addCart.js"></script>
+
 </body>
 
 </html>
