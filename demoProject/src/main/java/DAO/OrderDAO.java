@@ -787,7 +787,7 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
         Connection connection= null;
         try{
             connection = Connect.getConnection();
-            String sql = "update AlbumOrder set status= ? , purchareDate= ? where idOrder = ?";
+            String sql = "update CartOrder set status= ? , purchareDate= ? where idOrder = ?";
             PreparedStatement preparedStatement =connection.prepareStatement(sql);
             preparedStatement.setString(1, status);
             preparedStatement.setDate(2,sqlDate);

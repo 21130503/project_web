@@ -26,6 +26,7 @@
     <!-- endinject -->
     <!-- Layout styles -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="css/logo.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="assets/images/favicon.png"/>
 </head>
@@ -56,7 +57,7 @@
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" href="./admin"><img src="assets/images/logo.svg" alt="logo"/></a>
+            <a class="sidebar-brand brand-logo" href="./admin"><h1 class="logo text-decoration-none">Nhóm 26</h1></a>
             <a class="sidebar-brand brand-logo-mini" href="./admin"><img src="assets/images/logo-mini.svg" alt="logo"/></a>
         </div>
         <ul class="nav">
@@ -145,6 +146,14 @@
                 <i class="mdi mdi-table-large"></i>
               </span>
                     <span class="menu-title">Quản lí người dùng</span>
+                </a>
+            </li>
+            <li class="nav-item menu-items">
+                <a  class="nav-link" id="backup">
+              <span class="menu-icon">
+                <i class="mdi mdi-table-large"></i>
+              </span>
+                    <span class="menu-title">Backup dữ liệu</span>
                 </a>
             </li>
             <!--            <li class="nav-item menu-items">-->
@@ -1033,6 +1042,27 @@
 <!-- endinject -->
 <!-- Custom js for this page -->
 <script src="assets/js/dashboard.js"></script>
+<script>
+    const btnBackup = document.querySelector("#backup")
+    btnBackup.addEventListener("click",()=>{
+        const path = prompt("Vui lòng nhập địa chỉ lưu trữ");
+        if(path != null || path.trim() !==""){
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/demoProject_war/backup",
+                data: { path },
+                success: function(response) {
+                   alert(response.message)
+                },
+                error: function(error) {
+                    console.error("Error during backup:", error);
+                }
+            });
+        }else {
+            alert("Vui lòng nhập đường dẫn để lưu trữ file backup.");
+        }
+    })
+</script>
 <!-- End custom js for this page -->
 </body>
 </html>
