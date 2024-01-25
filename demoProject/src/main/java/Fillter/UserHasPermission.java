@@ -18,4 +18,15 @@ public class UserHasPermission {
         return true;
 
     }
+    public boolean userHasPermissionForClient(ServletRequest request) {
+        if (request instanceof HttpServletRequest) {
+            HttpSession session = ((HttpServletRequest) request).getSession();
+            User user = (User) session.getAttribute("user");
+            if (user == null ) {
+                return false;
+            }
+        }
+        return true;
+
+    }
 }

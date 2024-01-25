@@ -5,8 +5,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-@WebFilter(value = "/donhangcuaban")
-public class FilterMyOrder implements javax.servlet.Filter {
+@WebFilter(value = "/messageAdmin")
+public class FillterMessageAdmin implements  javax.servlet.Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -18,12 +18,11 @@ public class FilterMyOrder implements javax.servlet.Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String url = httpServletRequest.getServletPath();
         UserHasPermission userHasPermission = new UserHasPermission();
-        if(userHasPermission.userHasPermissionForClient(servletRequest)){
+        if(userHasPermission.userHasPermission(servletRequest)){
             filterChain.doFilter(servletRequest,servletResponse);
         }
         else{
-            System.out.println("Chuyen huong");
-            httpResponse.sendRedirect("login.jsp");
+            httpResponse.sendRedirect("404.jsp");
         }
     }
 

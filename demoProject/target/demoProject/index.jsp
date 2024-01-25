@@ -161,6 +161,7 @@
                         <div class="dropdown-menu rounded-0 m-0">
                             <%if (!user.isVerifyEmail()) {%>
                             <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
+                            <a href="./message" class="dropdown-item">Gửi tin nhắn</a>
                             <%}%>
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
@@ -1194,7 +1195,7 @@
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 
-<<<<<<< HEAD
+
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
@@ -1210,12 +1211,7 @@
     <script src="js/user.js"></script>
     <script src="js/addCart.js"></script>
 
-=======
-<!-- Template Javascript -->
-<script src="js/main.js"></script>
-<script src="js/user.js"></script>
-    <script src="js/addCart.js"></script>
->>>>>>> MinhPhi
+
 </body>
 
 </html>
