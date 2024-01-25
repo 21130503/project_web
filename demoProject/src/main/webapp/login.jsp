@@ -32,6 +32,7 @@
     <div class="athoner-login">
         <span>Hoặc đăng nhập với</span>
         <ul class="list">
+
             <li class="item"><a
                     href="https://www.facebook.com/dialog/oauth?client_id=801476171386686&redirect_uri=http://localhost:8080/demoProject_war/login-facebook"
                     class="link">
@@ -49,7 +50,6 @@
         <div>
             <a class="redirect-home" href="index.jsp"><span><i
                     class="fa-solid fa-angle-left"></i></span><span>Trang chủ</span></a>
-
         </div>
         <p class="redirect"><span>Bạn chưa có tài khoản?</span> <a href="register.jsp">Đăng kí</a></p>
         <a href="findEmail.jsp" class="fogot db"> Quên mật khẩu</a>
