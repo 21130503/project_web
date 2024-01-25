@@ -18,7 +18,7 @@ public class FilterCheckOut implements javax.servlet.Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String url = httpServletRequest.getServletPath();
         UserHasPermission userHasPermission = new UserHasPermission();
-        if(userHasPermission.userHasPermissionForClient(servletRequest)){
+        if(userHasPermission.userHasPermission(servletRequest)){
             filterChain.doFilter(servletRequest,servletResponse);
         }
         else{

@@ -241,44 +241,10 @@ public class ProductDAO {
         int startIndex = (page-1)* recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage where deleted = ? LIMIT ?  OFFSET ?";
+            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage LIMIT ?  OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, "false");
-            preparedStatement.setInt(2,recSize);
-            preparedStatement.setInt(3,startIndex);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                OddImage oddImage = new OddImage();
-                oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
-                oddImage.setName(resultSet.getString("name"));
-                oddImage.setImage(URL.URL + resultSet.getString("source"));
-                oddImage.setPrice(resultSet.getInt("price"));
-                oddImage.setDiscount(resultSet.getInt("discount"));
-                int idTopic = belongDAO.getIdTopicFromIdOdd(resultSet.getInt("idOddImage"));
-                String nameTopic = topicDAO.getNameTopicById(idTopic);
-                oddImage.setBelongTopic(nameTopic);
-                oddImage.setShow(resultSet.getBoolean("isShow"));
-                listOddImage.add(oddImage);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            Connect.closeConnection(connection);
-        }
-        return listOddImage;
-    }
-    public ArrayList<OddImage> getAllOddImageTrash(int page , int recSize) {
-        Connection connection = null;
-        ArrayList<OddImage> listOddImage = new ArrayList<OddImage>();
-        int startIndex = (page-1)* recSize;
-        try {
-            connection = Connect.getConnection();
-            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage where deleted = ? LIMIT ?  OFFSET ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, "true");
-            preparedStatement.setInt(2,recSize);
-            preparedStatement.setInt(3,startIndex);
+            preparedStatement.setInt(1,recSize);
+            preparedStatement.setInt(2,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 OddImage oddImage = new OddImage();
@@ -308,12 +274,11 @@ public class ProductDAO {
         int startIndex = (page - 1) * recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage where  isShow= ? and deleted = ? LIMIT ? OFFSET ?";
+            String sql = "Select idOddImage, name, source, price, discount, isShow from oddImage where  isShow= ? LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, "true");
-            preparedStatement.setString(2, "false");
-            preparedStatement.setInt(3, recSize);
-            preparedStatement.setInt(4, startIndex);
+            preparedStatement.setInt(2, recSize);
+            preparedStatement.setInt(3, startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 OddImage oddImage = new OddImage();
@@ -344,45 +309,10 @@ public class ProductDAO {
         int startIndex = (page - 1) * recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idAlbum, name, price, discount ,isShow from album where deleted= ? LIMIT ? OFFSET ?";
+            String sql = "select idAlbum, name, price, discount ,isShow from album LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,"false");
-            preparedStatement.setInt(2, recSize);
-            preparedStatement.setInt(3,startIndex);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("idAlbum");
-                Album album = new Album();
-                album.setIdAlbum(id);
-                album.setName(resultSet.getString("name"));
-                album.setPrice(resultSet.getInt("price"));
-                album.setDiscount(resultSet.getInt("discount"));
-                album.setShow(resultSet.getBoolean("isShow"));
-                album.setListImage(imageDAO.getAllImageByIdAlbum(id));
-                int idTopic = belongDAO.getIdTopicFromIdAlbum(id);
-                String nameTopic = topicDAO.getNameTopicById(idTopic);
-                album.setBelongTopic(nameTopic);
-                listAlbum.add(album);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            Connect.closeConnection(connection);
-        }
-        return listAlbum;
-    }
-    public ArrayList<Album> getAllAlbumTrash(int page, int recSize) {
-        Connection connection = null;
-        ArrayList<Album> listAlbum = new ArrayList<>();
-        int startIndex = (page - 1) * recSize;
-        try {
-            connection = Connect.getConnection();
-            String sql = "select idAlbum, name, price, discount ,isShow from album where deleted= ? LIMIT ? OFFSET ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,"true");
-            preparedStatement.setInt(2, recSize);
-            preparedStatement.setInt(3,startIndex);
+            preparedStatement.setInt(1, recSize);
+            preparedStatement.setInt(2,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -413,12 +343,11 @@ public class ProductDAO {
         int startIndex = (page - 1) * recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idAlbum, name, price, discount ,isShow from album where isShow = ? and deleted = ? LIMIT ? OFFSET ?";
+            String sql = "select idAlbum, name, price, discount ,isShow from album where isShow = ? LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, "true");
-            preparedStatement.setString(2, "false");
-            preparedStatement.setInt(3, recSize);
-            preparedStatement.setInt(4, startIndex);
+            preparedStatement.setInt(2, recSize);
+            preparedStatement.setInt(3, startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("idAlbum");
@@ -461,26 +390,6 @@ public class ProductDAO {
             Connect.closeConnection(connection);
         }
     }
-    public boolean deleteOddImagePhantom(int idOddImage,String status) {
-        Connection connection = null;
-        try {
-            connection = Connect.getConnection();
-            String sql = "UPDATE  OddImage set deleted = ? where idOddImage = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,status);
-            preparedStatement.setInt(2, idOddImage);
-            int check = preparedStatement.executeUpdate();
-            if (check > 0 && belongDAO.deleteOddImage(idOddImage) && descriptionDAO.deleteDescriptionOddImage(idOddImage)) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            Connect.closeConnection(connection);
-        }
-    }
 
     public boolean deleteAlbum(int idAlbum) {
         Connection connection = null;
@@ -490,32 +399,12 @@ public class ProductDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idAlbum);
             int check = preparedStatement.executeUpdate();
-            if (check > 0) {
+            if (check > 0 && belongDAO.deleteAlbum(idAlbum) && imageDAO.deleteImageBelongAblum(idAlbum) && descriptionDAO.deleteDescriptionAlbum(idAlbum)) {
                 return true;
             } else {
                 return false;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            Connect.closeConnection(connection);
-        }
-    }
-    public boolean deleteAlbumPhantom(int idAlbum,String status) {
-        Connection connection = null;
-        try {
-            connection = Connect.getConnection();
-            String sql = "update album set deleted= ? where  idAlbum= ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,status);
-            preparedStatement.setInt(2,idAlbum);
-            int check = preparedStatement.executeUpdate();
-            if (check > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             Connect.closeConnection(connection);
@@ -529,11 +418,10 @@ public class ProductDAO {
         OddImage oddImage = new OddImage();
         try {
             connection = Connect.getConnection();
-            String sql = "select idOddImage, name , price, discount, source from OddImage where idOddImage = ? and isShow = ? and deleted = ?";
+            String sql = "select idOddImage, name , price, discount, source from OddImage where idOddImage = ? and isShow = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idOddImage);
             preparedStatement.setString(2, "true");
-            preparedStatement.setString(3, "false");
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 oddImage.setIdOddImage(resultSet.getInt("idOddImage"));
@@ -592,11 +480,10 @@ public class ProductDAO {
         Album album = new Album();
         try {
             connection = Connect.getConnection();
-            String sql = "select idAlbum, name , price, discount from Album where idAlbum = ? and  isShow = ? and deleted = ?";
+            String sql = "select idAlbum, name , price, discount from Album where idAlbum = ? and  isShow = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idAlbum);
             preparedStatement.setString(2, "true");
-            preparedStatement.setString(3, "false");
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 album.setIdAlbum(resultSet.getInt("idAlbum"));
@@ -656,11 +543,10 @@ public class ProductDAO {
         ArrayList<Album> listAlbum = new ArrayList<>();
         try {
             connection = Connect.getConnection();
-            String sql = "select idAlbum , name, price, discount from album where name LIKE ? and  isShow = ? and deleted = ?";
+            String sql = "select idAlbum , name, price, discount from album where name LIKE ? and  isShow = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, "%" + name + "%");
             preparedStatement.setString(2, "true");
-            preparedStatement.setString(3, "false");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
 //                chỉ cần báy nhiêu dữ liệu thôi
@@ -685,11 +571,10 @@ public class ProductDAO {
         ArrayList<OddImage> listOddImage = new ArrayList<>();
         try {
             connection = Connect.getConnection();
-            String sql = "select idOddImage, name, price, discount, source from oddImage where name LIKE ? AND isShow = ? and deleted = ?";
+            String sql = "select idOddImage, name, price, discount, source from oddImage where name LIKE ? AND isShow = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, "%" + name + "%");
             preparedStatement.setString(2, "true");
-            preparedStatement.setString(3, "false");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
 //                chỉ cần báy nhiêu dữ liệu thôi
