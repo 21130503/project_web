@@ -117,9 +117,6 @@
             <a href="./product" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
             </a>
-            <a href="./trash" class="btn border">
-                <i class="fa-regular fa-trash-can"></i>
-            </a>
         </div>
     </div>
 </div>
