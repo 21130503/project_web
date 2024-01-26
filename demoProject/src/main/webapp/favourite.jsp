@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<%@ page import="nhom26.User" %>
-<%@ page import="nhom26.Topic" %>
-<%@ page import="java.util.ArrayList" %>
-=======
+
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page import="favourite.Favourite" %>
@@ -12,7 +8,8 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="nhom26.Topic" %>
->>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
+<%@ page import="nhom26.User" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -54,23 +51,7 @@
 %>
 
 <body>
-<<<<<<< HEAD
 
-<!-- Start - Phần dùng chung cho các trang dành cho user -->
-<!-- Topbar Start -->
-<div class="container-fluid">
-    <div class="row align-items-center py-3 px-xl-5">
-        <div class="col-lg-3 d-none d-lg-block">
-            <a href="index" class="text-decoration-none">
-                <h1 class="logo">Nhóm 26</h1>
-            </a>
-        </div>
-        <div class="col-lg-6 col-6 text-left">
-            <form action="">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
-                    <div class="input-group-append">
-=======
     <%Favourite favourite= (Favourite) session.getAttribute("favourite");
     if(favourite == null) favourite = new Favourite();
         Locale vnLocal = new Locale("vi", "VN");
@@ -93,25 +74,11 @@
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                         <div class="input-group-append">
->>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
                             <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
                                 <i class="fa fa-search"></i>
                             </span>
+                        </div>
                     </div>
-<<<<<<< HEAD
-                </div>
-            </form>
-        </div>
-        <div class="col-lg-3 col-6 text-right">
-            <a href="favourite.jsp" class="btn border" title="Yêu thích">
-                <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
-            <a href="cart" class="btn border" title="Giỏ hàng">
-                <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
-=======
                 </form>
             </div>
             <div class="col-lg-3 col-6 text-right">
@@ -124,60 +91,12 @@
                     <span class="badge">0</span>
                 </a>
             </div>
->>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
         </div>
     </div>
 </div>
 <!-- Topbar End -->
 
-<<<<<<< HEAD
 
-<!-- Navbar Start -->
-<div class="container-fluid">
-    <div class="row border-top px-xl-5">
-        <div class="col-lg-3 d-none d-lg-block">
-            <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
-               data-toggle="collapse" href="#navbar-vertical"
-               style="height: 65px; margin-top: -1px; padding: 0 30px;">
-                <h6 class="m-0">Danh mục</h6>
-                <i class="fa fa-angle-down text-dark"></i>
-            </a>
-            <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
-                 id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-
-                <%--Phần danh mục hiển thị các chủ đề--%>
-                <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                    <%if (listTopic.size() == 0) {%>
-                    <p>Chưa có topic nào</p>
-                    <%} else {%>
-                    <%for (Topic topic : listTopic) {%>
-                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
-                    </a>
-                    <%}%>
-                    <%}%>
-                </div>
-
-            </nav>
-        </div>
-        <div class="col-lg-9">
-            <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="index" class="text-decoration-none d-block d-lg-none">
-                    <h1 class="logo">Nhóm 26</h1>
-                </a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav mr-auto py-0">
-                        <a href="index" class="nav-item nav-link">Trang chủ</a>
-                        <a href="shop" class="nav-item nav-link">Cửa hàng</a>
-                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Trang</a>
-                            <div class="dropdown-menu rounded-0 m-0">
-                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
-                                <a href="checkout" class="dropdown-item active">Thanh toán</a>
-=======
     <!-- Navbar Start -->
     <div class="container-fluid">
         <div class="row border-top px-xl-5">
@@ -220,8 +139,6 @@
                                 <div class="dropdown-menu rounded-0 m-0">
                                     <a href="./cart" class="dropdown-item">Giỏ hàng</a>
                                     <a href="checkout.jsp" class="dropdown-item">Thanh toán</a>
-                                </div>
->>>>>>> 7d988eedcb7c20d06c678525c619cbcc9a97c9be
                             </div>
                         </div>
                         <a href="contact" class="nav-item nav-link ">Liên hệ</a>
