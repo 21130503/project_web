@@ -96,7 +96,7 @@ public class TopicController extends HttpServlet {
             // refines the fileName in case it is an absolute path
             fileName = new File(fileName).getName();
             try {
-                part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+                part.write(uploadFile.getFolderUpload(req).getAbsolutePath()+ "/" + fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,28 +126,24 @@ public class TopicController extends HttpServlet {
         if (topicDAO.checkTopicShowById(idTopic).equals("true")) {
             status = "false";
         }
+        System.out.println(status);
         ProductDAO productDAO = new ProductDAO();
         BelongDAO belongDAO= new BelongDAO();
-        ArrayList<Integer> listOddImage = belongDAO.listIdOddImageBelongTopic(idTopic);
-        ArrayList<Integer> listAlbum = belongDAO.listIdAlbumBelongTopic(idTopic);
-        for (int id : listOddImage){
-            if(!productDAO.checkOddImageExist(id)){
-                continue;
-            }
-            productDAO.updateShowOddImage(id, status);
-        }
-        for (int id : listAlbum){
-            if(!productDAO.checkAlbumExist(id)){
-                continue;
-            }
-            productDAO.updateShowAlbum(id, status);
-        }
+
         if (topicDAO.updateShowTopic(idTopic, status)) {
             jsonObject.put("status", 200);
             jsonObject.put("message", "Cập nhật thành công");
             resp.setContentType("application/json");
             resp.getWriter().write(jsonObject.toString());
             System.out.println("update thành công");
+            for (Integer id : belongDAO.listIdOddImageBelongTopic(idTopic)){
+                System.out.println(id);
+                productDAO.updateShowOddImage(id, status);
+            }
+            for (Integer id : belongDAO.listIdAlbumBelongTopic(idTopic)){
+
+                productDAO.updateShowAlbum(id, status);
+            }
         } else {
             jsonObject.put("status", 500);
             jsonObject.put("message", "Cập nhật thất bại thất bại. Vui lòng thử lại");

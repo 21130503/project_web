@@ -127,7 +127,8 @@ public class EditAlbumController extends HttpServlet {
             if(fileName.length() >3 || !fileName.isEmpty()){
                 listFileNames.add(fileName);
                 try {
-                    part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+//                    part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+                    part.write(uploadFile.getFolderUpload(req).getAbsolutePath()+ "/" + fileName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
