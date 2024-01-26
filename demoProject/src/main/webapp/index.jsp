@@ -54,25 +54,10 @@
     ArrayList<OddImage> listOddImageOrder = request.getAttribute("listOddImageOrder") == null ? new ArrayList<>() : (ArrayList<OddImage>) request.getAttribute("listOddImageOrder");
     ArrayList<Album> listAlbumOrder = request.getAttribute("listAlbumOrder") == null ? new ArrayList<>() : (ArrayList<Album>) request.getAttribute("listAlbumOrder");
     Random random = new Random();
-    int albumRan = 0;
-    int oddRan = 0;
-    Album albumSlide = null;
-    OddImage oddImageSlide = null;
-    try {
-        if (listAlbumNew.size() > 0) {
-            albumRan = random.nextInt(listAlbumNew.size());
-            albumSlide = listAlbumNew.get(albumRan);
-        }
-
-        if (listOddImageOrder.size() > 0) {
-            oddRan = random.nextInt(listOddImageOrder.size());
-            oddImageSlide = listOddImageOrder.get(oddRan);
-        }
-    } catch (IndexOutOfBoundsException e) {
-        // Handle the exception
-        e.printStackTrace(); // Print the stack trace for debugging
-    }
-
+    int albumRan = random.nextInt(listAlbumNew.size());
+    Album albumSlide = listAlbumNew.get(albumRan);
+    int oddRan = random.nextInt(0, listOddImageOrder.size());
+    OddImage oddImageSlide = listOddImageOrder.get(oddRan);
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
@@ -192,30 +177,28 @@
             <div id="header-carousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active" style="height: 410px;">
-                        <% if (oddImageSlide != null) { %>
-                        <img class="img-fluid" src="<%= oddImageSlide.getImage() %>" alt="Image">
+                        <img class="img-fluid" src="<%=oddImageSlide.getImage()%>" alt="Image">
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                             <div class="p-3" style="max-width: 700px;">
                                 <h4 class="text-light text-uppercase font-weight-medium mb-3">Ảnh bán chạy</h4>
-                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%= oddImageSlide.getName() %></h3>
-                                <a href="./detail?type=odd&id=<%= oddImageSlide.getIdOddImage() %>"
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%=oddImageSlide.getName()%>
+                                </h3>
+                                <a href="./detail?type=odd&id=<%=oddImageSlide.getIdOddImage()%>"
                                    class="btn btn-light py-2 px-3">Xem ngay</a>
                             </div>
                         </div>
-                        <% } %>
                     </div>
                     <div class="carousel-item" style="height: 410px;">
-                        <% if (albumSlide != null && albumSlide.getListImage().size() > 0) { %>
-                        <img class="img-fluid" src="<%= albumSlide.getListImage().get(0) %>" alt="Image">
+                        <img class="img-fluid" src="<%=albumSlide.getListImage().get(0)%>" alt="Image">
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                             <div class="p-3" style="max-width: 700px;">
                                 <h4 class="text-light text-uppercase font-weight-medium mb-3">Album mới nhất</h4>
-                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%= albumSlide.getName() %></h3>
-                                <a href="./detail?type=album&id=<%= albumSlide.getIdAlbum() %>"
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%=albumSlide.getName()%>
+                                </h3>
+                                <a href="./detail?type=album&id=<%=albumSlide.getIdAlbum()%>"
                                    class="btn btn-light py-2 px-3">Xem ngay</a>
                             </div>
                         </div>
-                        <% } %>
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
@@ -1211,6 +1194,7 @@
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 
+<<<<<<< HEAD
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
@@ -1226,6 +1210,12 @@
     <script src="js/user.js"></script>
     <script src="js/addCart.js"></script>
 
+=======
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+<script src="js/user.js"></script>
+    <script src="js/addCart.js"></script>
+>>>>>>> MinhPhi
 </body>
 
 </html>
