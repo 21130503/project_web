@@ -30,7 +30,7 @@ public class LoginFacebookController extends HttpServlet {
             String accessToken = RestFB.getToken(code);
             request.setAttribute("id", RestFB.getUserInfo(accessToken).getId());
             request.setAttribute("name", RestFB.getUserInfo(accessToken).getName());
-            String email = RestFB.getUserInfo(accessToken).getEmail();
+            String email = RestFB.getUserInfo(accessToken).getEmail() != null ? RestFB.getUserInfo(accessToken).getEmail() : RestFB.getUserInfo(accessToken).getId();
             if (userDAO.checkEmailExist(email)) {
                 User user = userDAO.getUserByEmailAndPass(email, "");
                 HttpSession session = request.getSession();

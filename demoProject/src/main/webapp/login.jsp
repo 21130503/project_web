@@ -14,12 +14,7 @@
 </head>
 <body>
 <% String err = (String) request.getAttribute("err") == null ? "" : (String) request.getAttribute("err");%>
-<%--             Đăng nhập bằng facebook--%>
-
-
 <div class="inner">
-    <div id="status">
-    </div>
     <h1 class="logo">Nhóm 26</h1>
     <h3 class="title">Đăng nhập</h3>
     <p style="text-align: center; color: red; font-weight: bold;"><%=err%>
@@ -32,17 +27,18 @@
     <div class="athoner-login">
         <span>Hoặc đăng nhập với</span>
         <ul class="list">
-            <li class="item"><a
-                    href="https://www.facebook.com/dialog/oauth?client_id=801476171386686&redirect_uri=http://localhost:8080/demoProject_war/login-facebook"
-                    class="link">
-                <img src="./asset/face.png" alt="" class="img-logo">
-            </a>
+            <li class="item">
+                <a href="https://www.facebook.com/dialog/oauth?client_id=801476171386686&redirect_uri=http://localhost:8080/demoProject_war/login-facebook"
+                   class="link">
+                    <img src="./asset/face.png" alt="" class="img-logo">
+                </a>
             </li>
-            <li class="item"><a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/demoProject_war/login-google&response_type=code
-    &client_id=529302459286-47e0gd36hgu0evknkun46lbsq7ddoalb.apps.googleusercontent.com&approval_prompt=force"
-                                class="link">
-                <img src="./asset/gg.png" alt="" class="img-logo">
-            </a></li>
+            <li class="item">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/demoProject_war/login-google&response_type=code
+    &client_id=529302459286-47e0gd36hgu0evknkun46lbsq7ddoalb.apps.googleusercontent.com&approval_prompt=force" class="link">
+                    <img src="./asset/gg.png" alt="" class="img-logo">
+                </a>
+            </li>
         </ul>
     </div>
     <div class="register">
