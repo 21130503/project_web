@@ -77,7 +77,8 @@ public class EditTopicController extends HttpServlet {
             // refines the fileName in case it is an absolute path
             fileName = new File(fileName).getName();
             try {
-                part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+//                part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+                part.write(uploadFile.getFolderUpload(req).getAbsolutePath()+ "/" + fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }

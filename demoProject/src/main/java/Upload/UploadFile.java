@@ -5,13 +5,23 @@ import javax.servlet.http.Part;
 import java.io.File;
 
 public class UploadFile {
-    public File getFolderUpload() {
-       File folderUpload = new File("D:/LTW_TL/project_web/demoProject/src/main/webapp" + "/images");
-//        File folderUpload = new File(request.getServletContext().getRealPath("/images/"));
-        if (!folderUpload.exists()) {
+//    public File getFolderUpload() {
+//       File folderUpload = new File("D:/LTW_TL/project_web/demoProject/src/main/webapp" + "/images");
+////        File folderUpload = new File(request.getServletContext().getRealPath("/images/"));
+//        if (!folderUpload.exists()) {
+//
+//            folderUpload.mkdirs();
+//        }
+//        System.out.println("Link " + folderUpload);
+//        return folderUpload;
+//    }
+    public File getFolderUpload(HttpServletRequest request) {
+        File folderUpload = new File(request.getServletContext().getRealPath("/images/"));
 
+        if (!folderUpload.exists()) {
             folderUpload.mkdirs();
         }
+        folderUpload.setWritable(true, false);
         System.out.println("Link " + folderUpload);
         return folderUpload;
     }
