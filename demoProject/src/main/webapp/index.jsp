@@ -54,7 +54,7 @@
     ArrayList<OddImage> listOddImageOrder = request.getAttribute("listOddImageOrder") == null ? new ArrayList<>() : (ArrayList<OddImage>) request.getAttribute("listOddImageOrder");
     ArrayList<Album> listAlbumOrder = request.getAttribute("listAlbumOrder") == null ? new ArrayList<>() : (ArrayList<Album>) request.getAttribute("listAlbumOrder");
     Random random = new Random();
-    int albumRan = random.nextInt(0, listAlbumNew.size());
+    int albumRan = random.nextInt(listAlbumNew.size());
     Album albumSlide = listAlbumNew.get(albumRan);
     int oddRan = random.nextInt(0, listOddImageOrder.size());
     OddImage oddImageSlide = listOddImageOrder.get(oddRan);
@@ -1195,6 +1195,7 @@
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 
+<<<<<<< HEAD
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
@@ -1210,6 +1211,12 @@
     <script src="js/user.js"></script>
     <script src="js/addCart.js"></script>
 
+=======
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+<script src="js/user.js"></script>
+    <script src="js/addCart.js"></script>
+>>>>>>> MinhPhi
 </body>
 
 </html>

@@ -48,6 +48,7 @@
 <%
     int totalPage = (int) request.getAttribute("totalPage");
     int currentPage = (int) request.getAttribute("currentPage");
+    String type = (String) request.getAttribute("type");
 %>
 <div class="container-fluid">
 
@@ -181,7 +182,7 @@
                     </li>
                     <%for (int i = 1; i <= totalPage; i++) {%>
                     <%String s = currentPage == i ? "active" : "";%>
-                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./orderManager?page=<%=i%>"><%=i%>
+                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./orderManager?option=<%=type%>&page=<%=i%>"><%=i%>
                     </a></li>
                     <%}%>
                     <li class="page-item">
@@ -218,9 +219,9 @@
                 <div class="col-md-6 mb-5" style="padding-left: 70px;">
                     <h5 class="font-weight-bold text-dark mb-4">Di Chuyển Nhanh</h5>
                     <div class="d-flex flex-column justify-content-start">
-                        <a class="text-dark mb-2" href="index.jsp"><i class="fa fa-angle-right mr-2"></i>Trang
+                        <a class="text-dark mb-2" href="./index"><i class="fa fa-angle-right mr-2"></i>Trang
                             chủ</a>
-                        <a class="text-dark mb-2" href="shop.jsp"><i class="fa fa-angle-right mr-2"></i>Của
+                        <a class="text-dark mb-2" href="./shop"><i class="fa fa-angle-right mr-2"></i>Của
                             hàng</a>
                         <a class="text-dark mb-2" href="albumnew.html"><i class="fa fa-angle-right mr-2"></i>Bộ sưu
                             tập mới</a>
