@@ -196,6 +196,7 @@
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
                             <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>

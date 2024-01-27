@@ -76,10 +76,12 @@
             </a>
             <a href="/user" class="btn border">
                 <i class="fa-regular fa-user text-primary"></i>
-
             </a>
             <a href="/product/" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
+            </a>
+            <a href="./discountAdmin" class="btn border" title="Quản lí mã giảm giá">
+                <i class="fa-solid fa-tag" style="color: #D19C97"></i>
             </a>
         </div>
     </div>

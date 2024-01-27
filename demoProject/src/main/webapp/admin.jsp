@@ -28,6 +28,10 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="assets/images/favicon.png"/>
+
+    <%-- css cho biểu tượng mã giảm giá --%>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
 </head>
 <body>
 <%
@@ -147,6 +151,15 @@
                     <span class="menu-title">Quản lí người dùng</span>
                 </a>
             </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" href="./discountAdmin">
+              <span class="menu-icon">
+                <i class="fas fa-tag" style="color: #D19C97"></i>
+              </span>
+                    <span class="menu-title">Quản lí mã giảm giá</span>
+                </a>
+            </li>
+
             <!--            <li class="nav-item menu-items">-->
             <!--                <a class="nav-link" href="pages/charts/chartjs.html">-->
             <!--              <span class="menu-icon">-->

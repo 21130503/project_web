@@ -192,7 +192,8 @@
     <input type="hidden" name="action" value="addDiscount" required>
     <input type="text" name="code" placeholder="Xin nhập mã từ 001-999" required lang="vi">
     <input type="text" name="description" placeholder="Mô tả - ví dụ: Giảm giá 10%" required lang="vi">
-    <input type="number" name="discountValue" placeholder="Giá trị giảm - ví dụ: 10" min="1" max="100" required
+    <input style="width: 16%" type="number" name="discountValue" placeholder="Giá trị giảm - ví dụ: 10" min="1"
+           max="100" required
            lang="vi">
     <input type="date" name="expiryDate" placeholder="Ngày hết hạn" required lang="vi">
     <input type="number" name="count" placeholder="Số lần sử dụng còn lại" min="0" required lang="vi">
