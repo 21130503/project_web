@@ -117,6 +117,9 @@
             <a href="./product" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
             </a>
+            <a href="./discountAdmin" class="btn border" title="Quản lí mã giảm giá">
+                <i class="fa-solid fa-tag" style="color: #D19C97"></i>
+            </a>
         </div>
     </div>
 </div>
@@ -256,9 +259,10 @@
                             <span class="sr-only">Quay lại</span>
                         </a>
                     </li>
-                    <%for(int i=1 ; i<=totalPage;i++){%>
-                    <%String s = currentPage==i ? "active": "";%>
-                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./product?page=<%=i%>"><%=i%></a></li>
+                    <%for (int i = 1; i <= totalPage; i++) {%>
+                    <%String s = currentPage == i ? "active" : "";%>
+                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./product?page=<%=i%>"><%=i%>
+                    </a></li>
                     <%}%>
                     <%--                            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
                     <%--                            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
@@ -589,7 +593,7 @@
         $.ajax({
             type: "GET",
             url: "./product",
-            data: { page: pageNumber },
+            data: {page: pageNumber},
             success: function (data) {
                 $("#itemContainer").html(data);
             },
