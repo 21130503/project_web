@@ -48,6 +48,7 @@ public class TopicDAO {
         Connection connection = null;
         int startIndex = (page-1)*recSize;
         ArrayList<Topic> listTopic = new ArrayList<Topic>();
+        BelongDAO belongDAO = new BelongDAO();
         try{
             connection = Connect.getConnection();
             // Câu truy vấn lấy dữ liệu topic
@@ -55,14 +56,13 @@ public class TopicDAO {
             PreparedStatement preparedStatementGetTopic = connection.prepareStatement(getAllTopic);
             preparedStatementGetTopic.setInt(1,recSize);
             preparedStatementGetTopic.setInt(2,startIndex);
-
             ResultSet resultSetGetTopic = preparedStatementGetTopic.executeQuery();
             while (resultSetGetTopic.next()) {
                 Topic topic = new Topic();
                 topic.setIdTopic(resultSetGetTopic.getInt("idTopic"));
                 topic.setName(resultSetGetTopic.getString("name"));
                 topic.setImageInterface(URL.URL + resultSetGetTopic.getString("interfaceImage"));
-                topic.setProduct(0);
+                topic.setProduct(belongDAO.getCountOddForTopic(topic.getIdTopic()) + belongDAO.getCountAlbumForTopic(topic.getIdTopic()));
                 topic.setShow(resultSetGetTopic.getBoolean("isShow"));
                 listTopic.add(topic);
             }
@@ -74,6 +74,7 @@ public class TopicDAO {
     public ArrayList<Topic> getAllTopicsForClient(){
         Connection connection = null;
         ArrayList<Topic> listTopic = new ArrayList<Topic>();
+        BelongDAO belongDAO = new BelongDAO();
         try{
             connection = Connect.getConnection();
             // Câu truy vấn lấy dữ liệu topic
@@ -86,7 +87,7 @@ public class TopicDAO {
                 topic.setIdTopic(resultSetGetTopic.getInt("idTopic"));
                 topic.setName(resultSetGetTopic.getString("name"));
                 topic.setImageInterface(URL.URL + resultSetGetTopic.getString("interfaceImage"));
-                topic.setProduct(0);
+                topic.setProduct(belongDAO.getCountOddForTopic(topic.getIdTopic()) + belongDAO.getCountAlbumForTopic(topic.getIdTopic()));
                 topic.setShow(resultSetGetTopic.getBoolean("isShow"));
                 listTopic.add(topic);
             }

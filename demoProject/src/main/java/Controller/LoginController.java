@@ -22,13 +22,17 @@ public class LoginController extends HttpServlet {
         String password = req.getParameter("password");
         UserDAO userDAO = new UserDAO();
         User user =userDAO.getUserByEmailAndPass(email, password);
-        if(user != null){
+        if(user.isAdmin()){
+            HttpSession session = req.getSession();
+            session.setAttribute("user", user);
+            session.setMaxInactiveInterval(10 * 60);
+            resp.sendRedirect("admin");
+        } else if (!user.isAdmin()) {
             HttpSession session = req.getSession();
             session.setAttribute("user", user);
             session.setMaxInactiveInterval(10 * 60);
             resp.sendRedirect("index");
-        }
-        else{
+        } else{
             req.setAttribute("err", "Email hoặc mật khẩu không đúng");
             req.getRequestDispatcher("login.jsp").forward(req, resp);
         }

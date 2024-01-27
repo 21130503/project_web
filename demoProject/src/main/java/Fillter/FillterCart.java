@@ -5,8 +5,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-@WebFilter(value = "/donhangcuaban")
-public class FilterMyOrder implements javax.servlet.Filter {
+@WebFilter(value = "/cart")
+public class FillterCart implements javax.servlet.Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 

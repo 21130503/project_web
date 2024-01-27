@@ -31,6 +31,7 @@
 
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
@@ -52,6 +53,7 @@
     double avgFeedbackStar = request.getAttribute("avgStar") == null ? 0 : (double) request.getAttribute("avgStar");
     ArrayList<OddImage> listSuggestedOddImage = (ArrayList<OddImage>) request.getAttribute("suggestedOdd");
     ArrayList<Album> listSuggestedAlbum = (ArrayList<Album>) request.getAttribute("suggestedAlbum");
+    String editLink = null;
     if (type.equals("album")) {
         album = (Album) request.getAttribute("detail");
         name = album.getName();
@@ -62,6 +64,7 @@
         sourceImage = album.getListImage().get(0);
         id = album.getIdAlbum();
         list = album.getListImage();
+        editLink = "album";
     } else if (type.equals("odd")) {
         oddImage = (OddImage) request.getAttribute("detail");
         name = oddImage.getName();
@@ -71,6 +74,7 @@
         sourceImage = oddImage.getImage();
         id = oddImage.getIdOddImage();
         list.add(oddImage.getImage());
+        editLink = "oddImage";
     }
 %>
 <%
@@ -241,6 +245,9 @@
                 <div class="option">
                     <button id="btn-favourite" title="<%=type%>" value="<%=id%>" class="btn border"><i class="fas fa-heart text-primary"></i></button>
                     <button id="btn-cart" class="btn border " title="<%=type%>" value="<%=id%>"><i class="fas fa-shopping-cart text-primary"></i></button>
+                    <%if(user !=null&&user.isAdmin()){%>
+                    <button id="btn-cart" class="btn border " title="edit"><a href="./<%=editLink%>?q=<%=id%>/edit"><i class="fa-solid fa-pen"></i></a></button>
+                    <%}%>
                 </div>
             </div>
             <div class="d-flex mb-3">

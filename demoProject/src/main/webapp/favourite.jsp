@@ -57,9 +57,7 @@
         Locale vnLocal = new Locale("vi", "VN");
         DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
     %>
-    <%
-        ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<Topic>() : (ArrayList<Topic>) request.getAttribute("listTopic");
-    %>
+
     <!-- Start - Phần dùng chung cho các trang dành cho user -->
     <!-- Topbar Start -->
     <div class="container-fluid">
