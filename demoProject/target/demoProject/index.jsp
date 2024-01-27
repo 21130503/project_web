@@ -161,8 +161,8 @@
                         <div class="dropdown-menu rounded-0 m-0">
                             <%if (!user.isVerifyEmail()) {%>
                             <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
-                            <a href="./message" class="dropdown-item">Gửi tin nhắn</a>
                             <%}%>
+                            <a href="./message" class="dropdown-item">Gửi tin nhắn</a>
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>

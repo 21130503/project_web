@@ -61,11 +61,11 @@ public class OrderController extends HttpServlet {
         }
         DiscountDAO discountDAO = new DiscountDAO();
 
-        double discount = 1.0;
+        double discount = 0;
         if (discountDAO.getDiscountByCode(code) != null) {
             discount = discountDAO.getDiscountByCode(code).getDiscountValue();
         } else {
-            discount = 1.0;
+            discount = 0;
         }
         HttpSession session1 = req.getSession();
         String URL = "/demoProject_war/detail?type=" + type + "&id=" + idProduct;
