@@ -1,3 +1,4 @@
+
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page import="favourite.Favourite" %>
@@ -7,6 +8,8 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="nhom26.Topic" %>
+<%@ page import="nhom26.User" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -17,6 +20,8 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
@@ -35,9 +40,18 @@
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/logo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js" integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
+<% User user = (User) session.getAttribute("user");
+    ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() :
+            (ArrayList<Topic>) request.getAttribute("listTopic");
+%>
+
 <body>
+
     <%Favourite favourite= (Favourite) session.getAttribute("favourite");
     if(favourite == null) favourite = new Favourite();
         Locale vnLocal = new Locale("vi", "VN");
@@ -80,7 +94,9 @@
             </div>
         </div>
     </div>
-    <!-- Topbar End -->
+</div>
+<!-- Topbar End -->
+
 
     <!-- Navbar Start -->
     <div class="container-fluid">
@@ -124,21 +140,43 @@
                                 <div class="dropdown-menu rounded-0 m-0">
                                     <a href="./cart" class="dropdown-item">Giỏ hàng</a>
                                     <a href="checkout.jsp" class="dropdown-item">Thanh toán</a>
-                                </div>
                             </div>
-                            <a href="contact.jsp" class="nav-item nav-link active">Liên hệ</a>
                         </div>
-                        <div class="navbar-nav ml-auto py-0">
-                            <a href="login.jsp" class="nav-item nav-link">Đăng nhập</a>
-                            <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
+                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
+                    </div>
+
+                    <%--Phần login--%>
+                    <%if (user == null) {%>
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="login.jsp" class="nav-item nav-link">Đăng nhập</a>
+                        <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
+                    </div>
+                    <%} else { %>
+                    <div class="navbar-nav ml-auto py-0 position-relative">
+                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
+                        </p>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <%if (!user.isVerifyEmail()) {%>
+                            <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
+                            <%}%>
+                            <% if (user.isAdmin()) {%>
+                            <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
+                            <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
+                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <%}%>
+                            <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
                     </div>
-                </nav>
-            </div>
+                    <%}%>
+
+                </div>
+            </nav>
         </div>
     </div>
-    <!-- Navbar End -->
-    <!-- End - Phần dùng chung cho các trang dành cho user -->
+</div>
+<!-- Navbar End -->
+<!-- End - Phần dùng chung cho các trang dành cho user -->
 
 
     <!-- Page Header Start -->

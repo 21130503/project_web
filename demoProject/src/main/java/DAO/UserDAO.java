@@ -49,8 +49,8 @@ public class UserDAO {
                     String insert = "Insert into User values (?,?,?,?,?,?,?,?)";
                     PreparedStatement preparedStatement1 = connection.prepareStatement(insert);
                     preparedStatement1.setInt(1, maxUserId + 1);
-                    preparedStatement1.setString(2, email);
-                    preparedStatement1.setString(3, username);
+                    preparedStatement1.setString(3, email);
+                    preparedStatement1.setString(2, username);
                     preparedStatement1.setString(4, pass);
                     preparedStatement1.setString(5, "false");
                     preparedStatement1.setString(6, "true");
@@ -90,7 +90,7 @@ public class UserDAO {
                 user.setId(resultSet.getInt(1));
                 user.setEmail(resultSet.getString(2));
                 user.setUsername(resultSet.getString(3));
-//                user.setPasword(resultSet.getString(4));
+                user.setPasword(resultSet.getString(4));
                 user.setVerifyEmail(resultSet.getBoolean(5));
                 user.setActive(resultSet.getBoolean(6));
                 user.setAdmin(resultSet.getBoolean(7));
@@ -311,5 +311,26 @@ public class UserDAO {
             Connect.closeConnection(connection);
         }
         return  0;
+    }
+    public boolean updateUser(String username, String password,int idUser){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update user set name= ? ,password= ? where idUser = ? ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,username);
+            preparedStatement.setString(2,password);
+            preparedStatement.setInt(3, idUser);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0){
+                return true;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  false;
     }
 }

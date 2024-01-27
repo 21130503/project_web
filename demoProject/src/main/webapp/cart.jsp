@@ -69,9 +69,10 @@
 <!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
 <div class="container-fluid">
+
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="index" class="text-decoration-none">
+            <a href="./index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
@@ -88,11 +89,11 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="./favourite" class="btn border" title="Yêu thích">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge"><%=favourite.total()%></span>
             </a>
-            <a href="cart" class="btn border" title="Giỏ hàng">
+            <a href="./cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge"><%=cart.total()%></span>
             </a>
@@ -103,23 +104,22 @@
 
 
 <!-- Navbar Start -->
-<div class="container-fluid">
+<div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
             <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
-               data-toggle="collapse" href="#navbar-vertical"
-               style="height: 65px; margin-top: -1px; padding: 0 30px;">
+               data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
                 <h6 class="m-0">Danh mục</h6>
                 <i class="fa fa-angle-down text-dark"></i>
             </a>
-            <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
-                 id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+            <nav class="collapse navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
+                 id="navbar-vertical">
+                <div class="navbar-nav w-100 overflow" style="height: 410px">
                     <%if (listTopic.size() == 0) {%>
                     <p>Chưa có topic nào</p>
                     <%} else {%>
                     <%for (Topic topic : listTopic) {%>
-                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
+                    <a href="./pTopic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
                     </a>
                     <%}%>
                     <%}%>
@@ -128,33 +128,32 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="index" class="text-decoration-none d-block d-lg-none">
-                    <h1 class="logo">Nhóm 26</h1>
+                <a href="./index" class="text-decoration-none d-block d-lg-none">
+                    <h1 class="logo" style="font-size: 34px;">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index" class="nav-item nav-link">Trang chủ</a>
-                        <a href="shop" class="nav-item nav-link">Cửa hàng</a>
-                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
+                        <a href="./index" class="nav-item nav-link active">Trang chủ</a>
+                        <a href="./shop" class="nav-item nav-link">Cửa hàng</a>
+                        <a href="./donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Trang</a>
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="cart" class="dropdown-item active">Giỏ hàng</a>
+                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
                                 <a href="checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
+                        <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
                     </div>
-
-                    <%--Phần login--%>
                     <%if (user == null) {%>
                     <div class="navbar-nav ml-auto py-0">
                         <a href="login.jsp" class="nav-item nav-link">Đăng nhập</a>
                         <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
                     </div>
+
                     <%} else { %>
                     <div class="navbar-nav ml-auto py-0 position-relative">
                         <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
@@ -163,20 +162,21 @@
                             <%if (!user.isVerifyEmail()) {%>
                             <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
                             <%}%>
+                            <a href="./message" class="dropdown-item">Gửi tin nhắn</a>
+                            <a href="./edit-infor" class="dropdown-item">Sửa thông tin</a>
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
-                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
                     </div>
                     <%}%>
-
                 </div>
             </nav>
+
         </div>
     </div>
 </div>

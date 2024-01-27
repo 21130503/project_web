@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.ProductDAO;
+import DAO.TopicDAO;
 import nhom26.User;
 
 import javax.servlet.ServletException;
@@ -30,6 +31,8 @@ public class SeachController extends HttpServlet {
             req.setAttribute("listOddImage", productDAO.searchOddImageWithParamForAdmin(param));
             req.setAttribute("listAlbum", productDAO.searchAlbumWithParamForAdmin(param));
         }
+        TopicDAO topicDAO = new TopicDAO();
+        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.getRequestDispatcher("search.jsp").forward(req,resp);
 
     }

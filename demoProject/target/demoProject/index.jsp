@@ -54,7 +54,7 @@
     ArrayList<OddImage> listOddImageOrder = request.getAttribute("listOddImageOrder") == null ? new ArrayList<>() : (ArrayList<OddImage>) request.getAttribute("listOddImageOrder");
     ArrayList<Album> listAlbumOrder = request.getAttribute("listAlbumOrder") == null ? new ArrayList<>() : (ArrayList<Album>) request.getAttribute("listAlbumOrder");
     Random random = new Random();
-    int albumRan = random.nextInt(0, listAlbumNew.size());
+    int albumRan = random.nextInt(listAlbumNew.size());
     Album albumSlide = listAlbumNew.get(albumRan);
     int oddRan = random.nextInt(0, listOddImageOrder.size());
     OddImage oddImageSlide = listOddImageOrder.get(oddRan);
@@ -142,8 +142,8 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="cart.jsp" class="dropdown-item">Giỏ hàng</a>
-                                <a href="checkout.jsp" class="dropdown-item">Thanh toán</a>
+                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
+                                <a href="checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
                         <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
@@ -163,6 +163,7 @@
                             <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
                             <%}%>
                             <a href="./message" class="dropdown-item">Gửi tin nhắn</a>
+                            <a href="./edit-infor" class="dropdown-item">Sửa thông tin</a>
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
@@ -1210,6 +1211,10 @@
     <script src="js/user.js"></script>
     <script src="js/addCart.js"></script>
 
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+<script src="js/user.js"></script>
+    <script src="js/addCart.js"></script>
 </body>
 
 </html>

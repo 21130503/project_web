@@ -58,6 +58,14 @@ public class AlbumController extends HttpServlet {
        UploadFile uploadFile = new UploadFile();
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
+        int totalAlbum = productDAO.totalAlbum();
+        int totalOdd = productDAO.totalOdd();
+        int totalPage = 0;
+        if (totalAlbum > totalOdd) {
+            totalPage = (int) Math.ceil((double) totalAlbum / 5);
+        } else {
+            totalPage = (int) Math.ceil((double) totalOdd / 5);
+        }
         String nameTopic = req.getParameter("nameTopic");
         String nameAlbum = req.getParameter("nameAlbum");
         String price = req.getParameter("price");
@@ -69,6 +77,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -77,6 +87,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -85,6 +97,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -93,6 +107,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -101,6 +117,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -109,6 +127,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -117,6 +137,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -125,6 +147,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -152,6 +176,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
         }
         if(productDAO.insertAlbum(nameTopic,nameAlbum,description,Integer.parseInt(price),Integer.parseInt(discount),topicDAO.checkTopicShow(nameTopic),listFileNames)){

@@ -42,6 +42,7 @@ public class DiscountAdminController extends HttpServlet {
             String description = req.getParameter("description");
             double discountValue = Double.parseDouble(req.getParameter("discountValue"));
             Date expiryDate = Date.valueOf(req.getParameter("expiryDate"));
+            int count = Integer.parseInt(req.getParameter("count"));
 
             DiscountDAO discountDAO = new DiscountDAO();
 
@@ -52,13 +53,13 @@ public class DiscountAdminController extends HttpServlet {
                 return;
             }
 
-
             // Tạo đối tượng Discount và thêm vào cơ sở dữ liệu
             Discount discount = new Discount();
             discount.setCode(code);
             discount.setDescription(description);
             discount.setDiscountValue(discountValue);
             discount.setExpiryDate(expiryDate);
+            discount.setCount(count);
 
             boolean success = discountDAO.addDiscount(discount);
 

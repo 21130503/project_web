@@ -26,6 +26,9 @@
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
@@ -247,29 +250,29 @@
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="all"
                                id="price-all" <%= "all".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-all">Tất cả loại giá</label>
+                        <label class="custom-control-label" for="price-all">Tất cả</label>
                     </div>
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="0-100"
                                id="price-1" <%= "0-100".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-1">Dưới 100.000 vnđ</label>
+                        <label class="custom-control-label" for="price-1">Dưới 100.000 VNĐ</label>
                     </div>
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="100-300"
                                id="price-2" <%= "100-300".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-2">100k đến 300k vnđ</label>
+                        <label class="custom-control-label" for="price-2">100 VNĐ - 300 VNĐ</label>
                     </div>
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="300-600"
                                id="price-3" <%= "300-600".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-3">300k đến 600k vnđ</label>
+                        <label class="custom-control-label" for="price-3">300 VNĐ - 600 VNĐ</label>
                     </div>
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="600-1000000"
                                id="price-4" <%= "600-1000000".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-4">600k vnđ trở lên</label>
+                        <label class="custom-control-label" for="price-4">Trên 600 VNĐ</label>
                     </div>
-                    <button type="submit">Lọc</button>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
                 </div>
             </form>
             <!-- Price End -->
@@ -281,7 +284,7 @@
             <div class="row pb-3">
                 <div class="col-12 pb-1">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <form action="">
+                        <form action="./search">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                                 <div class="input-group-append">
@@ -542,6 +545,7 @@
         })
     })
 </script>
+<script src="./js/user.js"></script>
 </body>
 
 </html>
