@@ -290,7 +290,7 @@
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                             <img class="img-fluid image-view"
 
-                                 src="<%=oddImage.getImage()%>"
+                                 src="<%=oddImage.getWatermark() !=null ? oddImage.getWatermark(): oddImage.getImage()%>"
 
                                  alt="<%=oddImage.getName()%>">
                         </div>

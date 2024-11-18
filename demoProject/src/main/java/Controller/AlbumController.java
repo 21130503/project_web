@@ -4,6 +4,7 @@ import DAO.ProductDAO;
 import DAO.TopicDAO;
 import Upload.UploadFile;
 import nhom26.User;
+import watermark.CreateWaterMark;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -152,6 +153,7 @@ public class AlbumController extends HttpServlet {
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
+        CreateWaterMark createWaterMark = new CreateWaterMark();
         for (Part part : req.getParts()) {
             String fileName = uploadFile.extractFileName(part);
             // Tạo một tên tệp duy nhất
@@ -159,17 +161,24 @@ public class AlbumController extends HttpServlet {
            if(fileName.length() >3 || !fileName.isEmpty()){
                listFileNames.add(fileName);
                try {
-                   part.write(uploadFile.getFolderUpload(req).getAbsolutePath()+ "/" + fileName);
+//                   part.write(uploadFile.getFolderUpload(req).getAbsolutePath()+ "/" + fileName);
+                   File uploadedFile = new File(uploadFile.getFolderUpload(req).getAbsolutePath() + "/" + fileName);
+                   part.write(uploadedFile.getAbsolutePath());
+
+                   // Write file to the watermark folder
+                   File watermarkFile = new File(createWaterMark.createFolderWaterMark(req).getAbsolutePath() + "/" + fileName);
+                   part.write(watermarkFile.getAbsolutePath());
+
+                   String watermarkText = "Water";
+                   createWaterMark.addTextWatermark(watermarkText, uploadedFile, watermarkFile);
                } catch (IOException e) {
                    e.printStackTrace();
+               } catch (Exception e) {
+                   throw new RuntimeException(e);
                }
            }
 
 
-        }
-
-        for (String file : listFileNames) {
-            System.out.println("Ảnh: " + file);
         }
         if(listFileNames.size() ==0){
             req.setAttribute("errImageForAlbum", "Vui lòng thêm ảnh cho album");

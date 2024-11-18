@@ -41,10 +41,11 @@
 <body>
 <% User user = (User) session.getAttribute("user");
     ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<>() : (ArrayList<Topic>) request.getAttribute("listTopic");
+    boolean isLogin =(boolean) request.getAttribute("isLogin");
 %>
 <% String type = (String) request.getAttribute("type");
     String name = null, description = null, sourceImage = null;
-    int price = 0, discount = 0, tottalImage = 1, id = 0;
+    int price = 0, discount = 0, tottalImage = 1, id = 0, currentPrice;
     OddImage oddImage = null;
     Album album = null;
     List<String> list = new ArrayList<>();
@@ -60,22 +61,25 @@
         description = album.getDescription();
         price = album.getPrice();
         discount = album.getDiscount();
-        tottalImage = album.getListImage().size();
-        sourceImage = album.getListImage().get(0);
+        tottalImage = album.getListWatermark().size();
+        sourceImage = album.getListWatermark().get(0);
         id = album.getIdAlbum();
         list = album.getListImage();
         editLink = "album";
+        System.out.println("This is log detail.jsp");
+        System.out.println(album.getPrice());
     } else if (type.equals("odd")) {
         oddImage = (OddImage) request.getAttribute("detail");
         name = oddImage.getName();
         description = oddImage.getDescription();
         price = oddImage.getPrice();
         discount = oddImage.getDiscount();
-        sourceImage = oddImage.getImage();
+        sourceImage = oddImage.getWatermark();
         id = oddImage.getIdOddImage();
         list.add(oddImage.getImage());
         editLink = "oddImage";
     }
+    currentPrice = price- discount;
 %>
 <%
     Locale vnLocal = new Locale("vi", "VN");
@@ -244,7 +248,7 @@
                 </h3>
                 <div class="option">
                     <button id="btn-favourite" title="<%=type%>" value="<%=id%>" class="btn border"><i class="fas fa-heart text-primary"></i></button>
-                    <button id="btn-cart" class="btn border " title="<%=type%>" value="<%=id%>"><i class="fas fa-shopping-cart text-primary"></i></button>
+                    <button id="btn-download" class="btn border " title="<%=type%>" value="<%=id%>"><i class="fa-regular fa-circle-down text-primary"></i></button>
                     <%if(user !=null&&user.isAdmin()){%>
                     <button id="btn-cart" class="btn border " title="edit"><a href="./<%=editLink%>?q=<%=id%>/edit"><i class="fa-solid fa-pen"></i></a></button>
                     <%}%>
@@ -465,7 +469,7 @@
                 <%for (OddImage oddImage1 : listSuggestedOddImage) {%>
                 <div class="card product-item border-0">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100 image-view" src="<%=oddImage1.getImage()%>" alt="">
+                        <img class="img-fluid w-100 image-view" src="<%=oddImage1.getWatermark() !=null ? oddImage1.getWatermark(): oddImage1.getImage()%>" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                         <h6 class="text-truncate mb-3"><%=oddImage1.getName()%></h6>
@@ -550,7 +554,17 @@
     </div>
 </div>
 <!-- Footer End -->
-
+<%--Banking--%>
+<div id="myModal" class="modal">
+    <div class="modal-content-banking">
+        <span class="close" id="closeModalBtn">&times;</span>
+        <h2 class="text-center">Thanh toán</h2>
+        <p class="text-center text-warning ">Vui lòng quét mã bên dưới để có thể mua ảnh.</p>
+        <div class="body-modal my-2 flex flex-column justify-content-center align-items-center ">
+            <img id="qr-banking" alt="qr-banking"/>
+        </div>
+    </div>
+</div>
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
@@ -591,6 +605,9 @@
 <script src="./js/user.js"></script>
 <script>
     const  idProduct = <%=id%>
+    const isLogin = <%=isLogin%>
+    const type = "<%=type%>"
+    <%--const id = <%=user.getId()%>--%>
 </script>
 <script>
     const favouriteBtn = document.getElementById('btn-favourite');
@@ -638,6 +655,72 @@
 
         xhr.send();
     })
+</script>
+<script>
+    const btnDown = document.getElementById("btn-download")
+    console.log(btnDown)
+    var modal = document.getElementById("myModal");
+    var closeModalBtn = document.getElementById("closeModalBtn");
+    var image = document.getElementById('qr-banking')
+    btnDown.onclick =()=>{
+
+        const link = document.createElement("a");
+        // const isLogin =isLogin
+        // const type = type
+        if(!<%=isLogin%>){
+            alert('c')
+            window.location.href = 'http://localhost:8080/demoProject_war/login.jsp';
+        }
+
+
+
+        let BANK_ID = 970436
+        let ACCOUNT_NO = 1016574856
+        let TEMPLATE= 'compact'
+        let description = `${type == 'odd' ?  'Thanh toán mua ảnh lẻ' : 'Thanh toán mua album'}`
+        let amount = <%=currentPrice%>
+        var QR= `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-${TEMPLATE}.png?amount=${amount}&addInfo=${description}`
+        image.src = QR
+        image.height= 332
+        image.style.width= 'auto'
+        console.log(QR)
+        modal.style.display = "block";
+//
+        if(type === 'odd'){
+            <%--const data = checPay();--%>
+            <%--data.forEach((item,index)=>{--%>
+            <%--    if(item['Mô tả'].substring(0) === id){--%>
+<%----%>
+            <%--        link.href ='<%=oddImage.getImage()%>'--%>
+            <%--        link.download = '<%=oddImage.getImage().substring(45)%>'--%>
+            <%--        link.click()--%>
+            <%--}--%>
+            <%--})--%>
+<%----%>
+        }
+        else {
+            console.log('a')
+        }
+//
+    }
+    closeModalBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+//
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+//
+//
+    // const checPay = async  ()=>{
+    //     const resp = await  fetch(`https://script.googleusercontent.com/macros/echo?user_content_key=VdvILEjkR7prGau60nO6JywHzOdRjL-e7y6Ls7Towy1QCWFy1Z1CQAbuyNFFIh6gYu_5VLINXfignFzfMkyh6ZSlYZaXQfRXm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnJXUcFNWVk6SD_eNLQSqM2jGqw2ZNFhvoOCBoE1DTGpRJg9N06TZDERdlXyQwVs0Q9olhK1kW-q9i8z1Bes2eXal1G61OByJXNz9Jw9Md8uu&lib=MOqSGi395BE9CLYWj1QBkvqhHvNT7C3Ew`,
+    //     );
+    //     const data = await resp.json();
+    //     return data
+    // }
+
 </script>
 </body>
 

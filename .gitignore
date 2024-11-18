@@ -4,3 +4,4 @@ lib/
 demoProject/target
 /target/
 /.metadata/
+demoProject/target/*.war

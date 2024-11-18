@@ -23,11 +23,15 @@ public class DetailController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         int id = Integer.parseInt(req.getParameter("id"));
+        boolean isLogin = false;
         String type = req.getParameter("type");
         ProductDAO productDAO = new ProductDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
+        if(user !=null) {
+            isLogin = true;
+        }
         if (type.equals("album")) {
             Album album = null;
             if (user == null || !user.isAdmin()) {
@@ -40,6 +44,7 @@ public class DetailController extends HttpServlet {
             req.setAttribute("feedback", feedbackDAO.getAllFeedbackForAlbumById(id));
             req.setAttribute("totalStar", feedbackDAO.countRatingAlbum(id));
             req.setAttribute("avgStar", feedbackDAO.AvgRatingAlbum(id));
+
 
         } else if (type.equals("odd")) {
             OddImage oddImage = null;
@@ -60,6 +65,7 @@ public class DetailController extends HttpServlet {
         req.setAttribute("suggestedOdd", productDAO.getTop8ddImageNew());
         req.setAttribute("suggestedAlbum", productDAO.getTop8AlbumNew());
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
+        req.setAttribute("isLogin", isLogin);
         req.getRequestDispatcher("detail.jsp").forward(req, resp);
         return;
 

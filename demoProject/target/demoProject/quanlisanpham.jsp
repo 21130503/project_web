@@ -117,6 +117,9 @@
             <a href="./product" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
             </a>
+            <a href="./trash" class="btn border">
+                <i class="fa-solid fa-trash-can"></i>
+            </a>
         </div>
     </div>
 </div>
@@ -221,7 +224,7 @@
                     String title = showOdd ? "Ẩn" : "Bán lại";
                 %>
                 <tr>
-                    <td class="text-left"><img class="mr-5" src=<%=odd.getImage()%> alt=""
+                    <td class="text-left"><img class="mr-5" src=<%= odd.getWatermark() !=null ? odd.getWatermark():  odd.getImage()%> alt=""
                                                style="width: 50px;"> <%=odd.getName()%>
                     </td>
                     <td class="align-middle"><%=vndFormat.format(odd.getPrice())%>

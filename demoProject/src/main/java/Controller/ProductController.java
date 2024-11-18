@@ -91,7 +91,7 @@ public class ProductController extends HttpServlet {
         JSONObject jsonObjectResults = new JSONObject();
         if (path.equals("/deleteOddImage")) {
             int idOddImage = Integer.parseInt(req.getParameter("idOddImage"));
-            if (productDAO.deleteOddImage(idOddImage)) {
+            if (productDAO.deleteOddImagePhantom(idOddImage,"true")) {
                 jsonObjectResults.put("status", 200);
                 jsonObjectResults.put("message", "Đã xóa ảnh thành công");
 
@@ -106,7 +106,7 @@ public class ProductController extends HttpServlet {
         if (path.equals("/deleteAlbum")) {
             int idAlbum = Integer.parseInt(req.getParameter("idAlbum"));
             System.out.println(idAlbum);
-            if (productDAO.deleteAlbum(idAlbum)) {
+            if (productDAO.deleteAlbumPhantom(idAlbum,"true")) {
                 jsonObjectResults.put("status", 200);
                 jsonObjectResults.put("message", "Đã xóa album thành công");
 
@@ -171,4 +171,5 @@ public class ProductController extends HttpServlet {
         }
 
     }
+
 }

@@ -14,6 +14,15 @@ public class Order {
     int idByer;
     String type;
     int idProduct;
+    String fileName;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public int getIdProduct() {
         return idProduct;
@@ -55,7 +64,7 @@ public class Order {
         this.phoneNumber = phoneNumber;
     }
 
-    int totalPrice;
+   double totalPrice;
     Date purchareDate;
 
     public int getIdOrder() {
@@ -90,11 +99,11 @@ public class Order {
         this.address = address;
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -112,5 +121,24 @@ public class Order {
 
     public void setPurchareDate(Date purchareDate) {
         this.purchareDate = purchareDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "idOrder=" + idOrder +
+                ", nameProduct='" + nameProduct + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", quantity=" + quantity +
+                ", status='" + status + '\'' +
+                ", address='" + address + '\'' +
+                ", idByer=" + idByer +
+                ", type='" + type + '\'' +
+                ", idProduct=" + idProduct +
+                ", fileName='" + fileName + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", purchareDate=" + purchareDate +
+                '}';
     }
 }
