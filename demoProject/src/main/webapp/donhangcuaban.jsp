@@ -6,6 +6,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="cart.Cart" %>
 <%@ page import="favourite.Favourite" %>
+<%@ page import="nhom26.Notification" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -66,6 +67,7 @@
     int totalPage = (int) request.getAttribute("totalPage");
     int currentPage = (int) request.getAttribute("currentPage");
 %>
+<% ArrayList<Notification> notifications = (ArrayList<Notification>) request.getAttribute("notifications") ;%>
 <!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
 <div class="container-fluid">
@@ -160,6 +162,22 @@
                         <a href="register.jsp" class="nav-item nav-link">Đăng ký</a>
                     </div>
                     <%} else { %>
+                    <div class="navbar-nav ml-auto py-0 position-relative">
+                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">
+                            <i class="fa-regular fa-bell"></i>
+                        </p>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <%
+                                for (Notification notification : notifications) {
+                            %>
+                            <%if("order".equals(notification.getType())){%>
+                                <a href="./donhangcuaban" class="dropdown-item"><%=notification.getContent()%></a>
+                            <%}%>
+                            <%
+                                }
+                            %>
+                        </div>
+                    </div>
                     <div class="navbar-nav ml-auto py-0 position-relative">
                         <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
                         </p>

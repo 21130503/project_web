@@ -697,6 +697,7 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
                 order.setPhoneNumber(resultSet.getString("phoneNumber"));
                 order.setIdByer(resultSet.getInt("idUser"));
                 order.setType("odd");
+
                 order.setIdProduct(resultSet.getInt("idOddImage"));
                 order.setFileName(resultSet.getString("fileName"));
                 listOrder.add(order);

@@ -1,5 +1,6 @@
 package logic;
 
+import DAO.NotificationDAO;
 import DAO.OrderDAO;
 import DAO.UserDAO;
 import Services.SendEmail;
@@ -12,6 +13,7 @@ import java.util.stream.Stream;
 public class EquaslFileOrder {
     OrderDAO orderDAO = new OrderDAO();
     UserDAO userDAO = new UserDAO();
+    NotificationDAO notificationDAO = new NotificationDAO();
     Security security = new Security();
     Config config = new Config();
     SendEmail sendEmail = new SendEmail();
@@ -25,22 +27,30 @@ public class EquaslFileOrder {
             for (Order o: orders) {
 
                 FileOrder fileOrder = security.AESDecryptFile(o.getFileName(),config.getKeyAES());
-                if(o.getIdProduct() == fileOrder.getIdProduct()
-                        && o.getType() == fileOrder.getType()
-                        && o.getPhoneNumber() == fileOrder.getPhoneNumber()
-                        && o.getAddress() == fileOrder.getAddress()
-                        && o.getReceiver() == fileOrder.getReceiver()
-                        && o.getTotalPrice() == fileOrder.getTotalPrice()
+                if (o.getIdProduct() == fileOrder.getIdProduct()
+                        && o.getQuantity() == fileOrder.getQuantity()
+                        && o.getType().equals(fileOrder.getType())
+                        && o.getPhoneNumber().equals(fileOrder.getPhoneNumber())
+                        && o.getAddress().equals(fileOrder.getAddress())
+                        && o.getReceiver().equals(fileOrder.getReceiver())
+                        && Double.compare(o.getTotalPrice(), fileOrder.getTotalPrice()) == 0) {
+                    bool = true;
+                } else {
+                    User user = userDAO.getUserById(String.valueOf(fileOrder.getUserId()));
+                    notificationDAO.insertNotification(user.getId(), "Đơn hàng của bạn đã bị hủy vì có sự cố", "order");
+                    orderDAO.updateAlbumStatus(String.valueOf(o.getIdOrder()), "Đã hủy");
+                    System.out.println("Bị thay dổi");
 
-                ){
-                    bool= true;
+//                    sendEmail.sendEmail(
+//                            "danghuuquy10042003@gmail.com",
+//                            "dwclkzpuimnqcgmj",
+//                            "danghuuquy10042003@gmail.com",
+//                            "Đơn hàng của bạn đã có sự thay đổi",
+//                            "Đơn hàng của bạn đã bị hủy vì có sự thay đổi"
+//                    );
+                    bool = false;
                 }
-//                else{
-//                    User user  = userDAO.getUserById(String.valueOf(fileOrder.getUserId()));
-//                    sendEmail.sendEmail("21130503@st.hcmuaf.edu.vn", "QUY10042003",user.getEmail(),"Đơn hàng của bạn đã có sự thay đổi","Đơn hàng của bạn đã bị hủy vì có sự thay đổi");
-//                    orderDAO.updateAlbumStatus(String.valueOf(o.getIdOrder()), "Đã hủy");
-//                    bool =false;
-//                }
+
                 System.out.println(fileOrder);
                 System.out.println(o);
             }

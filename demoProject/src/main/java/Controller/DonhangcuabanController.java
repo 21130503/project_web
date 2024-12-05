@@ -1,8 +1,10 @@
 package Controller;
 
+import DAO.NotificationDAO;
 import DAO.OrderDAO;
 import DAO.ProductDAO;
 import DAO.TopicDAO;
+import nhom26.Notification;
 import nhom26.Order;
 import nhom26.User;
 
@@ -42,10 +44,15 @@ public class DonhangcuabanController extends HttpServlet {
         ArrayList<Order> orders = new ArrayList<>(orderDAO.getAllOrderOddImageForUser(user.getId(),page,recSize));
         orders.addAll(orderDAO.getAllOrderAlbumForUser(user.getId(),page,recSize));
         orders.addAll(orderDAO.getAllCartOrderForUser(user.getId(),page,recSize));
+
+        /*notification*/
+        NotificationDAO notificationDAO = new NotificationDAO();
+        ArrayList<Notification> notifications = notificationDAO.getNotification(user.getId());
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.setAttribute("Order",orders);
         req.setAttribute("currentPage", page);
         req.setAttribute("totalPage", totalPage);
+        req.setAttribute("notifications", notifications);
         req.getRequestDispatcher("donhangcuaban.jsp").forward(req, resp);
     }
 }

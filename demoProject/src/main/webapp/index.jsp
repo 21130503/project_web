@@ -1,13 +1,10 @@
-<%@ page import="nhom26.User" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="nhom26.Topic" %>
-<%@ page import="nhom26.OddImage" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
-<%@ page import="nhom26.Album" %>
 <%@ page import="java.util.Random" %>
 <%@ page import="favourite.Favourite" %>
 <%@ page import="cart.Cart" %>
+<%@ page import="nhom26.*" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -67,6 +64,7 @@
     Cart cart = (Cart) session.getAttribute("cart");
     if (cart == null) cart = new Cart();
 %>
+<% ArrayList<Notification> notifications = (ArrayList<Notification>) request.getAttribute("notifications") ;%>
 <!-- Topbar Start -->
 <div class="container-fluid">
 
@@ -155,6 +153,22 @@
                     </div>
 
                     <%} else { %>
+                    <div class="navbar-nav ml-auto py-0 position-relative">
+                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">
+                            <i class="fa-regular fa-bell"></i>
+                        </p>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <%
+                                for (Notification notification : notifications) {
+                            %>
+                            <%if("order".equals(notification.getType())){%>
+                            <a href="./donhangcuaban" class="dropdown-item"><%=notification.getContent()%></a>
+                            <%}%>
+                            <%
+                                }
+                            %>
+                        </div>
+                    </div>
                     <div class="navbar-nav ml-auto py-0 position-relative">
                         <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
                         </p>
