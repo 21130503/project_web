@@ -69,30 +69,31 @@
 <!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
 <div class="container-fluid">
+
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a href="index" class="text-decoration-none">
+            <a href="./index" class="text-decoration-none">
                 <h1 class="logo">Nhóm 26</h1>
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="./favourite" class="btn border" title="Yêu thích">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge"><%=favourite.total()%></span>
             </a>
-            <a href="cart" class="btn border" title="Giỏ hàng">
+            <a href="./cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge"><%=cart.total()%></span>
             </a>
@@ -114,6 +115,8 @@
             </a>
             <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
                  id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
+
+                <%--Phần danh mục hiển thị các chủ đề--%>
                 <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                     <%if (listTopic.size() == 0) {%>
                     <p>Chưa có topic nào</p>
@@ -124,6 +127,7 @@
                     <%}%>
                     <%}%>
                 </div>
+
             </nav>
         </div>
         <div class="col-lg-9">
@@ -138,7 +142,7 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a href="index" class="nav-item nav-link">Trang chủ</a>
                         <a href="shop" class="nav-item nav-link">Cửa hàng</a>
-                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
+                        <a href="donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -146,7 +150,7 @@
                                 <a href="checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
+                        <a href="contact" class="nav-item nav-link">Liên hệ</a>
                     </div>
 
                     <%--Phần login--%>

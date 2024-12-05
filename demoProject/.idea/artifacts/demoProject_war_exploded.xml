@@ -1,0 +1,56 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" external-system-id="Maven" name="demoProject:war exploded">
+    <output-path>$PROJECT_DIR$/target/demoProject</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>demoProject</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="demoProject" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.9.1" />
+          <element id="library" level="project" name="Maven: com.restfb:restfb:2024.1.0" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.5" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.5" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.5.13" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.13" />
+          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.11" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:fluent-hc:4.5.14" />
+          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.0.1" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:8.0.29" />
+          <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.19.4" />
+          <element id="library" level="project" name="Maven: org.json:json:20210307" />
+          <element id="library" level="project" name="Maven: com.oracle.database.jdbc:ojdbc10:19.13.0.0.1" />
+          <element id="library" level="project" name="Maven: org.webjars:webjars-locator-core:0.47" />
+          <element id="library" level="project" name="Maven: io.github.classgraph:classgraph:4.8.106" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.12.3" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:axios:1.4.0" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:follow-redirects:1.15.4" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:form-data:4.0.0" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:asynckit:0.4.0" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:combined-stream:1.0.8" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:delayed-stream:1.0.0" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:mime-types:2.1.35" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:mime-db:1.52.0" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:proxy-from-env:1.1.0" />
+          <element id="library" level="project" name="Maven: com.sun.mail:javax.mail:1.6.2" />
+          <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+          <element id="library" level="project" name="Maven: commons-fileupload:commons-fileupload:1.4" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.2" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/demoProject/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="demoProject/web/Web" />
+    </root>
+  </artifact>
+</component>

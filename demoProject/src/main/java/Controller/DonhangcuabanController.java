@@ -1,8 +1,10 @@
 package Controller;
 
+import DAO.NotificationDAO;
 import DAO.OrderDAO;
 import DAO.ProductDAO;
 import DAO.TopicDAO;
+import nhom26.Notification;
 import nhom26.Order;
 import nhom26.User;
 
@@ -28,14 +30,29 @@ public class DonhangcuabanController extends HttpServlet {
             resp.sendRedirect("login.jsp");
             return;
         }
+        int page =1;
+        if(req.getParameter("page") !=null){
+            page = Integer.parseInt(req.getParameter("page"));
+        }
+        int recSize = 2;
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
         OrderDAO orderDAO = new OrderDAO();
-        ArrayList<Order> orders = new ArrayList<>(orderDAO.getAllOrderOddImageForUser(user.getId()));
-        orders.addAll(orderDAO.getAllOrderAlbumForUser(user.getId()));
-        orders.addAll(orderDAO.getAllCartOrderForUser(user.getId()));
+        int total = Math.max(orderDAO.getCountOrderAlbum(user.getId()),
+                Math.max(orderDAO.getCountOrderOdd(user.getId()),orderDAO.getCountOrderCart(user.getId())));
+        int totalPage = (int) Math.ceil((double) total/recSize);
+        ArrayList<Order> orders = new ArrayList<>(orderDAO.getAllOrderOddImageForUser(user.getId(),page,recSize));
+        orders.addAll(orderDAO.getAllOrderAlbumForUser(user.getId(),page,recSize));
+        orders.addAll(orderDAO.getAllCartOrderForUser(user.getId(),page,recSize));
+
+        /*notification*/
+        NotificationDAO notificationDAO = new NotificationDAO();
+        ArrayList<Notification> notifications = notificationDAO.getNotification(user.getId());
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.setAttribute("Order",orders);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPage", totalPage);
+        req.setAttribute("notifications", notifications);
         req.getRequestDispatcher("donhangcuaban.jsp").forward(req, resp);
     }
 }

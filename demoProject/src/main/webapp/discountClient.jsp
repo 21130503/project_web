@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Edit Album|| Admin</title>
+    <title>Lấy mã giảm giá</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -59,13 +59,13 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>

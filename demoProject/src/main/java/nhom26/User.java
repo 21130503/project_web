@@ -13,6 +13,15 @@ public class User {
     boolean isAdmin;
 
     Date createdAt;
+    String publicKey;
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 
     public User(){
     }

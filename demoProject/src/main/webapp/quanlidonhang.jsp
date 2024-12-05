@@ -59,13 +59,13 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -111,6 +111,7 @@
             <p><input type="radio" class="" name="option" value="Đang vận chuyển"> Đang vận chuyển</p>
             <p><input type="radio" class="" name="option" value="Đã giao"> Đã giao</p>
             <p><input type="radio" class="" name="option" value="Đã hủy"> Đã hủy</p>
+            <button class="btn btn-primary">Lọc</button>
         </form>
     </div>
     <div class="row px-xl-5">
@@ -290,38 +291,38 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
-<script>
-    $(document).ready(function () {
-        $("input[name='option']").change(function () {
-            submitForm();
-        });
+<%--<script>--%>
+<%--    $(document).ready(function () {--%>
+<%--        $("input[name='option']").change(function () {--%>
+<%--            submitForm();--%>
+<%--        });--%>
 
-        function submitForm() {
-            var selectedOption = $("input[name='option']:checked");
+<%--        function submitForm() {--%>
+<%--            var selectedOption = $("input[name='option']:checked");--%>
 
-            if (selectedOption.length > 0) {
-                var actionValue = selectedOption.val();
+<%--            if (selectedOption.length > 0) {--%>
+<%--                var actionValue = selectedOption.val();--%>
 
-                // Sử dụng AJAX để gửi yêu cầu GET
-                $.ajax({
-                    type: "GET",
-                    url: "http://localhost:8080/demoProject_war/orderManager",
-                    data: {option: actionValue},
-                    success: function (data) {
-                        $("#listOrderContainer").empty();
-                        // Xử lý phản hồi từ server và hiển thị tại trang
-                        $("#listOrderContainer").html(data);
-                    },
-                    error: function (error) {
-                        console.error("Error:", error);
-                    }
-                });
-            } else {
-                alert("Vui lòng chọn một tùy chọn!");
-            }
-        }
-    });
-</script>
+<%--                // Sử dụng AJAX để gửi yêu cầu GET--%>
+<%--                $.ajax({--%>
+<%--                    type: "GET",--%>
+<%--                    url: "http://localhost:8080/demoProject_war/orderManager",--%>
+<%--                    data: {option: actionValue},--%>
+<%--                    success: function (data) {--%>
+<%--                        $("#listOrderContainer").empty();--%>
+<%--                        // Xử lý phản hồi từ server và hiển thị tại trang--%>
+<%--                        $("#listOrderContainer").html(data);--%>
+<%--                    },--%>
+<%--                    error: function (error) {--%>
+<%--                        console.error("Error:", error);--%>
+<%--                    }--%>
+<%--                });--%>
+<%--            } else {--%>
+<%--                alert("Vui lòng chọn một tùy chọn!");--%>
+<%--            }--%>
+<%--        }--%>
+<%--    });--%>
+<%--</script>--%>
 <script>
     // Dialog("#deleteOrder","#btn-delete-order","/order/odd","idOrder", "delete")
     let where;

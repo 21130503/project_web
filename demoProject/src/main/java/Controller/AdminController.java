@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.OrderDAO;
 import DAO.UserDAO;
+import logic.EquaslFileOrder;
 import nhom26.User;
 
 import javax.servlet.ServletException;
@@ -18,6 +19,15 @@ public class AdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UserDAO userDAO = new UserDAO();
+        EquaslFileOrder equaslFileOrder = new EquaslFileOrder();
+//        check edit in database
+        try {
+            if(equaslFileOrder.checkEqualsFileOrderWithAlbum() == true){
+                System.out.println("Không có sự thay dổi nào");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         req.setAttribute("totalUser", userDAO.getCount());
         req.setAttribute("userNew", userDAO.getCountThisMonth());
 //        Tổng thu nhập

@@ -1,9 +1,16 @@
 package DAO;
 
 import Services.Connect;
+import nhom26.Config;
+import nhom26.Security;
 import nhom26.User;
 import org.json.JSONObject;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +27,7 @@ public class UserDAO {
             String checkEmailQuery = "select email from user where email = ?";
             PreparedStatement preparedStatementCheckEmail = connection.prepareStatement(checkEmailQuery);
             preparedStatementCheckEmail.setString(1, email);
+
             ResultSet resEmail = preparedStatementCheckEmail.executeQuery();
             if (resEmail.next()) {
                 checkEmail = true;
@@ -46,11 +54,11 @@ public class UserDAO {
                 java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
                 if (resultSet.next()) {
                     int maxUserId = resultSet.getInt("max_user_id");
-                    String insert = "Insert into User values (?,?,?,?,?,?,?,?)";
+                    String insert = "Insert into user(idUser, email, name, password,isVerifyEmail, isActive,isAdmin, createdAt) values (?,?,?,?,?,?,?,?)";
                     PreparedStatement preparedStatement1 = connection.prepareStatement(insert);
                     preparedStatement1.setInt(1, maxUserId + 1);
-                    preparedStatement1.setString(3, email);
-                    preparedStatement1.setString(2, username);
+                    preparedStatement1.setString(2, email);
+                    preparedStatement1.setString(3, username);
                     preparedStatement1.setString(4, pass);
                     preparedStatement1.setString(5, "false");
                     preparedStatement1.setString(6, "true");
@@ -78,9 +86,12 @@ public class UserDAO {
     }
     public User getUserByEmailAndPass(String email, String pass) {
         Connection connection = null;
+
+        Security security = new Security();
+        Config config = new Config();
         try {
             connection = Connect.getConnection();
-            String sql = "select idUser, email,name, password, isVerifyEmail, isActive, isAdmin, createdAt from user where email = ? AND password = ?";
+            String sql = "select idUser, email,name, password, isVerifyEmail, isActive, isAdmin, createdAt,publicKey from user where email = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, pass);
@@ -88,17 +99,28 @@ public class UserDAO {
             if (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getInt(1));
-                user.setEmail(resultSet.getString(2));
-                user.setUsername(resultSet.getString(3));
-//                user.setPasword(resultSet.getString(4));
+                user.setEmail(security.DESDecrypt(resultSet.getString(2), config.getKey()));
+                user.setUsername(security.DESDecrypt(resultSet.getString(3), config.getKey()));
+                user.setPasword(resultSet.getString(4));
                 user.setVerifyEmail(resultSet.getBoolean(5));
                 user.setActive(resultSet.getBoolean(6));
                 user.setAdmin(resultSet.getBoolean(7));
                 user.setCreatedAt(resultSet.getDate(8));
+                user.setPublicKey(resultSet.getString("publicKey"));
 //                System.out.println(user);
                 return user;
             }
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchPaddingException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (BadPaddingException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeyException e) {
             throw new RuntimeException(e);
         } finally {
             Connect.closeConnection(connection);
@@ -311,5 +333,26 @@ public class UserDAO {
             Connect.closeConnection(connection);
         }
         return  0;
+    }
+    public boolean updateUser(String username, String password,int idUser){
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update user set name= ? ,password= ? where idUser = ? ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,username);
+            preparedStatement.setString(2,password);
+            preparedStatement.setInt(3, idUser);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0){
+                return true;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  false;
     }
 }

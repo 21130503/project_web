@@ -41,6 +41,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
+    <link rel="stylesheet" href="./css/common.css">
 </head>
 
 <body>
@@ -69,13 +70,13 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -132,17 +133,17 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="./index" class="nav-item nav-link">Trang chủ</a>
-                        <a href="./shop" class="nav-item nav-link">Cửa hàng</a>
-                        <a href="./donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
+                        <a href="index" class="nav-item nav-link">Trang chủ</a>
+                        <a href="shop" class="nav-item nav-link">Cửa hàng</a>
+                        <a href="donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="./cart" class="dropdown-item">Giỏ hàng</a>
-                                <a href="./checkout" class="dropdown-item active">Thanh toán</a>
+                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
+                                <a href="checkout" class="dropdown-item active">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
+                        <a href="contact" class="nav-item nav-link">Liên hệ</a>
                     </div>
 
                     <%--Phần login--%>
@@ -162,8 +163,9 @@
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>

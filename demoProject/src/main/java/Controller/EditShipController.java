@@ -44,20 +44,20 @@ public class EditShipController extends HttpServlet {
         System.out.println(type);
         if("odd".equals(type)){
             if(orderDAO.updateOddStatus(idOrder,newStatus)){
-                resp.sendRedirect("product");
+                resp.sendRedirect("orderManager");
                 return;
             }
         }
         else if("album".equals(type)){
             if(orderDAO.updateAlbumStatus(idOrder,newStatus)){
-                resp.sendRedirect("product");
+                resp.sendRedirect("orderManager");
                 return;
             }
         }
 
         else if("cart".equals(type)){
             if(orderDAO.updateCartStatus(idOrder, newStatus)){
-                resp.sendRedirect("product");
+                resp.sendRedirect("orderManager");
                 return;
             }
         }

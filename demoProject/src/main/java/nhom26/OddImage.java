@@ -11,6 +11,16 @@ public class OddImage {
     boolean isShow;
     String type = "odd";
 
+    String watermark;
+
+    public String getWatermark() {
+        return watermark;
+    }
+
+    public void setWatermark(String watermark) {
+        this.watermark = watermark;
+    }
+
     public String getType() {
         return type;
     }

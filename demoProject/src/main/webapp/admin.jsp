@@ -69,8 +69,8 @@
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal">Hữu Qúy</h5>
-                            <span>Email</span>
+                            <h5 class="mb-0 font-weight-normal"><%=user.getUsername()%></h5>
+                            <span><%=user.getEmail()%></span>
                         </div>
                     </div>
                     <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                             <div class="preview-item-content">
-                                <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
+                                <a href="./edit-infor" class="preview-subject ellipsis mb-1 text-small">Chỉnh sửa tài khoản</a>
                             </div>
                         </a>
                         <div class="dropdown-divider"></div>
@@ -93,9 +93,9 @@
                                     <i class="mdi mdi-onepassword  text-info"></i>
                                 </div>
                             </div>
-                            <div class="preview-item-content">
-                                <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>
-                            </div>
+<%--                            <div class="preview-item-content">--%>
+<%--                                <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>--%>
+<%--                            </div>--%>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item preview-item">
@@ -123,8 +123,8 @@
                 </a>
             </li>
             <li class="nav-item menu-items">
-                <a class="nav-link" data-toggle="collapse" href="./product" aria-expanded="false"
-                   aria-controls="ui-basic">
+                <a class="nav-link"  href="./product">
+
               <span class="menu-icon">
                 <i class="mdi mdi-laptop"></i>
               </span>
@@ -215,8 +215,8 @@
                 </button>
                 <ul class="navbar-nav w-100">
                     <li class="nav-item w-100">
-                        <form class="nav-link mt-2 mt-md-0 d-none d-lg-flex search">
-                            <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                        <form action="./search" method="get" class="nav-link mt-2 mt-md-0 d-none d-lg-flex search">
+                            <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                         </form>
                     </li>
                 </ul>
@@ -260,50 +260,50 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown border-left">
-                        <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
-                           data-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link count-indicator dropdown-toggle" id="" href="./messageAdmin"
+                           >
                             <i class="mdi mdi-email"></i>
                             <span class="count bg-success"></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                             aria-labelledby="messageDropdown">
-                            <h6 class="p-3 mb-0">Tin nhắn</h6>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="img/avatarAdmin.jpg" alt="image"
-                                         class="rounded-circle profile-pic">
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject ellipsis mb-1">Mark send you a message</p>
-                                    <p class="text-muted mb-0"> 1 Minutes ago </p>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="assets/images/faces/face2.jpg" alt="image"
-                                         class="rounded-circle profile-pic">
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject ellipsis mb-1">Cregh send you a message</p>
-                                    <p class="text-muted mb-0"> 15 Minutes ago </p>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="assets/images/faces/face3.jpg" alt="image"
-                                         class="rounded-circle profile-pic">
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject ellipsis mb-1">Profile picture updated</p>
-                                    <p class="text-muted mb-0"> 18 Minutes ago </p>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <p class="p-3 mb-0 text-center">4 new messages</p>
-                        </div>
+<%--                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"--%>
+<%--                             aria-labelledby="messageDropdown">--%>
+<%--                            <h6 class="p-3 mb-0">Tin nhắn</h6>--%>
+<%--                            <div class="dropdown-divider"></div>--%>
+<%--                            <a class="dropdown-item preview-item">--%>
+<%--                                <div class="preview-thumbnail">--%>
+<%--                                    <img src="img/avatarAdmin.jpg" alt="image"--%>
+<%--                                         class="rounded-circle profile-pic">--%>
+<%--                                </div>--%>
+<%--                                <div class="preview-item-content">--%>
+<%--                                    <p class="preview-subject ellipsis mb-1">Mark send you a message</p>--%>
+<%--                                    <p class="text-muted mb-0"> 1 Minutes ago </p>--%>
+<%--                                </div>--%>
+<%--                            </a>--%>
+<%--                            <div class="dropdown-divider"></div>--%>
+<%--                            <a class="dropdown-item preview-item">--%>
+<%--                                <div class="preview-thumbnail">--%>
+<%--                                    <img src="assets/images/faces/face2.jpg" alt="image"--%>
+<%--                                         class="rounded-circle profile-pic">--%>
+<%--                                </div>--%>
+<%--                                <div class="preview-item-content">--%>
+<%--                                    <p class="preview-subject ellipsis mb-1">Cregh send you a message</p>--%>
+<%--                                    <p class="text-muted mb-0"> 15 Minutes ago </p>--%>
+<%--                                </div>--%>
+<%--                            </a>--%>
+<%--                            <div class="dropdown-divider"></div>--%>
+<%--                            <a class="dropdown-item preview-item">--%>
+<%--                                <div class="preview-thumbnail">--%>
+<%--                                    <img src="assets/images/faces/face3.jpg" alt="image"--%>
+<%--                                         class="rounded-circle profile-pic">--%>
+<%--                                </div>--%>
+<%--                                <div class="preview-item-content">--%>
+<%--                                    <p class="preview-subject ellipsis mb-1">Profile picture updated</p>--%>
+<%--                                    <p class="text-muted mb-0"> 18 Minutes ago </p>--%>
+<%--                                </div>--%>
+<%--                            </a>--%>
+<%--                            <div class="dropdown-divider"></div>--%>
+<%--                            <p class="p-3 mb-0 text-center">4 new messages</p>--%>
+<%--                        </div>--%>
                     </li>
                     <li class="nav-item dropdown border-left">
                         <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
@@ -313,7 +313,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                              aria-labelledby="notificationDropdown">
-                            <h6 class="p-3 mb-0">Notifications</h6>
+                            <h6 class="p-3 mb-0">Thông báo</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
@@ -322,7 +322,7 @@
                                     </div>
                                 </div>
                                 <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Event today</p>
+                                    <p class="preview-subject mb-1">Sự kiện</p>
                                     <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event
                                         today </p>
                                 </div>
@@ -359,7 +359,7 @@
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
                                 <img class="img-xs rounded-circle" src="img/avatarAdmin.jpg" alt="">
-                                <p class="mb-0 d-none d-sm-block navbar-profile-name">Hữu Qúy</p>
+                                <p class="mb-0 d-none d-sm-block navbar-profile-name"><%=user.getUsername()%></p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
@@ -385,7 +385,7 @@
                                     </div>
                                 </div>
                                 <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Đăng xuất</p>
+                                    <p id="logout" class="preview-subject mb-1">Đăng xuất</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -1042,6 +1042,7 @@
 <!-- endinject -->
 <!-- Custom js for this page -->
 <script src="assets/js/dashboard.js"></script>
+<script src="./js/user.js"></script>
 <script>
     const btnBackup = document.querySelector("#backup")
     btnBackup.addEventListener("click",()=>{

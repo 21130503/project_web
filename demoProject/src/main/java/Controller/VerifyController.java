@@ -30,7 +30,7 @@ public class VerifyController extends HttpServlet {
             return;
         }
         SendEmail email = new SendEmail();
-        email.sendEmail(Security.EMAIL, Security.PASS,user.getEmail(),"Xác thực Email",String.valueOf(code));
+        email.sendEmail(Security.EMAIL, Security.PASS,user.getEmail(),"Xác thực Email","Vui lòng nhập mã "+String.valueOf(code)+" để xác thực email của bạn");
         req.getRequestDispatcher("VerifyEmail.jsp").forward(req,resp);
     }
 

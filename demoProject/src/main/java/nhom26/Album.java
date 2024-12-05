@@ -12,6 +12,15 @@ public class Album {
     String description;
     String belongTopic;
     String type = "album";
+    ArrayList<String> listWatermark;
+
+    public ArrayList<String> getListWatermark() {
+        return listWatermark;
+    }
+
+    public void setListWatermark(ArrayList<String> listWatermark) {
+        this.listWatermark = listWatermark;
+    }
 
     public String getType() {
         return type;

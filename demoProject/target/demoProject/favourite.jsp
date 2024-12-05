@@ -57,9 +57,7 @@
         Locale vnLocal = new Locale("vi", "VN");
         DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
     %>
-    <%
-        ArrayList<Topic> listTopic = request.getAttribute("listTopic") == null ? new ArrayList<Topic>() : (ArrayList<Topic>) request.getAttribute("listTopic");
-    %>
+
     <!-- Start - Phần dùng chung cho các trang dành cho user -->
     <!-- Topbar Start -->
     <div class="container-fluid">
@@ -70,16 +68,17 @@
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
-                <form action="">
+                <form action="./search" method="get">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                        <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                         <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
+                            <button type="submit" class="input-group-text bg-transparent text-primary">
                                 <i class="fa fa-search"></i>
-                            </span>
+                            </button>
                         </div>
                     </div>
                 </form>
+
             </div>
             <div class="col-lg-3 col-6 text-right">
                 <a href="./favourite" class="btn border" title="Yêu thích">

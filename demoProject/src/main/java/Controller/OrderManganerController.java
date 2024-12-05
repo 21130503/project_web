@@ -54,9 +54,16 @@ public class OrderManganerController extends HttpServlet {
             return;
         }
         else{
-            ArrayList<Order> orders  = new ArrayList<>(orderDAO.getAllOrderOddImageForByStatus(optionValue));
-            orders.addAll(orderDAO.getAllOrderAlbumForByStatus(optionValue));
-            orders.addAll(orderDAO.getAllCartOrderForByStatus(optionValue));
+            totalAlbumOrder = orderDAO
+                    .getCountOrderAlbumByStatus(optionValue);
+            totalCartOrder = orderDAO.getCountOrderOddByStatus(optionValue);
+            totalOddOrder = orderDAO.getCountOrderOddByStatus(optionValue);
+             max = Math.max(totalCartOrder,Math.max(totalOddOrder,totalAlbumOrder));
+             totalPage = (int) Math.ceil((double)max/recSize );
+
+            ArrayList<Order> orders  = new ArrayList<>(orderDAO.getAllOrderOddImageForByStatus(optionValue,page, recSize));
+            orders.addAll(orderDAO.getAllOrderAlbumForByStatus(optionValue,page,recSize));
+            orders.addAll(orderDAO.getAllCartOrderForByStatus(optionValue,page,recSize));
             req.setAttribute("listOrder", orders);
             req.setAttribute("currentPage", page);
             req.setAttribute("totalPage", totalPage);

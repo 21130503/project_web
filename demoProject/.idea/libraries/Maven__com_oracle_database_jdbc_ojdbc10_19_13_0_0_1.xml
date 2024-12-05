@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.oracle.database.jdbc:ojdbc10:19.13.0.0.1" type="java-imported" external-system-id="Maven">
+    <properties groupId="com.oracle.database.jdbc" artifactId="ojdbc10" version="19.13.0.0.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/oracle/database/jdbc/ojdbc10/19.13.0.0.1/ojdbc10-19.13.0.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/oracle/database/jdbc/ojdbc10/19.13.0.0.1/ojdbc10-19.13.0.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/oracle/database/jdbc/ojdbc10/19.13.0.0.1/ojdbc10-19.13.0.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

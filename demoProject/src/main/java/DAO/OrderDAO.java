@@ -23,12 +23,12 @@ public class OrderDAO {
     int currentYear = calendar.get(Calendar.YEAR);
     int currentMonth = calendar.get(Calendar.MONTH) + 1;
 
-    public boolean insertOrderOdd(int idOddImage, int idUser,String receiver ,String phoneNumber ,int quantity, double totalPrice, String address) {
+    public boolean insertOrderOdd(int idOddImage, int idUser,String receiver ,String phoneNumber ,int quantity, double totalPrice, String address,String file) {
         Connection connection = null;
         ProductDAO productDAO = new ProductDAO();
         try {
             connection = Connect.getConnection();
-            String sql = "insert into OddImageOrder(idOddImage, idUser,receiver, phoneNumber, quantity ,totalPrice, status, address, purchareDate) values(?,?,?,?,?,?,?,?,?)";
+            String sql = "insert into OddImageOrder(idOddImage, idUser,receiver, phoneNumber, quantity ,totalPrice, status, address, purchareDate, fileName) values(?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idOddImage);
             preparedStatement.setInt(2, idUser);
@@ -39,6 +39,7 @@ public class OrderDAO {
             preparedStatement.setString(7, "Đang chuẩn bị");
             preparedStatement.setString(8, address);
             preparedStatement.setDate(9, sqlDate);
+            preparedStatement.setString(10, file);
             int check = preparedStatement.executeUpdate();
             if (check > 0) {
                 return true;
@@ -50,12 +51,12 @@ public class OrderDAO {
         }
         return false;
     }
-    public boolean insertOrderAlbum(int idAlbum, int idUser,String receiver ,String phoneNumber ,int quantity, double totalPrice, String address) {
+    public boolean insertOrderAlbum(int idAlbum, int idUser,String receiver ,String phoneNumber ,int quantity, double totalPrice, String address,String file) {
         Connection connection = null;
         ProductDAO productDAO = new ProductDAO();
         try {
             connection = Connect.getConnection();
-            String sql = "insert into AlbumOrder(idAlbum, idUser,receiver, phoneNumber, quantity ,totalPrice, status, address, purchareDate) values(?,?,?,?,?,?,?,?,?)";
+            String sql = "insert into AlbumOrder(idAlbum, idUser,receiver, phoneNumber, quantity ,totalPrice, status, address, purchareDate,fileName) values(?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idAlbum);
             preparedStatement.setInt(2, idUser);
@@ -66,6 +67,7 @@ public class OrderDAO {
             preparedStatement.setString(7, "Đang chuẩn bị");
             preparedStatement.setString(8, address);
             preparedStatement.setDate(9, sqlDate);
+            preparedStatement.setString(10, file);
             int check = preparedStatement.executeUpdate();
             if (check > 0) {
                 return true;
@@ -82,7 +84,7 @@ public class OrderDAO {
         ProductDAO productDAO = new ProductDAO();
         try {
             connection = Connect.getConnection();
-            String sql = "insert into CartOrder(name,idUser,receiver, phoneNumber, quantity ,totalPrice, status, address, purchareDate) values(?,?,?,?,?,?,?,?,?)";
+            String sql = "insert into CartOrder(name,idUser,receiver, phoneNumber, quantity ,totalPrice, status, address, purchareDate,fileName) values(?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,name);
             preparedStatement.setInt(2, idUser);
@@ -104,16 +106,85 @@ public class OrderDAO {
         }
         return false;
     }
-    public ArrayList<Order> getAllOrderOddImageForUser(int idUser) {
+    public int getCountOrderOdd(int idUser){
+        Connection connection = null;
+        try{
+            connection =Connect.getConnection();
+            String sql = "select count(idUser) as total from oddImageOrder where idUser = ? and status not like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idUser);
+            preparedStatement.setString(2, "%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public int getCountOrderAlbum(int idUser){
+        Connection connection = null;
+        try{
+            connection =Connect.getConnection();
+            String sql = "select count(idUser) as total from albumOrder where idUser = ? and status not like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idUser);
+            preparedStatement.setString(2, "%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public int getCountOrderCart(int idUser){
+        Connection connection = null;
+        try{
+            connection =Connect.getConnection();
+            String sql = "select count(idUser) as total from cartOrder where idUser = ? and status not like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idUser);
+            preparedStatement.setString(2, "%Đã hủy%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("total");
+            }
+
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return 0;
+    }
+    public ArrayList<Order> getAllOrderOddImageForUser(int idUser, int  page, int recSize) {
         Connection connection = null;
         ArrayList<Order> listOrder = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
+        int startIndex  = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idOrder, idOddImage,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from oddImageOrder where idUser = ? and status not like  ?";
+            String sql = "select idOrder, idOddImage,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from oddImageOrder where idUser = ? and status not like  ? LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idUser);
             preparedStatement.setString(2,"%Đã hủy%");
+            preparedStatement.setInt(3,recSize);
+            preparedStatement.setInt(4,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();
@@ -137,16 +208,19 @@ public class OrderDAO {
         }
         return  listOrder;
     }
-    public ArrayList<Order> getAllOrderAlbumForUser(int idUser) {
+    public ArrayList<Order> getAllOrderAlbumForUser(int idUser,int page, int recSize) {
         Connection connection = null;
         ArrayList<Order> listOrder = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
+        int startIndex  = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idOrder, idAlbum,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from albumOrder where idUser = ? and status not like  ?";
+            String sql = "select idOrder, idAlbum,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from albumOrder where idUser = ? and status not like  ? LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idUser);
             preparedStatement.setString(2,"%Đã hủy%");
+            preparedStatement.setInt(3,recSize);
+            preparedStatement.setInt(4,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();
@@ -170,16 +244,19 @@ public class OrderDAO {
         }
         return  listOrder;
     }
-    public ArrayList<Order> getAllCartOrderForUser(int idUser) {
+    public ArrayList<Order> getAllCartOrderForUser(int idUser,int page, int recSize) {
         Connection connection = null;
         ArrayList<Order> listOrder = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
+        int startIndex  = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idOrder,name,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from CartOrder where idUser = ? and status not like  ?";
+            String sql = "select idOrder,name,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from CartOrder where idUser = ? and status not like  ? LIMIT ? OFFSET ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idUser);
             preparedStatement.setString(2,"%Đã hủy%");
+            preparedStatement.setInt(3,recSize);
+            preparedStatement.setInt(4,startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();
@@ -513,15 +590,66 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
         }
         return  listOrder;
     }
-    public ArrayList<Order> getAllOrderOddImageForByStatus(String status) {
+    public int getCountOrderOddByStatus(String status){
+        Connection connection ;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from oddImageOrder where status like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%"+status+"%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return  resultSet.getInt("total");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public int getCountOrderAlbumByStatus(String status){
+        Connection connection ;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from albumOrder where status like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%"+status+"%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return  resultSet.getInt("total");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public int getCountOrderCartByStatus(String status){
+        Connection connection ;
+        try{
+            connection = Connect.getConnection();
+            String sql = "select count(idOrder) as total from cartOrder where status like ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%"+status+"%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return  resultSet.getInt("total");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public ArrayList<Order> getAllOrderOddImageForByStatus(String status, int page, int recSize) {
         Connection connection = null;
         ArrayList<Order> listOrder = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
+        int startIndex  = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idOrder,idUser, idOddImage,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from oddImageOrder where status = ?";
+            String sql = "select idOrder,idUser, idOddImage,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice,fileName from oddImageOrder where status = ? limit ? offset ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,status);
+            preparedStatement.setInt(2, recSize);
+            preparedStatement.setInt(3, startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();
@@ -537,6 +665,7 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
                 order.setIdByer(resultSet.getInt("idUser"));
                 order.setType("odd");
                 order.setIdProduct(resultSet.getInt("idOddImage"));
+                order.setFileName(resultSet.getString("fileName"));
                 listOrder.add(order);
             }
         } catch (Exception e) {
@@ -546,20 +675,90 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
         }
         return  listOrder;
     }
-    public ArrayList<Order> getAllCartOrderForByStatus(String status) {
+    public ArrayList<Order> getAllOrderOddImagePrepare() {
         Connection connection = null;
         ArrayList<Order> listOrder = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
         try {
             connection = Connect.getConnection();
-            String sql = "select idOrder,idUser, name,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from CartOrder where status = ?";
+            String sql = "select idOrder,idUser, idOddImage,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice,fileName from oddImageOrder where status LIKE ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,status);
+            preparedStatement.setString(1,"%Đang chuẩn bị%");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();
                 order.setIdOrder(resultSet.getInt("idOrder"));
-                order.setNameProduct(resultSet.getString("idOddImage"));
+                order.setQuantity(resultSet.getInt("quantity"));
+                order.setAddress(resultSet.getString("address"));
+                order.setStatus(resultSet.getString("status"));
+                order.setPurchareDate(resultSet.getDate("purchareDate"));
+                order.setTotalPrice(resultSet.getInt("totalPrice"));
+                order.setReceiver(resultSet.getString("receiver"));
+                order.setPhoneNumber(resultSet.getString("phoneNumber"));
+                order.setIdByer(resultSet.getInt("idUser"));
+                order.setType("odd");
+
+                order.setIdProduct(resultSet.getInt("idOddImage"));
+                order.setFileName(resultSet.getString("fileName"));
+                listOrder.add(order);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return  listOrder;
+    }
+    public ArrayList<Order> getAllOrderAlbumImagePrepare() {
+        Connection connection = null;
+        ArrayList<Order> listOrder = new ArrayList<>();
+        ProductDAO productDAO = new ProductDAO();
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idOrder,idUser, idAlbum,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice,fileName from albumorder where status  LIKE ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,"%Đang chuẩn bị%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setIdOrder(resultSet.getInt("idOrder"));
+                order.setQuantity(resultSet.getInt("quantity"));
+                order.setAddress(resultSet.getString("address"));
+                order.setStatus(resultSet.getString("status"));
+                order.setPurchareDate(resultSet.getDate("purchareDate"));
+                order.setTotalPrice(resultSet.getInt("totalPrice"));
+                order.setReceiver(resultSet.getString("receiver"));
+                order.setPhoneNumber(resultSet.getString("phoneNumber"));
+                order.setIdByer(resultSet.getInt("idUser"));
+                order.setFileName(resultSet.getString("fileName"));
+                order.setType("album");
+                order.setIdProduct(resultSet.getInt("idAlbum"));
+                listOrder.add(order);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return  listOrder;
+    }
+    public ArrayList<Order> getAllCartOrderForByStatus(String status,int page, int recSize) {
+        Connection connection = null;
+        ArrayList<Order> listOrder = new ArrayList<>();
+        ProductDAO productDAO = new ProductDAO();
+        int startIndex  = (page-1)*recSize;
+        try {
+            connection = Connect.getConnection();
+            String sql = "select idOrder,idUser, name,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from CartOrder where status = ? limit ? offset ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,status);
+            preparedStatement.setInt(2, recSize);
+            preparedStatement.setInt(3, startIndex);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setIdOrder(resultSet.getInt("idOrder"));
+                order.setNameProduct(resultSet.getString("name"));
                 order.setQuantity(resultSet.getInt("quantity"));
                 order.setAddress(resultSet.getString("address"));
                 order.setStatus(resultSet.getString("status"));
@@ -569,7 +768,6 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
                 order.setPhoneNumber(resultSet.getString("phoneNumber"));
                 order.setIdByer(resultSet.getInt("idUser"));
                 order.setType("cart");
-                order.setIdProduct(resultSet.getInt("idOddImage"));
                 listOrder.add(order);
             }
         } catch (Exception e) {
@@ -579,15 +777,18 @@ public ArrayList<Order> getAllOrderOddImageForAdmin(int page,int recSize) {
         }
         return  listOrder;
     }
-    public ArrayList<Order> getAllOrderAlbumForByStatus(String status) {
+    public ArrayList<Order> getAllOrderAlbumForByStatus(String status, int page, int recSize) {
         Connection connection = null;
         ArrayList<Order> listOrder = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
+        int startIndex  = (page-1)*recSize;
         try {
             connection = Connect.getConnection();
-            String sql = "select idOrder,idUser, idAlbum,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from albumOrder where status = ?";
+            String sql = "select idOrder,idUser, idAlbum,receiver, phoneNumber, quantity, address, status , purchareDate ,totalPrice from albumOrder where status = ? limit ? offset ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,status);
+            preparedStatement.setInt(2, recSize);
+            preparedStatement.setInt(3, startIndex);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();

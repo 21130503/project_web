@@ -52,6 +52,19 @@
             <button type="submit">Đăng kí</button>
         </div>
     </form>
+    <div class="athoner-register">
+        <span>Hoặc đăng kí với</span>
+        <ul class="list">
+<%--            <li class="item"><a href="" class="link">--%>
+<%--                <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>--%>
+<%--            </a></li>--%>
+<%--            <li class="item"><a href="" class="link">--%>
+<%--                <img src="./asset/gg.png" alt="" class="img-logo">--%>
+<%--            </a></li>--%>
+        </ul>
+
+
+    </div>
     <div class="signin mt-8">
         <span>Bạn đã có tài khoản ?</span>
         <a href="login.jsp" class="none_decorate">Đăng nhập</a>
@@ -103,45 +116,45 @@
     <%--            }--%>
     <%--        })--%>
     <%--    </script>--%>
-    <script>
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId      : '1288411131843645',
-                cookie     : true,
-                xfbml      : true,
-                version    : 'v13.0'
-            });
+<%--    <script>--%>
+<%--        window.fbAsyncInit = function() {--%>
+<%--            FB.init({--%>
+<%--                appId      : '1288411131843645',--%>
+<%--                cookie     : true,--%>
+<%--                xfbml      : true,--%>
+<%--                version    : 'v13.0'--%>
+<%--            });--%>
 
-            FB.AppEvents.logPageView();
-        };
-    </script>
-    <script>
-        function checkLoginState() {
-            FB.getLoginStatus(function(response) {
-                statusChangeCallback(response);
-            });
-        }
+<%--            FB.AppEvents.logPageView();--%>
+<%--        };--%>
+<%--    </script>--%>
+<%--    <script>--%>
+<%--        function checkLoginState() {--%>
+<%--            FB.getLoginStatus(function(response) {--%>
+<%--                statusChangeCallback(response);--%>
+<%--            });--%>
+<%--        }--%>
 
-        function statusChangeCallback(response) {
-            if (response.status === 'connected') {
-                // Người dùng đã đăng nhập vào ứng dụng và đã cho phép
-                // Truy cập thông tin với quyền được yêu cầu.
-                console.log('Logged in and authenticated');
-                getUserInfo();
-            } else {
-                // Người dùng chưa đăng nhập vào ứng dụng hoặc đã hủy đăng nhập.
-                console.log('Not authenticated');
-            }
-        }
+<%--        function statusChangeCallback(response) {--%>
+<%--            if (response.status === 'connected') {--%>
+<%--                // Người dùng đã đăng nhập vào ứng dụng và đã cho phép--%>
+<%--                // Truy cập thông tin với quyền được yêu cầu.--%>
+<%--                console.log('Logged in and authenticated');--%>
+<%--                getUserInfo();--%>
+<%--            } else {--%>
+<%--                // Người dùng chưa đăng nhập vào ứng dụng hoặc đã hủy đăng nhập.--%>
+<%--                console.log('Not authenticated');--%>
+<%--            }--%>
+<%--        }--%>
 
-        function getUserInfo() {
-            FB.api('/me', { fields: 'id,name,email' }, function(response) {
-                console.log('User Info:', response);
-                // Gửi thông tin người dùng đến máy chủ để xử lý đăng ký hoặc đăng nhập.
-                // Implement logic for registration or login here.
-            });
-        }
-    </script>
+<%--        function getUserInfo() {--%>
+<%--            FB.api('/me', { fields: 'id,name,email' }, function(response) {--%>
+<%--                console.log('User Info:', response);--%>
+<%--                // Gửi thông tin người dùng đến máy chủ để xử lý đăng ký hoặc đăng nhập.--%>
+<%--                // Implement logic for registration or login here.--%>
+<%--            });--%>
+<%--        }--%>
+<%--    </script>--%>
 
 </body>
 

@@ -65,13 +65,13 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -192,7 +192,7 @@
     <input type="hidden" name="action" value="addDiscount" required>
     <input type="text" name="code" placeholder="Xin nhập mã từ 001-999" required lang="vi">
     <input type="text" name="description" placeholder="Mô tả - ví dụ: Giảm giá 10%" required lang="vi">
-    <input type="number" name="discountValue" placeholder="Giá trị giảm - ví dụ: 10" min="1" max="100" required
+    <input style="width: 16%" type="number" name="discountValue" placeholder="Giá trị giảm - ví dụ: 10" min="1" max="100" required
            lang="vi">
     <input type="date" name="expiryDate" placeholder="Ngày hết hạn" required lang="vi">
     <input type="number" name="count" placeholder="Số lần sử dụng còn lại" min="0" required lang="vi">

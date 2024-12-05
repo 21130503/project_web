@@ -15,7 +15,6 @@
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html lang="en">
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <head>
     <meta charset="utf-8">
@@ -48,7 +47,6 @@
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
     <link rel="stylesheet" href="./css/common.css">
-
 </head>
 
 <body id="listProduct">
@@ -107,13 +105,13 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -161,7 +159,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
+                <a href="index" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -171,15 +169,15 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a href="index" class="nav-item nav-link">Trang chủ</a>
                         <a href="shop" class="nav-item nav-link active">Cửa hàng</a>
-                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
+                        <a href="donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">Trang</a>
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="cart" class="dropdown-item ">Giỏ hàng</a>
+                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
                                 <a href="checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
+                        <a href="contact" class="nav-item nav-link">Liên hệ</a>
                     </div>
 
                     <%--Phần login--%>
@@ -201,6 +199,7 @@
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
                             <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
@@ -252,27 +251,27 @@
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="all"
                                id="price-all" <%= "all".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-all">Tất cả loại giá</label>
+                        <label class="custom-control-label" for="price-all">Tất cả</label>
                     </div>
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="0-100"
                                id="price-1" <%= "0-100".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-1">Dưới 100.000 vnđ</label>
+                        <label class="custom-control-label" for="price-1">Dưới 100.000 VNĐ</label>
                     </div>
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="100-300"
                                id="price-2" <%= "100-300".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-2">100k đến 300k vnđ</label>
+                        <label class="custom-control-label" for="price-2">100 VNĐ - 300 VNĐ</label>
                     </div>
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="300-600"
                                id="price-3" <%= "300-600".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-3">300k đến 600k vnđ</label>
+                        <label class="custom-control-label" for="price-3">300 VNĐ - 600 VNĐ</label>
                     </div>
                     <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
                         <input type="radio" class="custom-control-input" name="priceRange" value="600-1000000"
                                id="price-4" <%= "600-1000000".equals(selectedPriceRange) ? "checked" : "" %>>
-                        <label class="custom-control-label" for="price-4">600k vnđ trở lên</label>
+                        <label class="custom-control-label" for="price-4">Trên 600 VNĐ</label>
                     </div>
                     <button type="submit" class="btn btn-primary">Lọc</button>
                 </div>
@@ -286,7 +285,7 @@
             <div class="row pb-3">
                 <div class="col-12 pb-1">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <form action="">
+                        <form action="./search">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                                 <div class="input-group-append">
@@ -547,6 +546,7 @@
         })
     })
 </script>
+<script src="./js/user.js"></script>
 </body>
 
 </html>

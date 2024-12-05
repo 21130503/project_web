@@ -92,13 +92,13 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -116,6 +116,9 @@
             </a>
             <a href="./product" class="btn border">
                 <i class="fa-brands fa-product-hunt text-primary"></i>
+            </a>
+            <a href="./trash" class="btn border">
+                <i class="fa-solid fa-trash-can"></i>
             </a>
         </div>
     </div>
@@ -221,7 +224,7 @@
                     String title = showOdd ? "Ẩn" : "Bán lại";
                 %>
                 <tr>
-                    <td class="text-left"><img class="mr-5" src=<%=odd.getImage()%> alt=""
+                    <td class="text-left"><img class="mr-5" src=<%= odd.getWatermark() !=null ? odd.getWatermark():  odd.getImage()%> alt=""
                                                style="width: 50px;"> <%=odd.getName()%>
                     </td>
                     <td class="align-middle"><%=vndFormat.format(odd.getPrice())%>
@@ -509,7 +512,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ẩn chủ đề</h5>
+                <h5 class="modal-title">Ẩn ảnh</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -528,7 +531,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ẩn chủ đề</h5>
+                <h5 class="modal-title">Ẩn album</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

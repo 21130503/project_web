@@ -5,6 +5,8 @@ import DAO.OrderDAO;
 import DAO.ProductDAO;
 import DAO.TopicDAO;
 import Regex.Regex;
+import nhom26.Config;
+import nhom26.Security;
 import nhom26.User;
 
 import javax.servlet.ServletException;
@@ -13,7 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.io.*;
+import java.rmi.server.UID;
+import java.util.UUID;
 
 @WebServlet(name = "OrderController", value = "/order")
 public class OrderController extends HttpServlet {
@@ -38,6 +42,8 @@ public class OrderController extends HttpServlet {
         OrderDAO orderDAO = new OrderDAO();
         ProductDAO productDAO = new ProductDAO();
         Regex regex = new Regex();
+        Config config = new Config();
+        Security security = new Security();
         if (user == null) {
             resp.sendRedirect("login.jsp");
             return;
@@ -61,11 +67,11 @@ public class OrderController extends HttpServlet {
         }
         DiscountDAO discountDAO = new DiscountDAO();
 
-        double discount = 1.0;
+        double discount = 0;
         if (discountDAO.getDiscountByCode(code) != null) {
             discount = discountDAO.getDiscountByCode(code).getDiscountValue();
         } else {
-            discount = 1.0;
+            discount = 0;
         }
         HttpSession session1 = req.getSession();
         String URL = "/demoProject_war/detail?type=" + type + "&id=" + idProduct;
@@ -109,14 +115,40 @@ public class OrderController extends HttpServlet {
             return;
         }
         double totalPrice = ((Integer.parseInt(quantity) * Integer.parseInt(price) )- (Integer.parseInt(quantity) * Integer.parseInt(price) * discount)) + 30000;
+        File directory = new File(req.getServletContext().getRealPath("/orders/"));
+
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        if(!directory.exists()) directory.mkdirs();
+        String file = directory+"/order" + UUID.randomUUID().toString() + ".txt";
+        OutputStream outputStream = new FileOutputStream(file);
+        BufferedOutputStream bos = new BufferedOutputStream(outputStream);
+        bos.write(("idProduct: " + idProduct + "\n").getBytes());
+        bos.write(("userId: " + user.getId() + "\n").getBytes());
+        bos.write(("receiver: " + receiver + "\n").getBytes());
+        bos.write(("phoneNumber: " + phoneNumber + "\n").getBytes());
+        bos.write(("quantity: " + quantity + "\n").getBytes());
+        bos.write(("totalPrice: " + totalPrice + "\n").getBytes());
+        bos.write(("address: " + address + "\n").getBytes());
+        bos.write(("type: " + type + "\n").getBytes());
+        bos.flush();
+        bos.close();
+        try {
+            security.AESEncryptFile(file,config.getKeyAES());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Order saved successfully at: " + file);
+
         if ("odd".equals(type)) {
-            if (orderDAO.insertOrderOdd(Integer.parseInt(idProduct), user.getId(), receiver, phoneNumber, Integer.parseInt(quantity), totalPrice, address)) {
+            if (orderDAO.insertOrderOdd(Integer.parseInt(idProduct), user.getId(), receiver, phoneNumber, Integer.parseInt(quantity), totalPrice, address,file)) {
                 resp.sendRedirect("./donhangcuaban");
                 return;
             }
         }
         if ("album".equals(type)) {
-            if (orderDAO.insertOrderAlbum(Integer.parseInt(idProduct), user.getId(), receiver, phoneNumber, Integer.parseInt(quantity), totalPrice, address)) {
+            if (orderDAO.insertOrderAlbum(Integer.parseInt(idProduct), user.getId(), receiver, phoneNumber, Integer.parseInt(quantity), totalPrice, address,file)) {
                 resp.sendRedirect("./donhangcuaban");
                 return;
             }

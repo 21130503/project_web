@@ -4,6 +4,7 @@ import DAO.ProductDAO;
 import DAO.TopicDAO;
 import Upload.UploadFile;
 import nhom26.User;
+import watermark.CreateWaterMark;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -58,6 +59,14 @@ public class AlbumController extends HttpServlet {
        UploadFile uploadFile = new UploadFile();
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
+        int totalAlbum = productDAO.totalAlbum();
+        int totalOdd = productDAO.totalOdd();
+        int totalPage = 0;
+        if (totalAlbum > totalOdd) {
+            totalPage = (int) Math.ceil((double) totalAlbum / 5);
+        } else {
+            totalPage = (int) Math.ceil((double) totalOdd / 5);
+        }
         String nameTopic = req.getParameter("nameTopic");
         String nameAlbum = req.getParameter("nameAlbum");
         String price = req.getParameter("price");
@@ -69,6 +78,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -77,6 +88,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -85,6 +98,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -93,6 +108,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -101,6 +118,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -109,6 +128,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -117,6 +138,8 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
@@ -125,9 +148,12 @@ public class AlbumController extends HttpServlet {
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
             return;
         }
+        CreateWaterMark createWaterMark = new CreateWaterMark();
         for (Part part : req.getParts()) {
             String fileName = uploadFile.extractFileName(part);
             // Tạo một tên tệp duy nhất
@@ -135,23 +161,32 @@ public class AlbumController extends HttpServlet {
            if(fileName.length() >3 || !fileName.isEmpty()){
                listFileNames.add(fileName);
                try {
-                   part.write(uploadFile.getFolderUpload().getAbsolutePath() + File.separator + fileName);
+//                   part.write(uploadFile.getFolderUpload(req).getAbsolutePath()+ "/" + fileName);
+                   File uploadedFile = new File(uploadFile.getFolderUpload(req).getAbsolutePath() + "/" + fileName);
+                   part.write(uploadedFile.getAbsolutePath());
+
+                   // Write file to the watermark folder
+                   File watermarkFile = new File(createWaterMark.createFolderWaterMark(req).getAbsolutePath() + "/" + fileName);
+                   part.write(watermarkFile.getAbsolutePath());
+
+                   String watermarkText = "Water";
+                   createWaterMark.addTextWatermark(watermarkText, uploadedFile, watermarkFile);
                } catch (IOException e) {
                    e.printStackTrace();
+               } catch (Exception e) {
+                   throw new RuntimeException(e);
                }
            }
 
 
-        }
-
-        for (String file : listFileNames) {
-            System.out.println("Ảnh: " + file);
         }
         if(listFileNames.size() ==0){
             req.setAttribute("errImageForAlbum", "Vui lòng thêm ảnh cho album");
             req.setAttribute("listAlbum", productDAO.getAllAlbum(1,5));
             req.setAttribute("listOddImage", productDAO.getAllOddImage(1,5));
             req.setAttribute("listNamesTopic", topicDAO.getAllNamesTopic());
+            req.setAttribute("currentPage", 1);
+            req.setAttribute("totalPage", totalPage);
             req.getRequestDispatcher("quanlisanpham.jsp").forward(req, resp);
         }
         if(productDAO.insertAlbum(nameTopic,nameAlbum,description,Integer.parseInt(price),Integer.parseInt(discount),topicDAO.checkTopicShow(nameTopic),listFileNames)){

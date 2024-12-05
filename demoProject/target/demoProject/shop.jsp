@@ -10,11 +10,11 @@
 <%@ page import="DAO.OrderDAO" %>
 <%@ page import="favourite.Favourite" %>
 <%@ page import="cart.Cart" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html lang="en">
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <head>
     <meta charset="utf-8">
@@ -47,7 +47,6 @@
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/logo.css">
     <link rel="stylesheet" href="./css/common.css">
-
 </head>
 
 <body id="listProduct">
@@ -69,17 +68,34 @@
 %>
 <%
     Favourite favourite = (Favourite) session.getAttribute("favourite");
-    if(favourite ==null) favourite = new Favourite();
+    if (favourite == null) favourite = new Favourite();
 
     Cart cart = (Cart) session.getAttribute("cart");
-    if(cart ==null) cart = new Cart();
+    if (cart == null) cart = new Cart();
 %>
-<%
-//  Pagination
-    int totalPage = (int) request.getAttribute("totalPage");
-    int currentPage = (int) request.getAttribute("currentPage");
 
+
+<%--<%--%>
+<%--    //  Pagination--%>
+<%--    int totalPage = (int) request.getAttribute("totalPage");--%>
+<%--    int currentPage = (int) request.getAttribute("currentPage");--%>
+<%--%>--%>
+
+
+<%
+    // Phân trang
+    int totalPage = 0;
+    int currentPage = 1;
+
+    if (request.getAttribute("totalPage") != null) {
+        totalPage = (Integer) request.getAttribute("totalPage");
+    }
+    if (request.getAttribute("currentPage") != null) {
+        currentPage = (Integer) request.getAttribute("currentPage");
+    }
 %>
+
+
 <!-- Topbar Start -->
 <div class="container-fluid">
     <div class="row align-items-center py-3 px-xl-5">
@@ -89,13 +105,13 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -143,7 +159,7 @@
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
+                <a href="index" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -153,15 +169,15 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a href="index" class="nav-item nav-link">Trang chủ</a>
                         <a href="shop" class="nav-item nav-link active">Cửa hàng</a>
-                        <a href="donhangcuaban" class="nav-item nav-link ">Đơn hàng của bạn</a>
+                        <a href="donhangcuaban" class="nav-item nav-link">Đơn hàng của bạn</a>
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">Trang</a>
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="cart" class="dropdown-item ">Giỏ hàng</a>
+                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
                                 <a href="checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
+                        <a href="contact" class="nav-item nav-link">Liên hệ</a>
                     </div>
 
                     <%--Phần login--%>
@@ -183,6 +199,7 @@
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
                             <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
@@ -217,41 +234,48 @@
         <!-- Shop Sidebar Start -->
         <div class="col-lg-3 col-md-12">
             <!-- Price Start -->
-            <div class="border-bottom mb-4 pb-4">
-                <h5 class="font-weight-semi-bold mb-4">Lọc theo giá</h5>
-                <form>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" checked id="price-all">
-                        <label class="custom-control-label" for="price-all">Tất cả loại giá</label>
-                        <span class="badge border font-weight-normal">1.000.000</span>
+            <%
+                //Check cho các phần lọc được chọn
+                String selectedPriceRange = (String) request.getAttribute("selectedPriceRange");
+                if (selectedPriceRange == null) {
+                    selectedPriceRange = "all";
+                }
+            %>
+
+            <%-- Chức năng lọc sản phẩm theo giá tiền --%>
+            <form action="shop" method="GET">
+                <%-- Xét value:  100 -> 100 000 vnd --%>
+                <input type="hidden" name="filterShop" value="filterShop">
+                <div class="border-bottom mb-4 pb-4">
+                    <h5 class="font-weight-semi-bold mb-4">Lọc theo giá</h5>
+                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                        <input type="radio" class="custom-control-input" name="priceRange" value="all"
+                               id="price-all" <%= "all".equals(selectedPriceRange) ? "checked" : "" %>>
+                        <label class="custom-control-label" for="price-all">Tất cả</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="price-1">
-                        <label class="custom-control-label" for="price-1">0 - 100.000</label>
-                        <span class="badge border font-weight-normal">150.000</span>
+                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                        <input type="radio" class="custom-control-input" name="priceRange" value="0-100"
+                               id="price-1" <%= "0-100".equals(selectedPriceRange) ? "checked" : "" %>>
+                        <label class="custom-control-label" for="price-1">Dưới 100.000 VNĐ</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="price-2">
-                        <label class="custom-control-label" for="price-2">100.000 - 200.000</label>
-                        <span class="badge border font-weight-normal">295.000</span>
+                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                        <input type="radio" class="custom-control-input" name="priceRange" value="100-300"
+                               id="price-2" <%= "100-300".equals(selectedPriceRange) ? "checked" : "" %>>
+                        <label class="custom-control-label" for="price-2">100 VNĐ - 300 VNĐ</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="price-3">
-                        <label class="custom-control-label" for="price-3">200.000 - 300.000</label>
-                        <span class="badge border font-weight-normal">246.000</span>
+                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                        <input type="radio" class="custom-control-input" name="priceRange" value="300-600"
+                               id="price-3" <%= "300-600".equals(selectedPriceRange) ? "checked" : "" %>>
+                        <label class="custom-control-label" for="price-3">300 VNĐ - 600 VNĐ</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="price-4">
-                        <label class="custom-control-label" for="price-4">300.000 - 400.000</label>
-                        <span class="badge border font-weight-normal">345.000 </span>
+                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                        <input type="radio" class="custom-control-input" name="priceRange" value="600-1000000"
+                               id="price-4" <%= "600-1000000".equals(selectedPriceRange) ? "checked" : "" %>>
+                        <label class="custom-control-label" for="price-4">Trên 600 VNĐ</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="price-5">
-                        <label class="custom-control-label" for="price-5">400.000 - 500.000 </label>
-                        <span class="badge border font-weight-normal">450.000</span>
-                    </div>
-                </form>
-            </div>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </div>
+            </form>
             <!-- Price End -->
         </div>
 
@@ -261,7 +285,7 @@
             <div class="row pb-3">
                 <div class="col-12 pb-1">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <form action="">
+                        <form action="./search">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
                                 <div class="input-group-append">
@@ -284,10 +308,17 @@
                         </div>
                     </div>
                 </div>
-
-                <%--Hiển thị ảnh và thêm vào giỏ hàng--%>
-                <%if (listOddImage.size() > 0) {%>
-                <% for (OddImage oddImage : listOddImage) { %>
+                <%
+                    List<Album> filteredAlbums = (List<Album>) request.getAttribute("filteredAlbums");
+                    List<OddImage> filteredOddImages = (List<OddImage>) request.getAttribute("filteredOddImages");
+                    //Kiểm tra có đang lọc sản phẩm không
+                    boolean isFiltered = (filteredAlbums != null && filteredOddImages != null);
+                    List<OddImage> displayedOddImages = isFiltered ? filteredOddImages : listOddImage;
+                    List<Album> displayedAlbums = isFiltered ? filteredAlbums : listAlbum;
+                    // Hiển thị ảnh
+                    if (displayedOddImages != null && displayedOddImages.size() > 0) {
+                        for (OddImage oddImage : displayedOddImages) {
+                %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
@@ -312,21 +343,26 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
+                            <a href="./detail?type=odd&id=<%=oddImage.getIdOddImage()%>"
+                               class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
 
-                            <button  title="<%=oddImage.getType()%>" value="<%=oddImage.getIdOddImage()%>" class="btn btn-sm text-dark p-0 addCart"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                                vào giỏ</button>
+                            <button title="<%=oddImage.getType()%>" value="<%=oddImage.getIdOddImage()%>"
+                                    class="btn btn-sm text-dark p-0 addCart"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                                vào giỏ
+                            </button>
 
                         </div>
                     </div>
                 </div>
-                <% }%>
-                <%}%>
-
-                <%--Hiển thị album và thêm nó vào giỏ hàng--%>
-                <%if (listAlbum.size() > 0) {%>
-                <% for (Album album : listAlbum) { %>
+                <%
+                        }
+                    }
+                    // Hiển thị album
+                    if (displayedAlbums != null && displayedAlbums.size() > 0) {
+                        for (Album album : displayedAlbums) {
+                %>
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
@@ -348,19 +384,23 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem
+                            <a href="./detail?type=album&id=<%=album.getIdAlbum()%>" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-eye text-primary mr-1"></i>Xem
                                 chi tiết</a>
 
-                            <button  title="<%=album.getType()%>" value="<%=album.getIdAlbum()%>"
-                                     href="" class="btn btn-sm text-dark p-0 addCart"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
-                                vào giỏ</button>
+                            <button title="<%=album.getType()%>" value="<%=album.getIdAlbum()%>"
+                                    href="" class="btn btn-sm text-dark p-0 addCart"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Thêm
+                                vào giỏ
+                            </button>
 
                         </div>
                     </div>
                 </div>
-                <% }%>
-                <%}%>
-
+                <%
+                        }
+                    }
+                %>
                 <div class="col-12 pb-1">
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center mb-3">
@@ -370,18 +410,24 @@
                                     <span class="sr-only">Quay lại</span>
                                 </a>
                             </li>
-                            <%for(int i=1 ; i<=totalPage;i++){%>
-                            <%String s = currentPage==i ? "active": "";%>
-                            <li class="page-item ml-1 <%=s%>"><a class="page-link" href="./shop?page=<%=i%>"><%=i%></a></li>
+
+                            <%-- Phân trang cho cả khi lọc và ko lọc sản phẩm --%>
+                            <%for (int i = 1; i <= totalPage; i++) {%>
+                            <% String s = currentPage == i ? "active" : ""; %>
+                            <li class="page-item ml-1 <%= s %>">
+                                <a class="page-link"
+                                   href="./shop?page=<%= i %>&filterShop=filterShop&priceRange=<%= selectedPriceRange %>"><%= i %>
+                                </a>
+                            </li>
                             <%}%>
-<%--                            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
-<%--                            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
+
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Tiếp</span>
                                 </a>
                             </li>
+
                         </ul>
                     </nav>
                 </div>
@@ -475,11 +521,11 @@
     const btnCart = document.querySelectorAll(".addCart")
     console.log(btnCart)
     const arrBtn = Array.from(btnCart);
-    arrBtn.forEach((item)=>{
+    arrBtn.forEach((item) => {
         console.log(item)
         const type = item.title;
         const id = item.value
-        item.addEventListener("click",()=>{
+        item.addEventListener("click", () => {
             const xhr = new XMLHttpRequest();
             const url = `http://localhost:8080/demoProject_war/cart?type=${type}&idProduct=${id}`;
 
@@ -500,6 +546,7 @@
         })
     })
 </script>
+<script src="./js/user.js"></script>
 </body>
 
 </html>

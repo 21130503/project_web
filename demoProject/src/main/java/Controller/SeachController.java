@@ -1,12 +1,15 @@
 package Controller;
 
 import DAO.ProductDAO;
+import DAO.TopicDAO;
+import nhom26.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(name = "SearchController" , value = "/search")
@@ -18,8 +21,18 @@ public class SeachController extends HttpServlet {
         String param = req.getParameter("q");
         ProductDAO productDAO = new ProductDAO();
         req.setAttribute("param", param);
-        req.setAttribute("listOddImage", productDAO.searchOddImageWithParam(param));
-        req.setAttribute("listAlbum", productDAO.searchAlbumWithParam(param));
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if(user== null || !user.isAdmin()){
+            req.setAttribute("listOddImage", productDAO.searchOddImageWithParam(param));
+            req.setAttribute("listAlbum", productDAO.searchAlbumWithParam(param));
+        }
+        else if(user.isAdmin()){
+            req.setAttribute("listOddImage", productDAO.searchOddImageWithParamForAdmin(param));
+            req.setAttribute("listAlbum", productDAO.searchAlbumWithParamForAdmin(param));
+        }
+        TopicDAO topicDAO = new TopicDAO();
+        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.getRequestDispatcher("search.jsp").forward(req,resp);
 
     }

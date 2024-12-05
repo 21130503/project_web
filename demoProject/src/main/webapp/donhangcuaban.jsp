@@ -6,6 +6,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="cart.Cart" %>
 <%@ page import="favourite.Favourite" %>
+<%@ page import="nhom26.Notification" %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -62,9 +63,15 @@
     if(cart ==null) cart = new Cart();
     if(favourite == null) favourite= new Favourite();
 %>
+<%
+    int totalPage = (int) request.getAttribute("totalPage");
+    int currentPage = (int) request.getAttribute("currentPage");
+%>
+<% ArrayList<Notification> notifications = (ArrayList<Notification>) request.getAttribute("notifications") ;%>
 <!-- Start - Phần dùng chung cho các trang dành cho user -->
 <!-- Topbar Start -->
 <div class="container-fluid">
+
     <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
             <a href="./index" class="text-decoration-none">
@@ -72,23 +79,23 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="./search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm">
                     <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
-                                <i class="fa fa-search"></i>
-                            </span>
+                        <button type="submit" class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
-            <a href="./favourite" class="btn border" title="Yêu thích">
+            <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge"><%=favourite.total()%></span>
             </a>
-            <a href="./cart" class="btn border" title="Giỏ hàng">
+            <a href="./cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge"><%=cart.total()%></span>
             </a>
@@ -110,26 +117,24 @@
             </a>
             <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
                  id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
+
+                <%--Phần danh mục hiển thị các chủ đề--%>
                 <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-
-                    <%--Phần danh mục hiển thị các chủ đề--%>
-                    <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                        <%if (listTopic.size() == 0) {%>
-                        <p>Chưa có topic nào</p>
-                        <%} else {%>
-                        <%for (Topic topic : listTopic) {%>
-                        <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
-                        </a>
-                        <%}%>
-                        <%}%>
-                    </div>
-
+                    <%if (listTopic.size() == 0) {%>
+                    <p>Chưa có topic nào</p>
+                    <%} else {%>
+                    <%for (Topic topic : listTopic) {%>
+                    <a href="/topic?q=<%=topic.getName()%>" class="nav-item nav-link"><%=topic.getName()%>
+                    </a>
+                    <%}%>
+                    <%}%>
                 </div>
+
             </nav>
         </div>
         <div class="col-lg-9">
             <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="./index" class="text-decoration-none d-block d-lg-none">
+                <a href="index" class="text-decoration-none d-block d-lg-none">
                     <h1 class="logo">Nhóm 26</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -143,11 +148,11 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="./cart" class="dropdown-item">Giỏ hàng</a>
-                                <a href="./checkout" class="dropdown-item">Thanh toán</a>
+                                <a href="cart" class="dropdown-item">Giỏ hàng</a>
+                                <a href="checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="contact" class="nav-item nav-link ">Liên hệ</a>
+                        <a href="contact" class="nav-item nav-link">Liên hệ</a>
                     </div>
 
                     <%--Phần login--%>
@@ -158,6 +163,22 @@
                     </div>
                     <%} else { %>
                     <div class="navbar-nav ml-auto py-0 position-relative">
+                        <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">
+                            <i class="fa-regular fa-bell"></i>
+                        </p>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <%
+                                for (Notification notification : notifications) {
+                            %>
+                            <%if("order".equals(notification.getType())){%>
+                                <a href="./donhangcuaban" class="dropdown-item"><%=notification.getContent()%></a>
+                            <%}%>
+                            <%
+                                }
+                            %>
+                        </div>
+                    </div>
+                    <div class="navbar-nav ml-auto py-0 position-relative">
                         <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
                         </p>
                         <div class="dropdown-menu rounded-0 m-0">
@@ -167,8 +188,9 @@
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
-                            <a href="./orderManager" class="dropdown-item">Quản lí đơn hàng</a>
+                            <a href="./order" class="dropdown-item">Quản lí đơn hàng</a>
                             <a href="./user" class="dropdown-item">Quản lí người dùng</a>
+                            <a href="./discountAdmin" class="dropdown-item">Quản lí mã giảm giá</a>
                             <%}%>
                             <button class="dropdown-item" id="logout">Đăng xuất</button>
                         </div>
@@ -260,6 +282,27 @@
 
                 </tbody>
             </table>
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center mb-3">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Quay lại</span>
+                        </a>
+                    </li>
+                    <%for (int i = 1; i <= totalPage; i++) {%>
+                    <%String s = currentPage == i ? "active" : "";%>
+                    <li class="page-item ml-1 <%=s%>"><a class="page-link" href="donhangcuaban?page=<%=i%>"><%=i%>
+                    </a></li>
+                    <%}%>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Tiếp</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
     </div>
