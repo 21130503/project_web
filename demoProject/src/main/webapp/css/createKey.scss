@@ -1,0 +1,86 @@
+:root{
+  --separator: #ccc;
+}
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.messages__wrapper {
+  height: 100vh;
+
+  .left-chat {
+    border-right: 1px solid var(--separator);
+    width: 300px;
+    overflow-y: auto;
+
+    .header {
+      padding: 8.2px 24px;
+      border-bottom: 1px solid var(--separator);
+
+      div {
+        cursor: pointer;
+
+        h3 {
+          font-size: 20px;
+          cursor: pointer;
+        }
+
+        span {
+          margin-left: 12px;
+          font-size: 20px;
+        }
+      }
+    }
+
+    .user-list {
+      padding: 12px 24px;
+
+      .chat-item {
+        padding: 8px 0;
+      }
+    }
+  }
+
+  .right-chat {
+    flex: 1 1;
+
+    .right-header {
+      height: 14vh;
+      border-bottom: 1px solid var(--separator);
+      text-align: center;
+      padding-top: 14px;
+    }
+
+
+      .content{
+        text-align: center;
+        margin-top: 40px;
+      }
+
+      .btn{
+
+        .uploadKey{
+          margin-left: 104px;
+        }
+
+      }
+    }
+
+
+}
+.flex{
+  display: flex;
+}
+.flex-column{
+  flex-direction: column;
+}
+.a-center{
+  align-items: center;
+}
+.mt-30{
+  margin-top: 30px;
+}
+.t-center{
+  text-align: center;
+}
