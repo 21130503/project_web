@@ -24,10 +24,9 @@
 </head>
 <body>
 <% String err =(String) request.getAttribute("err") == null ? "" : (String) request.getAttribute("err") ;%>
-<div class="inner-report">
-    <h3 style="color: #00ac4a;" class="title">BÁO MẤT PRIVATE KEY THÀNH CÔNG</h3>
-    <div>
-        <div id='card' class="animated fadeIn">
+<div class="inner-report" style="height: 476px; width: 376px">
+    <h3 style="color: #00ac4abd;padding-top: 30px;" class="title">BÁO MẤT PRIVATE KEY THÀNH CÔNG</h3>
+    <div id='card' class="animated fadeIn">
             <div id='upper-side'>
                 <?xml version="1.0" encoding="utf-8"?>
                 <!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -48,12 +47,11 @@
             </div>
             <div id='lower-side'>
                 <p id='message'>
-                    Private Key của bạn đã được báo cáo bị lộ với hệ thống thành công !
+                    Các thông tin về thời gian lộ Private Key đã được gửi về hệ thống !!
                 </p>
                 <a href="./index" id="contBtn">Tiếp tục</a>
             </div>
         </div>
-    </div>
 </div>
 </body>
 </html>

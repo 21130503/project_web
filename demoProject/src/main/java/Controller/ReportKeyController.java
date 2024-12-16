@@ -1,8 +1,10 @@
 package Controller;
 
+import DAO.ReportKeysDAO;
 import DAO.UserDAO;
 import Services.SendEmail;
 import nhom26.Config;
+import nhom26.ReportKeys;
 import nhom26.Security;
 import nhom26.User;
 
@@ -28,6 +30,8 @@ public class ReportKeyController extends HttpServlet {
     Security security = new Security();
     Config config = new Config();
     UserDAO userDAO = new UserDAO();
+
+    ReportKeysDAO reportKeysDAO = new ReportKeysDAO();
     Random random = new Random();
     int code = random.nextInt(89999) + 10000;
 
@@ -70,8 +74,16 @@ public class ReportKeyController extends HttpServlet {
             req.getRequestDispatcher("verifyEmailForReportKey.jsp").forward(req,resp);
         }
         else{
-            // note : thực hiện xóa public key
-
+            // note : thực hiện vô hiệu public key bằng cách set endTime
+                // đã có rpTime, rpReason, rpDate -> lưu xún database reportKeys
+                int curPublicKey = 10; // xử lí lấy ra publicKey hiện tại
+                String rpDate = (String) session.getAttribute("rpDate");
+                String rpTime = (String) session.getAttribute("rpTime");
+                String rpReason = (String) session.getAttribute("rpReason");
+                reportKeysDAO.insertReportKeys(user.getId(), curPublicKey, rpDate, rpTime, rpReason);
+                // set endTime của publicKey hiện tại là rpTime trong HttpSession
+                session.getAttribute("rpDate");
+                session.getAttribute("rpTime");
             // chuyển đến trang thông báo report Key thành công
             req.getRequestDispatcher("reportKeySuccess.jsp").forward(req,resp);
         }
