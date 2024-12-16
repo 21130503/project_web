@@ -87,6 +87,11 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
+            <%-- btn : showKeyList() --%>
+            <a href="./favourite" class="btn border">
+                <i class="fas fa-key text-primary"></i>
+                <span class="badge"><%=favourite.total()%></span>
+            </a>
             <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge"><%=favourite.total()%></span>
@@ -177,6 +182,7 @@
                             <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
                             <%}%>
                             <a href="./message" class="dropdown-item">Gửi tin nhắn</a>
+                            <a href="./report-priKey?action=direct" class="dropdown-item">Báo cáo lộ PrivateKey</a>
                             <a href="./edit-infor" class="dropdown-item">Sửa thông tin</a>
                             <% if (user.isAdmin()) {%>
                             <a href="./admin" class="dropdown-item">Trang quản lí</a>
