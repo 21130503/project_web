@@ -283,7 +283,7 @@
             </div>
 
             <div class="d-flex mb-3 mt-5">
-                <form action="./order" method="post">
+                <form action="./order" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="type" value="<%=type%>">
                     <input type="hidden" name="idProduct" value="<%=id%>">
                     <input type="hidden" name="price" value="<%=price-discount%>">
@@ -310,6 +310,9 @@
                         <label for="discount">Mã giảm giá(nếu có): </label>
                         <input type="number" id="discount" class="mt-1 mb-1  d-block p-2" name="discount"
                                placeholder="Mã giảm giá(nếu có)">
+                        <label for="privateKey">Chọn Private Key của bạn: </label>
+                        <input type="file" id="privateKey" class="mt-1 mb-1  d-block p-2" name="privateKey"
+                               placeholder="Vui lòng chọn tệp chứa Key của bạn">
                     </div>
                     <div class="address mt-2">
                         <select name="nameCity" id="nameCity" class="mt-3 p-2" style="width: 250px">
@@ -326,7 +329,7 @@
                         <p class="text-danger mt-1"><%=errAddress%>
                         </p>
                     </div>
-                    <button class="btn btn-primary mt-2" type="submit" id="btn-buy">Mua Ngay</button>
+                    <button class="btn btn-primary mt-2"  id="btn-buy">Mua Ngay</button>
                 </form>
             </div>
 
@@ -565,7 +568,22 @@
         </div>
     </div>
 </div>
+<div id="myModalKey" class="modal">
+    <div class="modal-verify-key">
+        <span class="close" id="closeModal">&times;</span>
+        <h2 class="text-center">Vui lòng tải Private Key của bạn</h2>
+        <form onsubmit="" method="post">
+            <input value="<%=type%>" name="type"/>
+            <input value="<%=name%>" name="name"/>
+            <input value="<%=price%>" name="price"/>
+            <input value="<%=discount%>" name="discount">
+            <input value="<%=description%>" name="description"/>
+            <input type="file" accept="*/*" name="privateKey"/>
+            <button type="submit">Xác thực</button>
+        </form>
 
+    </div>
+</div>
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 <script src="js/detail.js"></script>
@@ -722,6 +740,7 @@
     // }
 
 </script>
+
 </body>
 
 </html>

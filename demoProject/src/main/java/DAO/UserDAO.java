@@ -355,4 +355,24 @@ public class UserDAO {
         }
         return  false;
     }
+    public String getPublicKey(int idUser){
+        Connection connection = null;
+        String publicKey = "";
+        try{
+            connection = Connect.getConnection();
+            String sql = "select  publicKey from user where  id =?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idUser);
+            ResultSet resultSet =  preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                publicKey = resultSet.getString("publicKey");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Connect.closeConnection(connection);
+        }
+        return  publicKey;
+    }
 }
