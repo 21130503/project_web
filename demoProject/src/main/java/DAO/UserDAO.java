@@ -91,7 +91,7 @@ public class UserDAO {
         Config config = new Config();
         try {
             connection = Connect.getConnection();
-            String sql = "select idUser, email,name, password, isVerifyEmail, isActive, isAdmin, createdAt,publicKey from user where email = ? AND password = ?";
+            String sql = "select idUser, email,name, password, isVerifyEmail, isActive, isAdmin, createdAt from user where email = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, pass);
@@ -106,7 +106,6 @@ public class UserDAO {
                 user.setActive(resultSet.getBoolean(6));
                 user.setAdmin(resultSet.getBoolean(7));
                 user.setCreatedAt(resultSet.getDate(8));
-                user.setPublicKey(resultSet.getString("publicKey"));
 //                System.out.println(user);
                 return user;
             }

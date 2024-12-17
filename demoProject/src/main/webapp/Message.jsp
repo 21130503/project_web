@@ -126,7 +126,8 @@
 
     })
     let messages = []
-    async function getMessages(){
+
+    async function getMessages() {
         const {data} = await axios.post('http://localhost:5000/api/message/getmsg', {
             from: <%=id%>,
             to: 1,
@@ -134,10 +135,11 @@
         messages = data;
         handleMessage(data)
     }
+
     messages = getMessages()
     const hanleSendMess = async (msg) => {
         try {
-            const { data } = await axios.post('http://localhost:5000/api/message/addmsg', {
+            const {data} = await axios.post('http://localhost:5000/api/message/addmsg', {
                 from: <%=id%>,
                 to: 1,
                 message: msg,
@@ -164,10 +166,10 @@
         handleMessage(messages)
     });
     // render
-    const handleMessage=(messages)=>{
+    const handleMessage = (messages) => {
         console.log(messages);
         const message = document.querySelector(".messages")
-        const map = messages.map((item)=>{
+        const map = messages.map((item) => {
             return `
             <div class="message ${item.fromSelf ? "sended" : "recieved"}">
                 <div class="content-mess">

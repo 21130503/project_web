@@ -162,17 +162,17 @@
                         <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">
                             <i class="fa-regular fa-bell"></i>
                         </p>
-                        <div class="dropdown-menu rounded-0 m-0">
-                            <%
-                                for (Notification notification : notifications) {
-                            %>
-                            <%if("order".equals(notification.getType())){%>
-                            <a href="./donhangcuaban" class="dropdown-item"><%=notification.getContent()%></a>
-                            <%}%>
-                            <%
-                                }
-                            %>
-                        </div>
+<%--                        <div class="dropdown-menu rounded-0 m-0">--%>
+<%--                            <%--%>
+<%--                                for (Notification notification : notifications) {--%>
+<%--                            %>--%>
+<%--                            <%if("order".equals(notification.getType())){%>--%>
+<%--                            <a href="./donhangcuaban" class="dropdown-item"><%=notification.getContent()%></a>--%>
+<%--                            <%}%>--%>
+<%--                            <%--%>
+<%--                                }--%>
+<%--                            %>--%>
+<%--                        </div>--%>
                     </div>
                     <div class="navbar-nav ml-auto py-0 position-relative">
                         <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown">Hi, <%= user.getUsername()%>
@@ -184,6 +184,8 @@
                             <a href="./message" class="dropdown-item">Gửi tin nhắn</a>
                             <a href="./report-priKey?action=direct" class="dropdown-item">Báo cáo lộ PrivateKey</a>
                             <a href="./edit-infor" class="dropdown-item">Sửa thông tin</a>
+                            <a href="./createKey" class="dropdown-item">Tạo khóa</a>
+
                             <% if (user.isAdmin()) {%>
                             <a href="./admin" class="dropdown-item">Trang quản lí</a>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>

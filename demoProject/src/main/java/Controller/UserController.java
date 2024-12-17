@@ -24,24 +24,23 @@ public class UserController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
-        if(user == null || !user.isAdmin()){
+        if (user == null || !user.isAdmin()) {
             resp.sendRedirect("404.jsp");
-        }
-        else{
+        } else {
             UserDAO userDAO = new UserDAO();
             String q = req.getParameter("q");
-            if(q!=null){
+            if (q != null) {
                 ArrayList<User> list = new ArrayList<>(userDAO.getUserByName(q));
-                if(userDAO.getUserById(q).getUsername() != null){
+                if (userDAO.getUserById(q).getUsername() != null) {
 
                     list.add(userDAO.getUserById(q));
                 }
-                req.setAttribute("listUser",list);
-                req.getRequestDispatcher("quanlinguoidung.jsp").forward(req,resp);
+                req.setAttribute("listUser", list);
+                req.getRequestDispatcher("quanlinguoidung.jsp").forward(req, resp);
                 return;
             }
             req.setAttribute("listUser", userDAO.getAllUsers());
-            req.getRequestDispatcher("quanlinguoidung.jsp").forward(req,resp);
+            req.getRequestDispatcher("quanlinguoidung.jsp").forward(req, resp);
         }
 
 
@@ -53,22 +52,21 @@ public class UserController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         String idUser = req.getParameter("idUser");
-        System.out.println("delete " +idUser);
-        try{
+        System.out.println("delete " + idUser);
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/project", "root", "");
             String sqlDelete = "delete from user where idUser = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete);
-            preparedStatement.setString(1,idUser);
+            preparedStatement.setString(1, idUser);
             int resultSet = preparedStatement.executeUpdate();
             JSONObject jsonObject = new JSONObject();
-            if(resultSet > 0){
+            if (resultSet > 0) {
                 jsonObject.put("status", 200);
                 jsonObject.put("message", "Đã xóa thành công");
                 resp.setContentType("application/json");
                 resp.getWriter().write(jsonObject.toString());
-            }
-            else {
+            } else {
                 jsonObject.put("status", 500);
                 jsonObject.put("message", "Xóa chủ đề thất bại. Vui lòng thử lại");
                 resp.setContentType("application/json");
@@ -87,36 +85,34 @@ public class UserController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         String idUser = req.getParameter("idUser");
-        try{
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/project", "root", "");
             String sqlGetActive = "select isActive from user where idUser = ?";
-            boolean isActive ;
+            boolean isActive;
             PreparedStatement preparedStatement = connection.prepareStatement(sqlGetActive);
-            preparedStatement.setString(1,idUser);
+            preparedStatement.setString(1, idUser);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 isActive = resultSet.getBoolean(1);
                 String updateActive;
-                if (isActive){
+                if (isActive) {
                     updateActive = "false";
-                }
-                else{
+                } else {
                     updateActive = "true";
                 }
                 String sqlBlockOrUB = "UPDATE user set isActive = ? where idUser = ?";
                 PreparedStatement preparedStatement1 = connection.prepareStatement(sqlBlockOrUB);
-                preparedStatement1.setString(1,updateActive);
-                preparedStatement1.setString(2,idUser);
+                preparedStatement1.setString(1, updateActive);
+                preparedStatement1.setString(2, idUser);
                 int res = preparedStatement1.executeUpdate();
                 JSONObject jsonObject = new JSONObject();
-                if(res > 0){
+                if (res > 0) {
                     jsonObject.put("status", 200);
                     jsonObject.put("message", isActive ? "Đã chặn thành công" : "Đã mở chặn thành công");
                     resp.setContentType("application/json");
                     resp.getWriter().write(jsonObject.toString());
-                }
-                else{
+                } else {
                     jsonObject.put("status", 500);
                     jsonObject.put("message", "Thất bại");
                     resp.setContentType("application/json");
