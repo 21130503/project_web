@@ -37,17 +37,18 @@ public class EquaslFileOrder {
                     bool = true;
                 } else {
                     User user = userDAO.getUserById(String.valueOf(fileOrder.getUserId()));
+                    System.out.println(user.toString());
                     notificationDAO.insertNotification(user.getId(), "Đơn hàng của bạn đã bị hủy vì có sự cố", "order");
                     orderDAO.updateAlbumStatus(String.valueOf(o.getIdOrder()), "Đã hủy");
                     System.out.println("Bị thay dổi");
 
-//                    sendEmail.sendEmail(
-//                            "danghuuquy10042003@gmail.com",
-//                            "dwclkzpuimnqcgmj",
-//                            "danghuuquy10042003@gmail.com",
-//                            "Đơn hàng của bạn đã có sự thay đổi",
-//                            "Đơn hàng của bạn đã bị hủy vì có sự thay đổi"
-//                    );
+                    sendEmail.sendEmail(
+                            "21130503@st.hcmuaf.edu.vn",
+                            "gyvzbtqzyjoqveyn",
+                            security.DESDecrypt(user.getEmail(), config.getKey()),
+                            "Đơn hàng của bạn đã có sự thay đổi",
+                            "Đơn hàng của bạn đã bị hủy vì có sự thay đổi"
+                    );
                     bool = false;
                 }
 

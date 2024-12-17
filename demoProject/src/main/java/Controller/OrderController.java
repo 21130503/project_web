@@ -51,6 +51,7 @@ public class OrderController extends HttpServlet {
             return;
         }
 
+
         String type = req.getParameter("type");
         String idProduct = req.getParameter("idProduct");
         String price = req.getParameter("price");
@@ -61,6 +62,10 @@ public class OrderController extends HttpServlet {
         String detailAddress = req.getParameter("detail-address");
         String phoneNumber = req.getParameter("phoneNumber");
         String receiver = req.getParameter("receiver");
+
+
+        HttpSession session1 = req.getSession();
+        String URL = "/demoProject_war/detail?type=" + type + "&id=" + idProduct;
 //        Tiến hành xác thực
         Part filePart = req.getPart("privateKey");
         if (filePart != null && filePart.getSize() > 0) {
@@ -91,106 +96,118 @@ public class OrderController extends HttpServlet {
         String orderText = idProduct+ " " + type+ " "+ price + " " + quantity+" " + nameCity + " " +
                 nameDistrict+ " " + nameCommune + " " + detailAddress+ " " + phoneNumber+ " " + receiver;
         VerifyUser verifyUser = new VerifyUser(user.getId(), filePath,orderText);
-        verifyUser.sign();
+        boolean isSign = verifyUser.sign();
+        if(isSign == false) {
+            session1.setAttribute("errPrivate", "Private Key của bạn không chính xác");
+            session1.setMaxInactiveInterval(30);
+            resp.sendRedirect(URL);
+            return;
+        }
         boolean a = verifyUser.verify();
         System.out.println("This is log at line 94 :" + a);
 
 
-        int code = 0;
-//        try {
-//            code = Integer.parseInt(req.getParameter("discount"));
-//        } catch (NumberFormatException e) {
-//            code = 0;
-//        }
-//        DiscountDAO discountDAO = new DiscountDAO();
-//
-//        double discount = 0;
-//        if (discountDAO.getDiscountByCode(code) != null) {
-//            discount = discountDAO.getDiscountByCode(code).getDiscountValue();
-//        } else {
-//            discount = 0;
-//        }
-//        HttpSession session1 = req.getSession();
-//        String URL = "/demoProject_war/detail?type=" + type + "&id=" + idProduct;
-//        String address = detailAddress + "," + nameCommune + "," + nameDistrict + "," + nameCity;
-//
-//        if (!user.isActive()) {
-//            session1.setAttribute("errActive", "Bạn không thể mua hàng");
-//            session1.setMaxInactiveInterval(30);
-//            resp.sendRedirect(URL);
-//            return;
-//        }
-//        if (!user.isVerifyEmail()) {
-//            session1.setAttribute("errVerify", "Vui lòng xác thực email. <a href=" + "http://localhost:8080/demoProject_war/verify" + ">" + "Tại đây" + "</a>");
-//            session1.setMaxInactiveInterval(30);
-//            resp.sendRedirect(URL);
-//            return;
-//        }
-//        if (Integer.parseInt(quantity) <= 0) {
-//            session1.setAttribute("errTotal", "Số lượng phải lớn hơn 0");
-//            session1.setMaxInactiveInterval(30);
-//            resp.sendRedirect(URL);
-//            return;
-//        }
-//        if (receiver == null || receiver.isEmpty()) {
-//            session1.setAttribute("errReceiver", "Vui lòng nhập tên người nhận");
-//            session1.setMaxInactiveInterval(30);
-//            resp.sendRedirect(URL);
-//            return;
-//
-//        }
-//        if (phoneNumber == null || phoneNumber.isEmpty() || !regex.isValidPhoneNumber(phoneNumber)) {
-//            session1.setAttribute("errPhoneNumber", "Vui lòng nhập đúng số điện thoại");
-//            session1.setMaxInactiveInterval(30);
-//            resp.sendRedirect(URL);
-//            return;
-//        }
-//        if (nameCity.isEmpty() || nameDistrict.isEmpty() || nameCommune.isEmpty() || detailAddress.isEmpty()) {
-//            session1.setAttribute("errAddress", "Vui lòng nhập địa chỉ nhận hàng");
-//            session1.setMaxInactiveInterval(30);
-//            resp.sendRedirect(URL);
-//            return;
-//        }
-//        double totalPrice = ((Integer.parseInt(quantity) * Integer.parseInt(price) )- (Integer.parseInt(quantity) * Integer.parseInt(price) * discount)) + 30000;
-//        File directory = new File(req.getServletContext().getRealPath("/orders/"));
-//
-//        if (!directory.exists()) {
-//            directory.mkdirs();
-//        }
-//        if(!directory.exists()) directory.mkdirs();
-//        String file = directory+"/order" + UUID.randomUUID().toString() + ".txt";
-//        OutputStream outputStream = new FileOutputStream(file);
-//        BufferedOutputStream bos = new BufferedOutputStream(outputStream);
-//        bos.write(("idProduct: " + idProduct + "\n").getBytes());
-//        bos.write(("userId: " + user.getId() + "\n").getBytes());
-//        bos.write(("receiver: " + receiver + "\n").getBytes());
-//        bos.write(("phoneNumber: " + phoneNumber + "\n").getBytes());
-//        bos.write(("quantity: " + quantity + "\n").getBytes());
-//        bos.write(("totalPrice: " + totalPrice + "\n").getBytes());
-//        bos.write(("address: " + address + "\n").getBytes());
-//        bos.write(("type: " + type + "\n").getBytes());
-//        bos.flush();
-//        bos.close();
-//        try {
-//            security.AESEncryptFile(file,config.getKeyAES());
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        System.out.println("Order saved successfully at: " + file);
-//
-//        if ("odd".equals(type)) {
-//            if (orderDAO.insertOrderOdd(Integer.parseInt(idProduct), user.getId(), receiver, phoneNumber, Integer.parseInt(quantity), totalPrice, address,file)) {
-//                resp.sendRedirect("./donhangcuaban");
-//                return;
-//            }
-//        }
-//        if ("album".equals(type)) {
-//            if (orderDAO.insertOrderAlbum(Integer.parseInt(idProduct), user.getId(), receiver, phoneNumber, Integer.parseInt(quantity), totalPrice, address,file)) {
-//                resp.sendRedirect("./donhangcuaban");
-//                return;
-//            }
-//        }
 
+        int code = 0;
+        if(a == true) {
+            try {
+                code = Integer.parseInt(req.getParameter("discount"));
+            } catch (NumberFormatException e) {
+                code = 0;
+            }
+            DiscountDAO discountDAO = new DiscountDAO();
+
+            double discount = 0;
+            if (discountDAO.getDiscountByCode(code) != null) {
+                discount = discountDAO.getDiscountByCode(code).getDiscountValue();
+            } else {
+                discount = 0;
+            }
+            String address = detailAddress + "," + nameCommune + "," + nameDistrict + "," + nameCity;
+
+            if (!user.isActive()) {
+                session1.setAttribute("errActive", "Bạn không thể mua hàng");
+                session1.setMaxInactiveInterval(30);
+                resp.sendRedirect(URL);
+                return;
+            }
+            if (!user.isVerifyEmail()) {
+                session1.setAttribute("errVerify", "Vui lòng xác thực email. <a href=" + "http://localhost:8080/demoProject_war/verify" + ">" + "Tại đây" + "</a>");
+                session1.setMaxInactiveInterval(30);
+                resp.sendRedirect(URL);
+                return;
+            }
+            if (Integer.parseInt(quantity) <= 0) {
+                session1.setAttribute("errTotal", "Số lượng phải lớn hơn 0");
+                session1.setMaxInactiveInterval(30);
+                resp.sendRedirect(URL);
+                return;
+            }
+            if (receiver == null || receiver.isEmpty()) {
+                session1.setAttribute("errReceiver", "Vui lòng nhập tên người nhận");
+                session1.setMaxInactiveInterval(30);
+                resp.sendRedirect(URL);
+                return;
+
+            }
+            if (phoneNumber == null || phoneNumber.isEmpty() || !regex.isValidPhoneNumber(phoneNumber)) {
+                session1.setAttribute("errPhoneNumber", "Vui lòng nhập đúng số điện thoại");
+                session1.setMaxInactiveInterval(30);
+                resp.sendRedirect(URL);
+                return;
+            }
+            if (nameCity.isEmpty() || nameDistrict.isEmpty() || nameCommune.isEmpty() || detailAddress.isEmpty()) {
+                session1.setAttribute("errAddress", "Vui lòng nhập địa chỉ nhận hàng");
+                session1.setMaxInactiveInterval(30);
+                resp.sendRedirect(URL);
+                return;
+            }
+            double totalPrice = ((Integer.parseInt(quantity) * Integer.parseInt(price) )- (Integer.parseInt(quantity) * Integer.parseInt(price) * discount)) + 30000;
+            File directory = new File(req.getServletContext().getRealPath("/orders/"));
+
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            if(!directory.exists()) directory.mkdirs();
+            String file = directory+"/order" + UUID.randomUUID().toString() + ".txt";
+            OutputStream outputStream = new FileOutputStream(file);
+            BufferedOutputStream bos = new BufferedOutputStream(outputStream);
+            bos.write(("idProduct: " + idProduct + "\n").getBytes());
+            bos.write(("userId: " + user.getId() + "\n").getBytes());
+            bos.write(("receiver: " + receiver + "\n").getBytes());
+            bos.write(("phoneNumber: " + phoneNumber + "\n").getBytes());
+            bos.write(("quantity: " + quantity + "\n").getBytes());
+            bos.write(("totalPrice: " + totalPrice + "\n").getBytes());
+            bos.write(("address: " + address + "\n").getBytes());
+            bos.write(("type: " + type + "\n").getBytes());
+            bos.flush();
+            bos.close();
+            try {
+                security.AESEncryptFile(file,config.getKeyAES());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Order saved successfully at: " + file);
+
+            if ("odd".equals(type)) {
+                if (orderDAO.insertOrderOdd(Integer.parseInt(idProduct), user.getId(), receiver, phoneNumber, Integer.parseInt(quantity), totalPrice, address,file)) {
+                    resp.sendRedirect("./donhangcuaban");
+                    return;
+                }
+            }
+            if ("album".equals(type)) {
+                if (orderDAO.insertOrderAlbum(Integer.parseInt(idProduct), user.getId(), receiver, phoneNumber, Integer.parseInt(quantity), totalPrice, address,file)) {
+                    resp.sendRedirect("./donhangcuaban");
+                    return;
+                }
+            }
+        }
+        else {
+                session1.setAttribute("errPrivate", "Private Key của bạn không chính xác");
+                session1.setMaxInactiveInterval(30);
+                resp.sendRedirect(URL);
+                return;
+        }
     }
 
     @Override

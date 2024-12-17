@@ -16,7 +16,7 @@ public class VerifyUser {
         this.order = order;
     }
 
-    public void sign() {
+    public boolean sign() {
         try {
             // Tải private key từ file
             byte[] privateKeyBytes = Files.readAllBytes(Paths.get(pathPrivate));
@@ -41,8 +41,10 @@ public class VerifyUser {
             Files.write(Paths.get(signaturePath), signatureBytes);
 
             System.out.println("Ký tài liệu thành công!");
+            return  true;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi ký tài liệu: " + e.getMessage(), e);
+            System.err.println("Lỗi khi xác minh tài liệu: " + e.getMessage());
+            return false;
         }
     }
 
@@ -68,7 +70,8 @@ public class VerifyUser {
             System.out.println(isVerified ? "Tài liệu đã được xác minh!" : "Tài liệu không hợp lệ!");
             return isVerified;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi xác minh tài liệu: " + e.getMessage(), e);
+            System.out.println("Lỗi khi xác minh tài liệu: " + e.getMessage());
+            return  false;
         }
     }
 }

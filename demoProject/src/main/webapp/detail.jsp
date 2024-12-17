@@ -93,6 +93,7 @@
     String errPhoneNumber = session.getAttribute("errPhoneNumber") == null ? "" : (String) session.getAttribute("errPhoneNumber");
     String errVerify = session.getAttribute("errVerify") == null ? "" : (String) session.getAttribute("errVerify");
     String errActive = session.getAttribute("errActive") == null ? "" : (String) session.getAttribute("errActive");
+    String errPrivateKey = session.getAttribute("errPrivate") == null ? "" : (String) session.getAttribute("errPrivate");
 
 %>
 
@@ -313,6 +314,7 @@
                         <label for="privateKey">Chọn Private Key của bạn: </label>
                         <input type="file" id="privateKey" class="mt-1 mb-1  d-block p-2" name="privateKey"
                                placeholder="Vui lòng chọn tệp chứa Key của bạn">
+                        <p class="text-danger"><%=errPrivateKey%>
                     </div>
                     <div class="address mt-2">
                         <select name="nameCity" id="nameCity" class="mt-3 p-2" style="width: 250px">
