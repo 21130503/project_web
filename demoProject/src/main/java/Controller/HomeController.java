@@ -25,20 +25,20 @@ public class HomeController extends HttpServlet {
         TopicDAO topicDAO = new TopicDAO();
         ProductDAO productDAO = new ProductDAO();
         OrderDAO orderDAO = new OrderDAO();
-        NotificationDAO notificationDAO = new NotificationDAO();
+//        NotificationDAO notificationDAO = new NotificationDAO();
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if(user == null){
             resp.sendRedirect("login.jsp");
             return;
         }
-        ArrayList<Notification> notifications = notificationDAO.getNotification(user.getId());
+//        ArrayList<Notification> notifications = notificationDAO.getNotification(user.getId());
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.setAttribute("listAlbumNew", productDAO.getTop8AlbumNew());
         req.setAttribute("listOddNew",productDAO.getTop8ddImageNew());
         req.setAttribute("listOddImageOrder", orderDAO.getTop8OddImageOrder());
         req.setAttribute("listAlbumOrder", orderDAO.getTop8OAlbumOrder());
-        req.setAttribute("notifications", notifications);
+//        req.setAttribute("notifications", notifications);
         req.getRequestDispatcher("index.jsp").forward(req,resp);
     }
 }
