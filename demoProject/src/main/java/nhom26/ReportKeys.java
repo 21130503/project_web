@@ -5,18 +5,18 @@ import java.time.LocalTime;
 
 public class ReportKeys {
     private int id; // Khóa chính
-    private int userId; // Khóa ngoại đến bảng users
-    private int publicKeyId; // Khóa ngoại đến bảng publickeys
+    private int reportUserID; // Khóa ngoại đến bảng users
+    private int publicKeysId; // Khóa ngoại đến bảng publickeys
     private LocalDate date; // Ngày báo cáo
     private LocalTime time; // Giờ báo cáo
     private String reason; // Lý do báo cáo (có thể null)
 
     public ReportKeys() {}
 
-    public ReportKeys(int id, int userId, int publicKeyId, LocalDate date, LocalTime time, String reason) {
+    public ReportKeys(int id, int userId, int publicKeysId, LocalDate date, LocalTime time, String reason) {
         this.id = id;
-        this.userId = userId;
-        this.publicKeyId = publicKeyId;
+        this.reportUserID = userId;
+        this.publicKeysId = publicKeysId;
         this.date = date;
         this.time = time;
         this.reason = reason;
@@ -31,20 +31,20 @@ public class ReportKeys {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getReportUserID() {
+        return reportUserID;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setReportUserID(int reportUserID) {
+        this.reportUserID = reportUserID;
     }
 
-    public int getPublicKeyId() {
-        return publicKeyId;
+    public int getPublicKeysId() {
+        return publicKeysId;
     }
 
-    public void setPublicKeyId(int publicKeyId) {
-        this.publicKeyId = publicKeyId;
+    public void setPublicKeysId(int publicKeysId) {
+        this.publicKeysId = publicKeysId;
     }
 
     public LocalDate getDate() {
