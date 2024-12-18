@@ -54,7 +54,7 @@ public class ReportKeysDAO {
         try {
             conn = Connect.getConnection();
 
-            String sql = "SELECT id, userId, publicKeysId, date, time, reason FROM reportkeys WHERE userId = ?";
+            String sql = "SELECT id, reportUserID, publicKeysId, date, time, reason FROM reportkeys WHERE reportUserID = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, userID);
             rs = pstmt.executeQuery();

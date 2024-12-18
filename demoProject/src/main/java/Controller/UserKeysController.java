@@ -2,7 +2,9 @@ package Controller;
 
 import DAO.ReportKeysDAO;
 import DAO.TopicDAO;
+import DAO.UserKeyDAO;
 import favourite.Favourite;
+import nhom26.PublicKeys;
 import nhom26.ReportKeys;
 import nhom26.User;
 import org.json.JSONObject;
@@ -20,6 +22,7 @@ import java.util.List;
 public class UserKeysController extends HttpServlet {
 
     ReportKeysDAO reportKeysDAO ;
+    UserKeyDAO userKeyDAO ;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,6 +30,7 @@ public class UserKeysController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
 
         reportKeysDAO = new ReportKeysDAO();
+        userKeyDAO = new UserKeyDAO();
 
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
@@ -36,23 +40,19 @@ public class UserKeysController extends HttpServlet {
         }
         int userID = user.getId(); // id của user hiện tại
         // lấy ra list key của user - publicKeys
-
-
+        List<PublicKeys> publicKeysList = userKeyDAO.getAllPublicKeys(userID);
         // lấy ra list report key của user - reportKey
         List<ReportKeys> reportKeysList = reportKeysDAO.getReportList(userID);
-
         // gửi 2 list này cho userKeysManagement.jsp để hiển thị
         session.setAttribute("reportKeysList", reportKeysList);
-        session.setAttribute("publicKeysList", reportKeysList);
-
+        session.setAttribute("publicKeysList", publicKeysList);
+        // chuyển trang
         req.getRequestDispatcher("userKeysManagement.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-
+        doGet(req, resp);
     }
 
     @Override

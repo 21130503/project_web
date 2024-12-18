@@ -15,7 +15,6 @@
     if (cart == null) {
         cart = new Cart();
     }
-
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
@@ -26,7 +25,7 @@
 
 <%
     // lấy ra publicKeys trong session
-    List<PublicKey> publicKeysList = (List<PublicKey>) session.getAttribute("publicKeysList");
+    List<PublicKeys> publicKeysList = (List<PublicKeys>) session.getAttribute("publicKeysList");
     // lấy ra reportKeysList trong session
     List<ReportKeys> listRPKeys = (List<ReportKeys>) session.getAttribute("reportKeysList");
 
@@ -255,89 +254,96 @@
                         </tr>
                     </thead>
                     <tbody class="align-middle">
-                        <c:forEach var="cartProduct" items="${cartProducts}">
-                            <tr>
-                                <td class="text-left"><i class="fas fa-key text-primary"></i> ${cartProduct.name} </td>
-                                <td class="align-middle">${vndFormat.format(cartProduct.price - cartProduct.discount)}</td>
-                                <td class="align-middle">
-                                    <div class="input-group quantity mx-auto" style="width: 300px;justify-content: center ; align-items: center">
-                                        <button value="${cartProduct.id}" title="${cartProduct.type}" class="p-2 border mr-3 decre" style="cursor: pointer">-</button>
-                                        <span id="quantity">${cartProduct.quantity}</span>
-                                        <button value="${cartProduct.id}" title="${cartProduct.type}" class="p-2 border ml-3 incre" style="cursor: pointer">+</button>
-                                    </div>
-                                </td>
-                                <td class="align-middle">${vndFormat.format(cartProduct.price - cartProduct.discount)}</td>
-                                <td class="align-middle">
-                                    <button type="submit" id="btnRemove" value="${cartProduct.id}" title="${cartProduct.type}" class="btnRemove btn btn-sm btn-primary">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </c:forEach>
+<%--                        <c:forEach items="${publicKeysList}" var="pubKey">--%>
+<%--                            <tr>--%>
+<%--                                <td class="text-left"><i class="fas fa-key text-primary"></i> ${pubKey.id} </td>--%>
+<%--                                <td class="align-middle">${pubKey.publicKey}</td>--%>
+<%--                                <td class="align-middle">${pubKey.createTime}</td>--%>
+<%--                                <td class="align-middle">${pubKey.endTime}</td>--%>
+<%--                                <td class="align-middle">--%>
+<%--                                    <button type="submit" id="btnRemove" value="" title="" class="btnRemove btn btn-sm btn-primary">--%>
+<%--                                        <i class="fa fa-times"></i>--%>
+<%--                                    </button>--%>
+<%--                                </td>--%>
+<%--                            </tr>--%>
+<%--                        </c:forEach>--%>
+                            <%
+                                if (publicKeysList != null) {
+                                    for (PublicKeys pubKey : publicKeysList) {
+                            %>
+                                <tr>
+                                    <td class="text-left"><i class="fas fa-key text-primary"></i> <%= pubKey.getId() %> </td>
+                                    <td class="align-middle" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: 300px;">
+                                        <span id="keySnippet">
+                                            <%= pubKey.getPublicKey() %>
+                                        </span>
+                                        <button class="btn btn-link p-0" onclick="showFullKey('<%= pubKey.getPublicKey() %>')">View Details</button>
+                                    </td>
+                                    <script>
+                                        function showFullKey(fullKey) {
+                                            const modal = document.createElement('div');
+                                            modal.style.position = 'fixed';
+                                            modal.style.top = '50%';
+                                            modal.style.left = '50%';
+                                            modal.style.transform = 'translate(-50%, -50%)';
+                                            modal.style.backgroundColor = '#fff';
+                                            modal.style.padding = '20px';
+                                            modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                                            modal.style.zIndex = '1000';
+                                            modal.style.width = '400px'; /* Chiều ngang ngắn */
+                                            modal.style.borderRadius = '8px';
+
+                                            modal.innerHTML = `
+                                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                        <h5>Public Key Details</h5>
+                                                        <button class="btn btn-link p-0" onclick="closeModal(this)" style="font-size: 20px;">&times;</button>
+                                                    </div>
+                                                    <div style="max-height: 500px; overflow-y: auto; margin-top: 10px;">
+                                                        <p>${fullKey}</p>
+                                                    </div>
+                                                    <button class="btn btn-primary" onclick="closeModal(this)" style="margin-top: 10px;">Close</button>
+                                                `;
+                                            document.body.appendChild(modal);
+                                        }
+                                        function closeModal(button) {
+                                            const modal = button.parentElement.parentElement;
+                                            document.body.removeChild(modal);
+                                        }
+                                    </script>
+
+
+                                    <td class="align-middle"><%= pubKey.getCreateTime() %></td>
+                                    <td class="align-middle"><%= pubKey.getEndTime() %></td>
+                                    <td class="align-middle">
+                                        <button type="submit" id="btnRemove" value="<%= pubKey.getId() %>" class="btnRemove btn btn-sm btn-primary">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <%
+                                    }
+                                }
+                            %>
                     </tbody>
                 </table>
             <% } else { %>
-            <%-- Khi không có sản phẩm trong giỏ --%>
-            <div class="">
-                <div class="text-center mb-4">
-                    <h2 class="section px-5"><span
-                    >Bạn chưa mua sản phẩm nào.</span></h2>
+                <div class="">
+                    <div class="text-center mb-4">
+                        <h2 class="section px-5"><span
+                        >Bạn chưa có Public Key nào.</span></h2>
+                    </div>
+                    <div class="text-center" style="margin-top: 40px; ">
+                        <a href="./createKey" style="display: flex;justify-content: center">
+                            <button class="btn btn-block btn-primary my-3 py-3"
+                                    style="width: 50%">Tạo Public Key cho bạn.
+                            </button>
+                        </a>
+                    </div>
                 </div>
-
-                <div class="" style="justify-content: center; display: flex">
-                    <img class="align-middle" style="width: 16%; margin-top: 40px" src="./asset/remove-from-cart.png"
-                         alt="ảnh giỏ hàng">
-                </div>
-
-                <div class="text-center" style="margin-top: 40px; ">
-                    <a href="./shop" style="display: flex;justify-content: center">
-                        <button class="btn btn-block btn-primary my-3 py-3"
-                                style="width: 50%">Mua sắm
-                        </button>
-                    </a>
-                </div>
-
-            </div>
             <% } %>
         </div>
 
-
-        <%-- Xác nhận xóa mã giảm giá --%>
-        <script>
-            function confirmRemoveDiscount() {
-                var result = confirm('Bạn có chắc muốn xóa mã giảm giá này chứ?');
-                if (result) {
-                    location.href = 'removeDiscount';
-                }
-            }
-        </script>
-
-
         <div class="col-lg-4">
-            <%-- Thông báo cho việc mã giảm giá bị xóa --%>
-            <% String message = (String) session.getAttribute("message"); %>
-            <% if (message != null) { %>
-            <p style="color: green;"><%= message %>
-            </p>
-            <% session.removeAttribute("message"); %>
-            <% } %>
-
-            <%-- Thông báo cho việc nhập mã giảm giá --%>
-            <% String discountError = (String) session.getAttribute("discountError"); %>
-            <% String discountSuccess = (String) session.getAttribute("discountSuccess"); %>
-
-            <% if (discountError != null) { %>
-            <p style="color: red;"><%= discountError %>
-            </p>
-            <% session.removeAttribute("discountError"); %>
-            <% } %>
-
-            <% if (discountSuccess != null) { %>
-            <p style="color: green;"><%= discountSuccess %>
-            </p>
-            <% session.removeAttribute("discountSuccess"); %>
-            <% } %>
-
             <form action="applyDiscount" method="post">
                 <div class="input-group">
                     <input type="text" class="form-control p-4" name="discountCode" placeholder="Mã Giảm Giá">
@@ -346,8 +352,6 @@
                     </div>
                 </div>
             </form>
-
-
             <div class="card border-secondary mb-5">
                 <div class="card-header bg-secondary border-0">
                     <h4 class="font-weight-semi-bold m-0">Tóm Tắt Giỏ Hàng</h4>
@@ -358,20 +362,6 @@
                         <h6 class="font-weight-medium"><%=vndFormat.format(cart.totalPrice())%>
                         </h6>
                     </div>
-
-                    <%-- Hiển thị mã giảm giá được áp --%>
-                    <% if (cart.getAppliedDiscount() != null) { %>
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Mã <h6 class="font-weight-semi-bold"><%= cart.getAppliedDiscount().getDescription() %></h6> được áp
-                            dụng.
-                        </h6>
-                        <%-- Nút xóa mã giảm giá ra khỏi tổng tiền --%>
-                        <button type="button" class="close" aria-label="Close" onclick="confirmRemoveDiscount();">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <% } %>
-
                 </div>
                 <div class="card-footer border-secondary bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
@@ -380,15 +370,11 @@
                         </h5>
                     </div>
                     <a href="checkout">
-                        <button class="btn btn-block btn-primary my-3 py-3">Tiến Hành Thanh
-                            Toán
-                        </button>
+                        <button class="btn btn-block btn-primary my-3 py-3"> Tiến Hành Thanh Toán </button>
                     </a>
                 </div>
             </div>
         </div>
-
-    </div>
     </div>
 <!-- Cart End -->
 
@@ -573,6 +559,24 @@
             xhr.send();
         })
     })
+</script>
+
+<script>
+    function toggleKeyDetails(button) {
+        const keySnippet = button.previousElementSibling;
+        if (keySnippet.style.display === 'none') {
+            keySnippet.style.display = '-webkit-box';
+            keySnippet.style.overflow = 'hidden';
+            keySnippet.style.textOverflow = 'ellipsis';
+            keySnippet.style.webkitLineClamp = 2;
+            button.textContent = 'View Details';
+        } else {
+            keySnippet.style.display = 'block';
+            keySnippet.style.overflow = 'visible';
+            keySnippet.style.textOverflow = 'clip';
+            button.textContent = 'Hide Details';
+        }
+    }
 </script>
 </body>
 

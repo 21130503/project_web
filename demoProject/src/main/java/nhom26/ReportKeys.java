@@ -1,8 +1,11 @@
 package nhom26;
 
+import lombok.Data;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Data
 public class ReportKeys {
     private int id; // Khóa chính
     private int reportUserID; // Khóa ngoại đến bảng users
