@@ -2,13 +2,13 @@
 <%@ page import="cart.CartProduct" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="nhom26.User" %>
-<%@ page import="nhom26.Topic" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="favourite.Favourite" %>
-<%@ page import="nhom26.OddImage" %>
-<%@ page import="nhom26.Album" %>
+<%@ page import="nhom26.*" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.security.PublicKey" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
     Cart cart = (Cart) session.getAttribute("cart");
@@ -22,6 +22,15 @@
 <%
     Favourite favourite = (Favourite) session.getAttribute("favourite");
     if (favourite == null) favourite = new Favourite();
+%>
+
+<%
+    // lấy ra publicKeys trong session
+    List<PublicKey> publicKeysList = (List<PublicKey>) session.getAttribute("publicKeysList");
+    // lấy ra reportKeysList trong session
+    List<ReportKeys> listRPKeys = (List<ReportKeys>) session.getAttribute("reportKeysList");
+
+
 %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
@@ -203,118 +212,70 @@
     </div>
 <!-- Page Header End -->
 
-
 <!-- Cart Start -->
-<div class="container-fluid pt-5">
-    <div class="row px-xl-5">
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+            <% if (publicKeysList.size() > 0) { %>
+                <table class="table table-bordered text-center mb-0">
+                    <thead class="bg-secondary text-dark">
 
-        <div class="col-lg-8 table-responsive mb-5">
-            <% if (cart.total() > 0) { %>
-            <table class="table table-bordered text-center mb-0">
-                <thead class="bg-secondary text-dark">
-
-                <%--Thông báo lỗi khi cố giảm số lượng sản phẩm xuống dưới 1--%>
-                <% if (session.getAttribute("errorMessage") != null) { %>
-                <div class="alert alert-warning">
-                    <%= session.getAttribute("errorMessage") %>
-                </div>
-                <% session.removeAttribute("errorMessage"); %> <%--Xóa thông báo khi tải lại trang--%>
-                <% } %>
-
-
-                <%-- Khi có sản phẩm trong giỏ --%>
-                <div class="align-middle" style="display: flex;justify-content: space-between">
-                    <div class="cols-md-6 mb-4">
-                        <a href="./shop" style="display: flex;justify-content: center">
-                            <button class="btn btn-block btn-primary"
-                                    style="width: 100%">Mua sắm tiếp
-                            </button>
-                        </a>
-                    </div>
-                    <div class="cols-md-6 mb-4">
-                        <%--Nút xóa toàn bộ sản phẩm khỏi giỏ hàng --%>
-                        <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal"
-                                data-target="#deleteCart">
-                            Làm trống giỏ hàng
-                        </button>
-                    </div>
-                </div>
-
-                <tr class="align-middle">
-                    <th>Sản Phẩm</th>
-                    <th>Giá</th>
-                    <th>Số lượng</th>
-                    <th>Thành tiền</th>
-                    <th>Xóa</th>
-                </tr>
-                </thead>
-                <tbody class="align-middle">
-
-                <%-- Dữ liệu cho cart --%>
-                <%
-                    String name = null, type = null, image = null;
-                    int id = 0, price = 0, discount = 0;
-                %>
-                <% for (Map.Entry<String, CartProduct> entry : cart.getData().entrySet()) {
-                    CartProduct cartProduct = entry.getValue();
-                    if (cartProduct.getObject() instanceof OddImage) {
-                        id = ((OddImage) cartProduct.getObject()).getIdOddImage();
-                        price = ((OddImage) cartProduct.getObject()).getPrice();
-                        discount = ((OddImage) cartProduct.getObject()).getDiscount();
-                        name = ((OddImage) cartProduct.getObject()).getName();
-                        type = ((OddImage) cartProduct.getObject()).getType();
-                        image = ((OddImage) cartProduct.getObject()).getImage();
-                    }
-                    if (cartProduct.getObject() instanceof Album) {
-                        id = ((Album) cartProduct.getObject()).getIdAlbum();
-                        price = ((Album) cartProduct.getObject()).getPrice();
-                        discount = ((Album) cartProduct.getObject()).getDiscount();
-                        name = ((Album) cartProduct.getObject()).getName();
-                        type = ((Album) cartProduct.getObject()).getType();
-                        image = ((Album) cartProduct.getObject()).getListImage().get(0);
-                    }
-                %>
-                <tr>
-                    <td class="text-left"><img class="mr-5" src="<%=image %>" alt="<%=name %>"
-                                               style="width: 50px;">
-                        <a
-                                href="./detail?type=<%=type%>&id=<%=id%>"><%=name%>
-                        </a>
-                    </td>
-
-                    <td class="align-middle"><%=vndFormat.format(price - discount)%>
-                    </td>
-
-                    <td class="align-middle">
-                        <div class="input-group quantity mx-auto"
-                             style="width: 300px;justify-content: center ; align-items: center">
-                            <button value="<%=id%>" title="<%=type%>" class="p-2 border mr-3 decre"
-                                    style="cursor: pointer">-
-                            </button>
-                            <span id="quantity"><%=cartProduct.getQuantity()%></span>
-                            <button value="<%=id%>" title="<%=type%>" class="p-2 border ml-3 incre"
-                                    style="cursor: pointer">+
-                            </button>
-
+                        <%--Thông báo lỗi khi cố giảm số lượng sản phẩm xuống dưới 1--%>
+                        <% if (session.getAttribute("errorMessage") != null) { %>
+                        <div class="alert alert-warning">
+                            <%= session.getAttribute("errorMessage") %>
                         </div>
-                    </td>
+                        <% session.removeAttribute("errorMessage"); %> <%--Xóa thông báo khi tải lại trang--%>
+                        <% } %>
 
-                    <td class="align-middle"><%=vndFormat.format(price - discount)%>
-                    </td>
+                        <div class="align-middle" style="display: flex;justify-content: space-between">
+                            <%--  note : chỉnh thành chuyển thành nút xem lịch sử Report của USER                          --%>
+                            <div class="cols-md-6 mb-4">
+                                <a href="./rpKey-histories" style="display: flex;justify-content: center">
+                                    <button class="btn btn-block btn-primary"
+                                            style="width: 100%">Xem lịch sử Report Key
+                                    </button>
+                                </a>
+                            </div>
+                            <%--Nút xóa toàn bộ lịch sử --%>
+                            <div class="cols-md-6 mb-4">
+                                <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal"
+                                        data-target="#deleteCart">
+                                    Làm trống giỏ hàng
+                                </button>
+                            </div>
+                        </div>
 
-                    <td class="align-middle">
-
-                        <button type="submit" id="btnRemove" value="<%=id%>" title="<%=type%>"
-                                class="btnRemove btn btn-sm btn-primary">
-                            <i class="fa fa-times"></i>
-                        </button>
-
-                    </td>
-
-                </tr>
-                <% } %>
-                </tbody>
-            </table>
+                        <tr class="align-middle">
+                            <th>Key ID</th>
+                            <th>Public Key</th>
+                            <th>Create Time</th>
+                            <th>End Time</th>
+                            <th>Delete Key</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                        <c:forEach var="cartProduct" items="${cartProducts}">
+                            <tr>
+                                <td class="text-left"><i class="fas fa-key text-primary"></i> ${cartProduct.name} </td>
+                                <td class="align-middle">${vndFormat.format(cartProduct.price - cartProduct.discount)}</td>
+                                <td class="align-middle">
+                                    <div class="input-group quantity mx-auto" style="width: 300px;justify-content: center ; align-items: center">
+                                        <button value="${cartProduct.id}" title="${cartProduct.type}" class="p-2 border mr-3 decre" style="cursor: pointer">-</button>
+                                        <span id="quantity">${cartProduct.quantity}</span>
+                                        <button value="${cartProduct.id}" title="${cartProduct.type}" class="p-2 border ml-3 incre" style="cursor: pointer">+</button>
+                                    </div>
+                                </td>
+                                <td class="align-middle">${vndFormat.format(cartProduct.price - cartProduct.discount)}</td>
+                                <td class="align-middle">
+                                    <button type="submit" id="btnRemove" value="${cartProduct.id}" title="${cartProduct.type}" class="btnRemove btn btn-sm btn-primary">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
             <% } else { %>
             <%-- Khi không có sản phẩm trong giỏ --%>
             <div class="">
@@ -428,7 +389,7 @@
         </div>
 
     </div>
-</div>
+    </div>
 <!-- Cart End -->
 
 
@@ -546,7 +507,6 @@
             } else if (xhr.status === 500) {
                 const data = JSON.parse(xhr.responseText);
                 alert(data.message);
-                // window.location.href="http://localhost:8080/demoProject_war/favourite"
             }
         };
 
