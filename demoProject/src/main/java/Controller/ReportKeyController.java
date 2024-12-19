@@ -76,14 +76,15 @@ public class ReportKeyController extends HttpServlet {
         else{
             // note : thực hiện vô hiệu public key bằng cách set endTime
                 // đã có rpTime, rpReason, rpDate -> lưu xún database reportKeys
-                int curPublicKey = 10; // xử lí lấy ra publicKey hiện tại
-                String rpDate = (String) session.getAttribute("rpDate");
-                String rpTime = (String) session.getAttribute("rpTime");
-                String rpReason = (String) session.getAttribute("rpReason");
-                reportKeysDAO.insertReportKeys(user.getId(), curPublicKey, rpDate, rpTime, rpReason);
+                int curPublicKeyID = 1; // xử lí lấy ra publicKey hiện tại
+                String rpDate = (String) session.getAttribute("rp-date");
+                System.out.println(rpDate);
+                String rpTime = (String) session.getAttribute("rp-time");
+                System.out.println(rpTime);
+                String rpReason = (String) session.getAttribute("rp-reason");
+                reportKeysDAO.insertReportKeys(user.getId(), curPublicKeyID, rpDate, rpTime, rpReason);
                 // set endTime của publicKey hiện tại là rpTime trong HttpSession
-                session.getAttribute("rpDate");
-                session.getAttribute("rpTime");
+
             // chuyển đến trang thông báo report Key thành công
             req.getRequestDispatcher("reportKeySuccess.jsp").forward(req,resp);
         }

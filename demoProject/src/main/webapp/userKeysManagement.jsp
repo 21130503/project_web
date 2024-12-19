@@ -2,26 +2,34 @@
 <%@ page import="cart.CartProduct" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="nhom26.User" %>
-<%@ page import="nhom26.Topic" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="favourite.Favourite" %>
-<%@ page import="nhom26.OddImage" %>
-<%@ page import="nhom26.Album" %>
+<%@ page import="nhom26.*" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.security.PublicKey" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
     Cart cart = (Cart) session.getAttribute("cart");
     if (cart == null) {
         cart = new Cart();
     }
-
     Locale vnLocal = new Locale("vi", "VN");
     DecimalFormat vndFormat = new DecimalFormat("#,### VNĐ");
 %>
 <%
     Favourite favourite = (Favourite) session.getAttribute("favourite");
     if (favourite == null) favourite = new Favourite();
+%>
+
+<%
+    // lấy ra publicKeys trong session
+    List<PublicKeys> publicKeysList = (List<PublicKeys>) session.getAttribute("publicKeysList");
+    // lấy ra reportKeysList trong session
+    List<ReportKeys> listRPKeys = (List<ReportKeys>) session.getAttribute("reportKeysList");
+
+
 %>
 <!DOCTYPE html>
 <%--Dòng dưới để hiện lên theo charset UTF-8--%>
@@ -33,7 +41,7 @@
     <%--Dòng dưới để hiện lên theo charset UTF-8--%>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <title>Nhóm 26</title>
+    <title>Key Management Page</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -191,248 +199,189 @@
 </div>
 <!-- Navbar End -->
 
-<!-- End - Phần dùng chung cho các trang dành cho user -->
-
-
 <!-- Page Header Start -->
-<div class="container-fluid bg-secondary mb-5">
-    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-        <h1 class="font-weight-semi-bold text-uppercase mb-3">Giỏ Hàng</h1>
-        <div class="d-inline-flex">
-            <p class="m-0"><a href="index">Trang Chủ</a></p>
-            <p class="m-0 px-2">-</p>
-            <p class="m-0">Giỏ Hàng</p>
+    <div class="container-fluid bg-secondary mb-5" style="margin-bottom: 1rem !important;">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 45px">
+            <div class="d-inline-flex" style="text-align: left">
+                <p class="m-0"><a href="index">Trang Chủ</a></p>
+                <p class="m-0 px-2"> / </p>
+                <p class="m-0"  >USER KEY MANAGEMENT</p>
+            </div>
         </div>
     </div>
-</div>
 <!-- Page Header End -->
 
-
 <!-- Cart Start -->
-<div class="container-fluid pt-5">
-    <div class="row px-xl-5">
+    <div class="container-fluid pt-5" style="padding-top: 0rem !important;">
+        <div class="row px-xl-5">
+            <% if (publicKeysList.size() > 0) { %>
+                <table class="table table-bordered text-center mb-0">
+                    <thead class="bg-secondary text-dark">
 
-        <div class="col-lg-8 table-responsive mb-5">
-            <% if (cart.total() > 0) { %>
-            <table class="table table-bordered text-center mb-0">
-                <thead class="bg-secondary text-dark">
-
-                <%--Thông báo lỗi khi cố giảm số lượng sản phẩm xuống dưới 1--%>
-                <% if (session.getAttribute("errorMessage") != null) { %>
-                <div class="alert alert-warning">
-                    <%= session.getAttribute("errorMessage") %>
-                </div>
-                <% session.removeAttribute("errorMessage"); %> <%--Xóa thông báo khi tải lại trang--%>
-                <% } %>
-
-
-                <%-- Khi có sản phẩm trong giỏ --%>
-                <div class="align-middle" style="display: flex;justify-content: space-between">
-                    <div class="cols-md-6 mb-4">
-                        <a href="./shop" style="display: flex;justify-content: center">
-                            <button class="btn btn-block btn-primary"
-                                    style="width: 100%">Mua sắm tiếp
-                            </button>
-                        </a>
-                    </div>
-                    <div class="cols-md-6 mb-4">
-                        <%--Nút xóa toàn bộ sản phẩm khỏi giỏ hàng --%>
-                        <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal"
-                                data-target="#deleteCart">
-                            Làm trống giỏ hàng
-                        </button>
-                    </div>
-                </div>
-
-                <tr class="align-middle">
-                    <th>Sản Phẩm</th>
-                    <th>Giá</th>
-                    <th>Số lượng</th>
-                    <th>Thành tiền</th>
-                    <th>Xóa</th>
-                </tr>
-                </thead>
-                <tbody class="align-middle">
-
-                <%-- Dữ liệu cho cart --%>
-                <%
-                    String name = null, type = null, image = null;
-                    int id = 0, price = 0, discount = 0;
-                %>
-                <% for (Map.Entry<String, CartProduct> entry : cart.getData().entrySet()) {
-                    CartProduct cartProduct = entry.getValue();
-                    if (cartProduct.getObject() instanceof OddImage) {
-                        id = ((OddImage) cartProduct.getObject()).getIdOddImage();
-                        price = ((OddImage) cartProduct.getObject()).getPrice();
-                        discount = ((OddImage) cartProduct.getObject()).getDiscount();
-                        name = ((OddImage) cartProduct.getObject()).getName();
-                        type = ((OddImage) cartProduct.getObject()).getType();
-                        image = ((OddImage) cartProduct.getObject()).getImage();
-                    }
-                    if (cartProduct.getObject() instanceof Album) {
-                        id = ((Album) cartProduct.getObject()).getIdAlbum();
-                        price = ((Album) cartProduct.getObject()).getPrice();
-                        discount = ((Album) cartProduct.getObject()).getDiscount();
-                        name = ((Album) cartProduct.getObject()).getName();
-                        type = ((Album) cartProduct.getObject()).getType();
-                        image = ((Album) cartProduct.getObject()).getListImage().get(0);
-                    }
-                %>
-                <tr>
-                    <td class="text-left"><img class="mr-5" src="<%=image %>" alt="<%=name %>"
-                                               style="width: 50px;">
-                        <a
-                                href="./detail?type=<%=type%>&id=<%=id%>"><%=name%>
-                        </a>
-                    </td>
-
-                    <td class="align-middle"><%=vndFormat.format(price - discount)%>
-                    </td>
-
-                    <td class="align-middle">
-                        <div class="input-group quantity mx-auto"
-                             style="width: 300px;justify-content: center ; align-items: center">
-                            <button value="<%=id%>" title="<%=type%>" class="p-2 border mr-3 decre"
-                                    style="cursor: pointer">-
-                            </button>
-                            <span id="quantity"><%=cartProduct.getQuantity()%></span>
-                            <button value="<%=id%>" title="<%=type%>" class="p-2 border ml-3 incre"
-                                    style="cursor: pointer">+
-                            </button>
-
+                        <%--Thông báo lỗi khi cố giảm số lượng sản phẩm xuống dưới 1--%>
+                        <% if (session.getAttribute("errorMessage") != null) { %>
+                        <div class="alert alert-warning">
+                            <%= session.getAttribute("errorMessage") %>
                         </div>
-                    </td>
+                        <% session.removeAttribute("errorMessage"); %> <%--Xóa thông báo khi tải lại trang--%>
+                        <% } %>
 
-                    <td class="align-middle"><%=vndFormat.format(price - discount)%>
-                    </td>
+                        <div class="align-middle" style="display: flex;justify-content: space-between">
+                            <%--  note : chỉnh thành chuyển thành nút xem lịch sử Report của USER                          --%>
+                            <div class="cols-md-6 mb-4">
+                                <a href="./rpKey-histories" style="display: flex;justify-content: center">
+                                    <button class="btn btn-block btn-primary"
+                                            style="width: 100%">Xem lịch sử Report Key
+                                    </button>
+                                </a>
+                            </div>
+                            <%--Nút xóa toàn bộ lịch sử --%>
+                            <div class="cols-md-6 mb-4">
+                                <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal"
+                                        data-target="#deleteCart">
+                                    Làm trống giỏ hàng
+                                </button>
+                            </div>
+                        </div>
 
-                    <td class="align-middle">
+                        <tr class="align-middle">
+                            <th>Key ID</th>
+                            <th>Public Key</th>
+                            <th>Create Time</th>
+                            <th>End Time</th>
+                            <th>View Key</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                            <%
+                                if (publicKeysList != null) {
+                                    for (PublicKeys pubKey : publicKeysList) {
+                            %>
+                                <tr>
+                                    <td class="text-left"><i class="fas fa-key text-primary"></i> <%= pubKey.getId() %> </td>
+                                    <td class="align-middle" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: calc(1.5em* 31);">
+                                        <span id="keySnippet">
+                                            <%= pubKey.getPublicKey() %>
+                                        </span>
+                                    </td>
+                                    <td class="align-middle"><%= pubKey.getCreateTime() %></td>
+                                    <td class="align-middle"><%= pubKey.getEndTime() %></td>
+                                    <td class="align-middle">
+                                        <button class="btn btn-link p-0" onclick="showFullKey('<%= pubKey.getPublicKey() %>')" style="color: black; padding: 3px !important; background-color: #D19C97; border-radius: 9px;">
+                                            Details
+                                        </button>
+                                        <script>
+                                            function showFullKey(fullKey) {
+                                                const modal = document.createElement('div');
+                                                modal.style.position = 'fixed';
+                                                modal.style.top = '50%';
+                                                modal.style.left = '50%';
+                                                modal.style.transform = 'translate(-50%, -50%)';
+                                                modal.style.backgroundColor = '#fff';
+                                                modal.style.padding = '20px';
+                                                modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                                                modal.style.zIndex = '1000';
+                                                modal.style.width = '400px'; /* Chiều ngang ngắn */
+                                                modal.style.borderRadius = '8px';
 
-                        <button type="submit" id="btnRemove" value="<%=id%>" title="<%=type%>"
-                                class="btnRemove btn btn-sm btn-primary">
-                            <i class="fa fa-times"></i>
-                        </button>
-
-                    </td>
-
-                </tr>
-                <% } %>
-                </tbody>
-            </table>
+                                                modal.innerHTML = `
+                                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                    <h5>Public Key Details</h5>
+                                                    <button class="btn btn-link p-0" onclick="closeModal(this)" style="font-size: 30px;">&times;</button>
+                                                </div>
+                                                <div style="
+                                                    line-height: 1.5;
+                                                    padding: 10px;
+                                                    border: 1px solid #ccc;
+                                                    border-radius: 5px;
+                                                    word-wrap: break-word;
+                                                    background-color: #f9f9f9;
+                                                    white-space: normal;
+                                                    overflow: hidden;
+                                                    display: -webkit-box;
+                                                    -webkit-line-clamp: 10;
+                                                    -webkit-box-orient: vertical;
+                                                    max-height: calc(1.5em* 15);
+                                                    overflow-y: auto;
+                                                ">
+                                                    <p>${fullKey}</p>
+                                                </div>
+                                                <button class="btn btn-primary" onclick="copyKey('${fullKey}')" style="margin-top: 10px;">Copy Key</button>
+                                            `;
+                                                document.body.appendChild(modal);
+                                            }
+                                            function closeModal(button) {
+                                                const modal = button.parentElement.parentElement;
+                                                document.body.removeChild(modal);
+                                            }
+                                            function copyKey(fullKey) {
+                                                const tempTextarea = document.createElement('textarea');
+                                                tempTextarea.value = fullKey;
+                                                document.body.appendChild(tempTextarea);
+                                                tempTextarea.select();
+                                                document.execCommand('copy');
+                                                document.body.removeChild(tempTextarea);
+                                                alert('Key has been copied to clipboard!');
+                                            }
+                                        </script>
+                                    </td>
+                                </tr>
+                            <%
+                                    }
+                                }
+                            %>
+                    </tbody>
+                </table>
             <% } else { %>
-            <%-- Khi không có sản phẩm trong giỏ --%>
-            <div class="">
-                <div class="text-center mb-4">
-                    <h2 class="section px-5"><span
-                    >Bạn chưa mua sản phẩm nào.</span></h2>
-                </div>
-
-                <div class="" style="justify-content: center; display: flex">
-                    <img class="align-middle" style="width: 16%; margin-top: 40px" src="./asset/remove-from-cart.png"
-                         alt="ảnh giỏ hàng">
-                </div>
-
-                <div class="text-center" style="margin-top: 40px; ">
-                    <a href="./shop" style="display: flex;justify-content: center">
-                        <button class="btn btn-block btn-primary my-3 py-3"
-                                style="width: 50%">Mua sắm
-                        </button>
-                    </a>
-                </div>
-
-            </div>
-            <% } %>
-        </div>
-
-
-        <%-- Xác nhận xóa mã giảm giá --%>
-        <script>
-            function confirmRemoveDiscount() {
-                var result = confirm('Bạn có chắc muốn xóa mã giảm giá này chứ?');
-                if (result) {
-                    location.href = 'removeDiscount';
-                }
-            }
-        </script>
-
-
-        <div class="col-lg-4">
-            <%-- Thông báo cho việc mã giảm giá bị xóa --%>
-            <% String message = (String) session.getAttribute("message"); %>
-            <% if (message != null) { %>
-            <p style="color: green;"><%= message %>
-            </p>
-            <% session.removeAttribute("message"); %>
-            <% } %>
-
-            <%-- Thông báo cho việc nhập mã giảm giá --%>
-            <% String discountError = (String) session.getAttribute("discountError"); %>
-            <% String discountSuccess = (String) session.getAttribute("discountSuccess"); %>
-
-            <% if (discountError != null) { %>
-            <p style="color: red;"><%= discountError %>
-            </p>
-            <% session.removeAttribute("discountError"); %>
-            <% } %>
-
-            <% if (discountSuccess != null) { %>
-            <p style="color: green;"><%= discountSuccess %>
-            </p>
-            <% session.removeAttribute("discountSuccess"); %>
-            <% } %>
-
-            <form action="applyDiscount" method="post">
-                <div class="input-group">
-                    <input type="text" class="form-control p-4" name="discountCode" placeholder="Mã Giảm Giá">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Áp Dụng Mã</button>
+                <div class="">
+                    <div class="text-center mb-4">
+                        <h2 class="section px-5"><span
+                        >Bạn chưa có Public Key nào.</span></h2>
+                    </div>
+                    <div class="text-center" style="margin-top: 40px; ">
+                        <a href="./createKey" style="display: flex;justify-content: center">
+                            <button class="btn btn-block btn-primary my-3 py-3"
+                                    style="width: 50%">Tạo Public Key cho bạn.
+                            </button>
+                        </a>
                     </div>
                 </div>
-            </form>
+            <% } %>
+<%--        </div>--%>
 
-
-            <div class="card border-secondary mb-5">
-                <div class="card-header bg-secondary border-0">
-                    <h4 class="font-weight-semi-bold m-0">Tóm Tắt Giỏ Hàng</h4>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3 pt-1">
-                        <h6 class="font-weight-medium">Tổng Tiền Các Sản Phẩm</h6>
-                        <h6 class="font-weight-medium"><%=vndFormat.format(cart.totalPrice())%>
-                        </h6>
-                    </div>
-
-                    <%-- Hiển thị mã giảm giá được áp --%>
-                    <% if (cart.getAppliedDiscount() != null) { %>
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Mã <h6 class="font-weight-semi-bold"><%= cart.getAppliedDiscount().getDescription() %></h6> được áp
-                            dụng.
-                        </h6>
-                        <%-- Nút xóa mã giảm giá ra khỏi tổng tiền --%>
-                        <button type="button" class="close" aria-label="Close" onclick="confirmRemoveDiscount();">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <% } %>
-
-                </div>
-                <div class="card-footer border-secondary bg-transparent">
-                    <div class="d-flex justify-content-between mt-2">
-                        <h5 class="font-weight-bold">Tổng Cộng</h5>
-                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.totalPrice())%>
-                        </h5>
-                    </div>
-                    <a href="checkout">
-                        <button class="btn btn-block btn-primary my-3 py-3">Tiến Hành Thanh
-                            Toán
-                        </button>
-                    </a>
-                </div>
-            </div>
-        </div>
-
+<%--        <div class="col-lg-4">--%>
+<%--            <form action="applyDiscount" method="post">--%>
+<%--                <div class="input-group">--%>
+<%--                    <input type="text" class="form-control p-4" name="discountCode" placeholder="Mã Giảm Giá">--%>
+<%--                    <div class="input-group-append">--%>
+<%--                        <button type="submit" class="btn btn-primary">Áp Dụng Mã</button>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--            </form>--%>
+<%--            <div class="card border-secondary mb-5">--%>
+<%--                <div class="card-header bg-secondary border-0">--%>
+<%--                    <h4 class="font-weight-semi-bold m-0">Tóm Tắt Giỏ Hàng</h4>--%>
+<%--                </div>--%>
+<%--                <div class="card-body">--%>
+<%--                    <div class="d-flex justify-content-between mb-3 pt-1">--%>
+<%--                        <h6 class="font-weight-medium">Tổng Tiền Các Sản Phẩm</h6>--%>
+<%--                        <h6 class="font-weight-medium"><%=vndFormat.format(cart.totalPrice())%>--%>
+<%--                        </h6>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--                <div class="card-footer border-secondary bg-transparent">--%>
+<%--                    <div class="d-flex justify-content-between mt-2">--%>
+<%--                        <h5 class="font-weight-bold">Tổng Cộng</h5>--%>
+<%--                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.totalPrice())%>--%>
+<%--                        </h5>--%>
+<%--                    </div>--%>
+<%--                    <a href="checkout">--%>
+<%--                        <button class="btn btn-block btn-primary my-3 py-3"> Tiến Hành Thanh Toán </button>--%>
+<%--                    </a>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
     </div>
-</div>
 <!-- Cart End -->
 
 
@@ -550,7 +499,6 @@
             } else if (xhr.status === 500) {
                 const data = JSON.parse(xhr.responseText);
                 alert(data.message);
-                // window.location.href="http://localhost:8080/demoProject_war/favourite"
             }
         };
 
@@ -617,6 +565,24 @@
             xhr.send();
         })
     })
+</script>
+
+<script>
+    function toggleKeyDetails(button) {
+        const keySnippet = button.previousElementSibling;
+        if (keySnippet.style.display === 'none') {
+            keySnippet.style.display = '-webkit-box';
+            keySnippet.style.overflow = 'hidden';
+            keySnippet.style.textOverflow = 'ellipsis';
+            keySnippet.style.webkitLineClamp = 2;
+            button.textContent = 'View Details';
+        } else {
+            keySnippet.style.display = 'block';
+            keySnippet.style.overflow = 'visible';
+            keySnippet.style.textOverflow = 'clip';
+            button.textContent = 'Hide Details';
+        }
+    }
 </script>
 </body>
 
