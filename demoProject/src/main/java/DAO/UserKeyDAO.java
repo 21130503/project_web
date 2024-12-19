@@ -68,6 +68,32 @@ public class UserKeyDAO {
         return publicKeysList;
     }
 
+    public PublicKeys getPublicKey(int id) {
+        Connection connection = null;
+        PublicKeys publicKeyObj = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "SELECT * FROM publickeys WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int publicKeyId = resultSet.getInt("id");
+                int userId = resultSet.getInt("userId");
+                String publicKey = resultSet.getString("publicKey");
+                LocalDateTime createTime = resultSet.getTimestamp("createTime").toLocalDateTime();
+                LocalDateTime endTime = resultSet.getTimestamp("endTime").toLocalDateTime();
+
+                publicKeyObj = new PublicKeys(publicKeyId, userId, publicKey, createTime, endTime);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Connect.closeConnection(connection);
+        }
+        return publicKeyObj;
+    }
+
     public static void main(String[] args) {
         UserKeyDAO dao = new UserKeyDAO();
         System.out.println(dao.getAllPublicKeys(12).size());

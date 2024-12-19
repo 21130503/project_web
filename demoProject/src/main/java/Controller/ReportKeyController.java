@@ -1,12 +1,11 @@
 package Controller;
 
 import DAO.ReportKeysDAO;
+import DAO.TopicDAO;
 import DAO.UserDAO;
+import DAO.UserKeyDAO;
 import Services.SendEmail;
-import nhom26.Config;
-import nhom26.ReportKeys;
-import nhom26.Security;
-import nhom26.User;
+import nhom26.*;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -19,9 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 
 @WebServlet(value = "/report-priKey")
@@ -30,8 +31,9 @@ public class ReportKeyController extends HttpServlet {
     Security security = new Security();
     Config config = new Config();
     UserDAO userDAO = new UserDAO();
-
+    TopicDAO topicDAO = new TopicDAO();
     ReportKeysDAO reportKeysDAO = new ReportKeysDAO();
+    UserKeyDAO pubKeyDAO = new UserKeyDAO();
     Random random = new Random();
     int code = random.nextInt(89999) + 10000;
 
@@ -48,7 +50,32 @@ public class ReportKeyController extends HttpServlet {
             processInput(req,resp);
         } else if (action.equals("verify-email")) {
             verifyRPEmail(req,resp);
+        } else if (action.equals("management")) {
+            rpKeyManagement(req,resp);
         }
+    }
+
+    private void rpKeyManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
+
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if(user == null) { // nếu user hết phiên đăng nhập thì login lại
+            resp.sendRedirect("login.jsp");
+            return;
+        }
+
+        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
+        int userID = user.getId(); // id của user hiện tại
+        // lấy ra list report key của user - reportKey
+        List<ReportKeys> reportKeysList = reportKeysDAO.getReportList(userID);
+        // gửi 2 list này cho userKeysManagement.jsp để hiển thị
+        session.setAttribute("reportKeysList", reportKeysList);
+
+        // chuyển đến trang thông báo report Key thành công
+        req.getRequestDispatcher("rpKeyManagement.jsp").forward(req,resp);
     }
 
     @Override

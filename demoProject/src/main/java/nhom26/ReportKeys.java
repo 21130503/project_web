@@ -1,5 +1,6 @@
 package nhom26;
 
+import DAO.UserKeyDAO;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -72,5 +73,10 @@ public class ReportKeys {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getPublicKey(int pubKeyID) {
+        UserKeyDAO userKeyDAO = new UserKeyDAO();
+        return userKeyDAO.getPublicKey(pubKeyID).getPublicKey();
     }
 }

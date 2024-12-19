@@ -180,6 +180,10 @@
                             <%if (!user.isVerifyEmail()) {%>
                             <a href="./verify" class="dropdown-item">Xác thực email của bạn</a>
                             <%}%>
+                            <a href="./message" class="dropdown-item">Gửi tin nhắn</a>
+                            <a href="./report-priKey?action=direct" class="dropdown-item">Báo cáo lộ PrivateKey</a>
+                            <a href="./edit-infor" class="dropdown-item">Sửa thông tin</a>
+                            <a href="./createKey" class="dropdown-item">Tạo khóa</a>
                             <% if (user.isAdmin()) {%>
                             <a href="./topic" class="dropdown-item">Quản lí chủ đề</a>
                             <a href="./product" class="dropdown-item">Quản lí sản phẩm</a>
@@ -229,18 +233,11 @@
                         <div class="align-middle" style="display: flex;justify-content: space-between">
                             <%--  note : chỉnh thành chuyển thành nút xem lịch sử Report của USER                          --%>
                             <div class="cols-md-6 mb-4">
-                                <a href="./rpKey-histories" style="display: flex;justify-content: center">
+                                <a href="./report-priKey?action=management" style="display: flex;justify-content: center">
                                     <button class="btn btn-block btn-primary"
                                             style="width: 100%">Xem lịch sử Report Key
                                     </button>
                                 </a>
-                            </div>
-                            <%--Nút xóa toàn bộ lịch sử --%>
-                            <div class="cols-md-6 mb-4">
-                                <button id="removeAll" class="btn btn-block btn-primary" style="width: 100%" data-toggle="modal"
-                                        data-target="#deleteCart">
-                                    Làm trống giỏ hàng
-                                </button>
                             </div>
                         </div>
 
