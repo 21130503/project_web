@@ -200,8 +200,8 @@
 <!-- Navbar End -->
 
 <!-- Page Header Start -->
-    <div class="container-fluid bg-secondary mb-5">
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 90px">
+    <div class="container-fluid bg-secondary mb-5" style="margin-bottom: 1rem !important;">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 45px">
             <div class="d-inline-flex" style="text-align: left">
                 <p class="m-0"><a href="index">Trang Chủ</a></p>
                 <p class="m-0 px-2"> / </p>
@@ -212,9 +212,8 @@
 <!-- Page Header End -->
 
 <!-- Cart Start -->
-    <div class="container-fluid pt-5">
+    <div class="container-fluid pt-5" style="padding-top: 0rem !important;">
         <div class="row px-xl-5">
-            <div class="col-lg-8 table-responsive mb-5">
             <% if (publicKeysList.size() > 0) { %>
                 <table class="table table-bordered text-center mb-0">
                     <thead class="bg-secondary text-dark">
@@ -250,74 +249,81 @@
                             <th>Public Key</th>
                             <th>Create Time</th>
                             <th>End Time</th>
-                            <th>Delete Key</th>
+                            <th>View Key</th>
                         </tr>
                     </thead>
                     <tbody class="align-middle">
-<%--                        <c:forEach items="${publicKeysList}" var="pubKey">--%>
-<%--                            <tr>--%>
-<%--                                <td class="text-left"><i class="fas fa-key text-primary"></i> ${pubKey.id} </td>--%>
-<%--                                <td class="align-middle">${pubKey.publicKey}</td>--%>
-<%--                                <td class="align-middle">${pubKey.createTime}</td>--%>
-<%--                                <td class="align-middle">${pubKey.endTime}</td>--%>
-<%--                                <td class="align-middle">--%>
-<%--                                    <button type="submit" id="btnRemove" value="" title="" class="btnRemove btn btn-sm btn-primary">--%>
-<%--                                        <i class="fa fa-times"></i>--%>
-<%--                                    </button>--%>
-<%--                                </td>--%>
-<%--                            </tr>--%>
-<%--                        </c:forEach>--%>
                             <%
                                 if (publicKeysList != null) {
                                     for (PublicKeys pubKey : publicKeysList) {
                             %>
                                 <tr>
                                     <td class="text-left"><i class="fas fa-key text-primary"></i> <%= pubKey.getId() %> </td>
-                                    <td class="align-middle" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: 300px;">
+                                    <td class="align-middle" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: calc(1.5em* 31);">
                                         <span id="keySnippet">
                                             <%= pubKey.getPublicKey() %>
                                         </span>
-                                        <button class="btn btn-link p-0" onclick="showFullKey('<%= pubKey.getPublicKey() %>')">View Details</button>
                                     </td>
-                                    <script>
-                                        function showFullKey(fullKey) {
-                                            const modal = document.createElement('div');
-                                            modal.style.position = 'fixed';
-                                            modal.style.top = '50%';
-                                            modal.style.left = '50%';
-                                            modal.style.transform = 'translate(-50%, -50%)';
-                                            modal.style.backgroundColor = '#fff';
-                                            modal.style.padding = '20px';
-                                            modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-                                            modal.style.zIndex = '1000';
-                                            modal.style.width = '400px'; /* Chiều ngang ngắn */
-                                            modal.style.borderRadius = '8px';
-
-                                            modal.innerHTML = `
-                                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                                        <h5>Public Key Details</h5>
-                                                        <button class="btn btn-link p-0" onclick="closeModal(this)" style="font-size: 20px;">&times;</button>
-                                                    </div>
-                                                    <div style="max-height: 500px; overflow-y: auto; margin-top: 10px;">
-                                                        <p>${fullKey}</p>
-                                                    </div>
-                                                    <button class="btn btn-primary" onclick="closeModal(this)" style="margin-top: 10px;">Close</button>
-                                                `;
-                                            document.body.appendChild(modal);
-                                        }
-                                        function closeModal(button) {
-                                            const modal = button.parentElement.parentElement;
-                                            document.body.removeChild(modal);
-                                        }
-                                    </script>
-
-
                                     <td class="align-middle"><%= pubKey.getCreateTime() %></td>
                                     <td class="align-middle"><%= pubKey.getEndTime() %></td>
                                     <td class="align-middle">
-                                        <button type="submit" id="btnRemove" value="<%= pubKey.getId() %>" class="btnRemove btn btn-sm btn-primary">
-                                            <i class="fa fa-times"></i>
+                                        <button class="btn btn-link p-0" onclick="showFullKey('<%= pubKey.getPublicKey() %>')" style="color: black; padding: 3px !important; background-color: #D19C97; border-radius: 9px;">
+                                            Details
                                         </button>
+                                        <script>
+                                            function showFullKey(fullKey) {
+                                                const modal = document.createElement('div');
+                                                modal.style.position = 'fixed';
+                                                modal.style.top = '50%';
+                                                modal.style.left = '50%';
+                                                modal.style.transform = 'translate(-50%, -50%)';
+                                                modal.style.backgroundColor = '#fff';
+                                                modal.style.padding = '20px';
+                                                modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                                                modal.style.zIndex = '1000';
+                                                modal.style.width = '400px'; /* Chiều ngang ngắn */
+                                                modal.style.borderRadius = '8px';
+
+                                                modal.innerHTML = `
+                                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                    <h5>Public Key Details</h5>
+                                                    <button class="btn btn-link p-0" onclick="closeModal(this)" style="font-size: 30px;">&times;</button>
+                                                </div>
+                                                <div style="
+                                                    line-height: 1.5;
+                                                    padding: 10px;
+                                                    border: 1px solid #ccc;
+                                                    border-radius: 5px;
+                                                    word-wrap: break-word;
+                                                    background-color: #f9f9f9;
+                                                    white-space: normal;
+                                                    overflow: hidden;
+                                                    display: -webkit-box;
+                                                    -webkit-line-clamp: 10;
+                                                    -webkit-box-orient: vertical;
+                                                    max-height: calc(1.5em* 15);
+                                                    overflow-y: auto;
+                                                ">
+                                                    <p>${fullKey}</p>
+                                                </div>
+                                                <button class="btn btn-primary" onclick="copyKey('${fullKey}')" style="margin-top: 10px;">Copy Key</button>
+                                            `;
+                                                document.body.appendChild(modal);
+                                            }
+                                            function closeModal(button) {
+                                                const modal = button.parentElement.parentElement;
+                                                document.body.removeChild(modal);
+                                            }
+                                            function copyKey(fullKey) {
+                                                const tempTextarea = document.createElement('textarea');
+                                                tempTextarea.value = fullKey;
+                                                document.body.appendChild(tempTextarea);
+                                                tempTextarea.select();
+                                                document.execCommand('copy');
+                                                document.body.removeChild(tempTextarea);
+                                                alert('Key has been copied to clipboard!');
+                                            }
+                                        </script>
                                     </td>
                                 </tr>
                             <%
@@ -341,40 +347,40 @@
                     </div>
                 </div>
             <% } %>
-        </div>
+<%--        </div>--%>
 
-        <div class="col-lg-4">
-            <form action="applyDiscount" method="post">
-                <div class="input-group">
-                    <input type="text" class="form-control p-4" name="discountCode" placeholder="Mã Giảm Giá">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Áp Dụng Mã</button>
-                    </div>
-                </div>
-            </form>
-            <div class="card border-secondary mb-5">
-                <div class="card-header bg-secondary border-0">
-                    <h4 class="font-weight-semi-bold m-0">Tóm Tắt Giỏ Hàng</h4>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3 pt-1">
-                        <h6 class="font-weight-medium">Tổng Tiền Các Sản Phẩm</h6>
-                        <h6 class="font-weight-medium"><%=vndFormat.format(cart.totalPrice())%>
-                        </h6>
-                    </div>
-                </div>
-                <div class="card-footer border-secondary bg-transparent">
-                    <div class="d-flex justify-content-between mt-2">
-                        <h5 class="font-weight-bold">Tổng Cộng</h5>
-                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.totalPrice())%>
-                        </h5>
-                    </div>
-                    <a href="checkout">
-                        <button class="btn btn-block btn-primary my-3 py-3"> Tiến Hành Thanh Toán </button>
-                    </a>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col-lg-4">--%>
+<%--            <form action="applyDiscount" method="post">--%>
+<%--                <div class="input-group">--%>
+<%--                    <input type="text" class="form-control p-4" name="discountCode" placeholder="Mã Giảm Giá">--%>
+<%--                    <div class="input-group-append">--%>
+<%--                        <button type="submit" class="btn btn-primary">Áp Dụng Mã</button>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--            </form>--%>
+<%--            <div class="card border-secondary mb-5">--%>
+<%--                <div class="card-header bg-secondary border-0">--%>
+<%--                    <h4 class="font-weight-semi-bold m-0">Tóm Tắt Giỏ Hàng</h4>--%>
+<%--                </div>--%>
+<%--                <div class="card-body">--%>
+<%--                    <div class="d-flex justify-content-between mb-3 pt-1">--%>
+<%--                        <h6 class="font-weight-medium">Tổng Tiền Các Sản Phẩm</h6>--%>
+<%--                        <h6 class="font-weight-medium"><%=vndFormat.format(cart.totalPrice())%>--%>
+<%--                        </h6>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--                <div class="card-footer border-secondary bg-transparent">--%>
+<%--                    <div class="d-flex justify-content-between mt-2">--%>
+<%--                        <h5 class="font-weight-bold">Tổng Cộng</h5>--%>
+<%--                        <h5 class="font-weight-bold"><%=vndFormat.format(cart.totalPrice())%>--%>
+<%--                        </h5>--%>
+<%--                    </div>--%>
+<%--                    <a href="checkout">--%>
+<%--                        <button class="btn btn-block btn-primary my-3 py-3"> Tiến Hành Thanh Toán </button>--%>
+<%--                    </a>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
     </div>
 <!-- Cart End -->
 

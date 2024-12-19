@@ -31,6 +31,7 @@ public class UserKeysController extends HttpServlet {
 
         reportKeysDAO = new ReportKeysDAO();
         userKeyDAO = new UserKeyDAO();
+        TopicDAO topicDAO = new TopicDAO();
 
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
@@ -38,6 +39,7 @@ public class UserKeysController extends HttpServlet {
             resp.sendRedirect("login.jsp");
             return;
         }
+        req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         int userID = user.getId(); // id của user hiện tại
         // lấy ra list key của user - publicKeys
         List<PublicKeys> publicKeysList = userKeyDAO.getAllPublicKeys(userID);
