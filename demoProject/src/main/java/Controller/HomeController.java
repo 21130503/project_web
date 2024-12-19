@@ -27,11 +27,11 @@ public class HomeController extends HttpServlet {
         OrderDAO orderDAO = new OrderDAO();
 //        NotificationDAO notificationDAO = new NotificationDAO();
         HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
-        if(user == null){
-            resp.sendRedirect("login.jsp");
-            return;
-        }
+//        User user = (User) session.getAttribute("user");
+//        if(user == null){
+//            resp.sendRedirect("login.jsp");
+//            return;
+//        }
 //        ArrayList<Notification> notifications = notificationDAO.getNotification(user.getId());
         req.setAttribute("listTopic", topicDAO.getAllTopicsForClient());
         req.setAttribute("listAlbumNew", productDAO.getTop8AlbumNew());
