@@ -79,6 +79,11 @@
             </form>
         </div>
         <div class="col-lg-3 col-6 text-right">
+            <%-- btn : showKeyList() --%>
+            <a href="./userkeys-management" class="btn border">
+                <i class="fas fa-key text-primary"></i>
+                <span class="badge"></span>
+            </a>
             <a href="./favourite" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge"><%=favourite.total()%></span>

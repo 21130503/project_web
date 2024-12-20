@@ -47,6 +47,9 @@ CREATE TABLE `album` (
 --
 
 INSERT INTO `album` (`idAlbum`, `name`, `price`, `discount`, `isShow`, `deleted`, `createdAt`) VALUES
+(13, 'Funny Anime', 100000, 20000, 'true', 'false', '2024-12-20'),
+(14, 'Video Game', 200000, 15000, 'true', 'false', '2024-12-20'),
+(15, 'Meme', 150000, 30000, 'true', 'false', '2024-12-20'),
 (10, 'Chó cưng', 100000, 50000, 'true', 'false', '2023-12-12'),
 (16, 'Hoa hồng1', 200000, 0, 'true', 'false', '2023-12-25'),
 (20, 'Con người ', 100000, 5000, 'true', 'false', '2024-01-01'),
@@ -63,44 +66,32 @@ INSERT INTO `album` (`idAlbum`, `name`, `price`, `discount`, `isShow`, `deleted`
 (32, '19/10-1', 5000, 0, 'true', 'false', '2024-10-19'),
 (33, '19/10-2', 6000, 0, 'true', 'false', '2024-10-19');
 
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `albumbelongtopic`
---
 
 CREATE TABLE `albumbelongtopic` (
   `idTopic` int(11) NOT NULL,
   `idAlbum` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `albumbelongtopic`
---
-
 INSERT INTO `albumbelongtopic` (`idTopic`, `idAlbum`) VALUES
-(2, 10),
-(1, 16),
-(3, 20),
-(1, 21),
-(2, 22),
-(5, 23),
-(6, 24),
-(7, 25),
-(10, 26),
-(4, 27),
-(7, 28),
-(7, 29),
-(11, 30),
-(11, 31),
-(11, 32),
-(11, 33);
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `albumfeedback`
---
+  (2, 10),
+  (1, 16),
+  (3, 20),
+  (1, 21),
+  (2, 22),
+  (5, 23),
+  (6, 24),
+  (7, 25),
+  (10, 26),
+  (4, 27),
+  (7, 28),
+  (7, 29),
+  (11, 30),
+  (11, 31),
+  (11, 32),
+  (10, 13),
+  (10, 14),
+  (10, 15),
+  (11, 33);
 
 CREATE TABLE `albumfeedback` (
   `idFeedBack` int(11) NOT NULL,
@@ -110,12 +101,6 @@ CREATE TABLE `albumfeedback` (
   `star` varchar(11) DEFAULT NULL,
   `createdAt` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `albumorder`
---
 
 CREATE TABLE `albumorder` (
   `idOrder` int(11) NOT NULL,
@@ -131,10 +116,6 @@ CREATE TABLE `albumorder` (
   `fileName` varchar(225) NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `albumorder`
---
 
 INSERT INTO `albumorder` (`idOrder`, `idAlbum`, `idUser`, `receiver`, `phoneNumber`, `quantity`, `totalPrice`, `status`, `address`, `purchareDate`, `fileName`, `createdAt`) VALUES
 (29, 24, 10, 'Đặng Diễm Quyên', '0765607019', 1, 500000, 'Đã hủy', 'Bố Hạ 1,Phường Hiệp Sơn,Thị xã Kinh Môn,Tỉnh Hải Dương', '2024-12-04', 'E:\\TomCat\\apache-tomcat-9.0.82\\apache-tomcat-9.0.82\\webapps\\demoProject_war\\orders/order10f66da1-2b54-4a46-b16c-21ed9e1facf4.txt', '2024-12-04 00:00:52');
@@ -192,8 +173,9 @@ INSERT INTO `ct_album` (`idAlbum`, `description`) VALUES
 (10, 'Chó là bạn'),
 (11, 'Pokemon xyz'),
 (12, 'abc xyz'),
-(14, 'sdssadas'),
-(14, 'sdssadas'),
+(13, 'Các bức ảnh Funny xuất hiện trong các bộ Anime, phim Hoạt Hình.'),
+(14, 'Video Game là nguồn cảm hứng bất tận cho các Meme của người dùng Internet.'),
+(15, 'Các Meme huyền thoại xuất hiện hầu hết mọi nên trên INTERNET.'),
 (16, '1'),
 (20, 'update'),
 (21, 'Hoa 1'),
@@ -281,6 +263,17 @@ CREATE TABLE `image` (
 
 INSERT INTO `image` (`idImage`, `idAlbum`, `source`) VALUES
 (8, 10, '/images/cho3.png'),
+
+(1, 13, '/images/meme1.png'),
+(2, 13, '/images/meme2.png'),
+(3, 13, '/images/meme3.png'),
+(4, 14, '/images/meme4.png'),
+(5, 14, '/images/meme5.png'),
+(6, 14, '/images/meme6.png'),
+(7, 15, '/images/meme7.png'),
+(11, 15, '/images/meme8.png'),
+(9, 15, '/images/meme9.png'),
+
 (10, 12, '/images/lizardon.jpg'),
 (34, 16, '/images/f160c4cb-cdf6-4469-892f-440ef326154a_logohq.png'),
 (59, 20, '/images/connguoi1.png'),
@@ -363,7 +356,13 @@ CREATE TABLE `oddimage` (
 --
 
 INSERT INTO `oddimage` (`idOddImage`, `name`, `source`, `watermark`, `price`, `discount`, `isShow`, `deleted`, `createdAt`) VALUES
-(12, 'Tháng 4 lời nói dối của em', '/images/avatar.gif', '', 500000, 20000, 'false', 'false', '2023-12-17'),
+(8, 'Noel Vui Vẻ Nhoa :>>', '/images/meme10.png', '', 500000, 20000, 'true', 'false', '2024-12-17'),
+(9, 'Anh chàng thư giãn', '/images/meme11.png', '', 500000, 20000, 'true', 'false', '2024-12-17'),
+(7, 'Coder 2025', '/images/meme12.png', '', 500000, 20000, 'true', 'false', '2024-12-17'),
+(10, 'Nó ở đây này !', '/images/meme13.png', '', 500000, 20000, 'true', 'false', '2024-12-17'),
+(11, 'Jojo Mèo Tom', '/images/meme14.png', '', 500000, 20000, 'true', 'false', '2024-12-17'),
+
+(12, 'Tháng 4 lời nói dối của em', '/images/avatar.gif', '', 500000, 20000, 'false', 'false', '2024-12-17'),
 (13, 'Hoa hồng', '/images/hoa4.png', '', 100000, 0, 'true', 'false', '2023-12-17'),
 (15, 'Vũ trụ-Hố đen1', '/images/vutru1.png', '', 20000, 0, 'true', 'false', '2023-12-30'),
 (16, 'Cún Lucky', '/images/cho4.png', '', 300000, 5000, 'false', 'false', '2023-12-30'),
@@ -380,23 +379,19 @@ INSERT INTO `oddimage` (`idOddImage`, `name`, `source`, `watermark`, `price`, `d
 (28, 'Natural', '/images/images.jfif', '/images-watermark/images.jfif', 100000, 1000, 'true', 'false', '2024-10-01'),
 (29, 'Nautural-1', '/images/images.jfif', '/images-watermark/images.jfif', 50000, 0, 'true', 'false', '2024-10-01');
 
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `oddimagebelongtopic`
---
 
 CREATE TABLE `oddimagebelongtopic` (
   `idTopic` int(11) NOT NULL,
   `idOddImage` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `oddimagebelongtopic`
---
-
 INSERT INTO `oddimagebelongtopic` (`idTopic`, `idOddImage`) VALUES
 (1, 13),
+(10, 7),
+(10, 8),
+(10, 9),
+(10, 10),
+(10, 11),
 (7, 15),
 (2, 16),
 (1, 17),
@@ -510,17 +505,7 @@ CREATE TABLE `publickeys` (
 
 INSERT INTO `publickeys` (userId, publicKey, createTime, endTime) VALUES 
 (8, 'ABCD1234EFGH5678...', '2024-12-17 10:00:00', '2025-12-17 10:00:00'),
-(12, 'MIICXAIBADCCAjUGByqGSM44BAEwggIoAoIBAQCPeTXZuarpv6vtiHrPSVG28y7FnjuvNxjo6sSWHz79NgbnQ1GpxBgzObgJ58KuHFObp0dbhdARrbi0eYd1SYRpXKwOjxSzNggooi/6JxEKPWKpk0U0CaD+aWxGWPhL3SCBnDcJoBBXsZWtzQAjPbpUhLYpH51kjviDRIZ3l5zsBLQ0pqwudemYXeI9sCkvwRGMn/qdgYHnM423krcw17njSVkvaAmYchU5Feo9a4tGU8YzRY+AOzKkwuDycpAlbk4/ijsIOKHEUOThjBopo33fXqFD3ktm/wSQPtXPFiPhWNSHxgjpfyEc2B3KI8tuOAdl+CLjQr5ITAV2OTlgHNZnAh0AuvaWpoV499/e5/pnyXfHhe8ysjO65YDAvNVpXQKCAQAWplxYIEhQcE51AqOXVwQNNNo6NHjBVNTkpcAtJC7gT5bmHkvQkEq9rI837rHgnzGC0jyQQ8tkL4gAQWDt+coJsyB2p5wypifyRz6Rh5uixOdEvSCBVEy1W4AsNo0fqD7UielOD6BojjJCilx4xHjGjQUntxyaOrsLC+EsRGiWOefTznTbEBplqiuH9kxoJts+xy9LVZmDS7TtsC98kOmkltOlXVNb6/xF1PYZ9j897buHOSXC8iTgdzEpbaiH7B5HSPh++1/et1SEMWsiMt7lU92vAhErDR8C2jCXMiT+J67ai51LKSLZuovjntnhA6Y8UoELxoi34u1DFuHvF9veBB4CHCzX0HyVK0pyFxq5L/PJKjd+cM4nPGMMoaoMqBs=, '2024-12-17 10:00:00', '2025-12-17 10:00:00');
-
-
-
-
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `topic`
---
+(12, 'MIICXAIBADCCAjUGByqGSM44BAEwggIoAoIBAQCPeTXZuarpv6vtiHrPSVG28y7FnjuvNxjo6sSWHz79NgbnQ1GpxBgzObgJ58KuHFObp0dbhdARrbi0eYd1SYRpXKwOjxSzNggooi/6JxEKPWKpk0U0CaD+aWxGWPhL3SCBnDcJoBBXsZWtzQAjPbpUhLYpH51kjviDRIZ3l5zsBLQ0pqwudemYXeI9sCkvwRGMn/qdgYHnM423krcw17njSVkvaAmYchU5Feo9a4tGU8YzRY+AOzKkwuDycpAlbk4/ijsIOKHEUOThjBopo33fXqFD3ktm/wSQPtXPFiPhWNSHxgjpfyEc2B3KI8tuOAdl+CLjQr5ITAV2OTlgHNZnAh0AuvaWpoV499/e5/pnyXfHhe8ysjO65YDAvNVpXQKCAQAWplxYIEhQcE51AqOXVwQNNNo6NHjBVNTkpcAtJC7gT5bmHkvQkEq9rI837rHgnzGC0jyQQ8tkL4gAQWDt+coJsyB2p5wypifyRz6Rh5uixOdEvSCBVEy1W4AsNo0fqD7UielOD6BojjJCilx4xHjGjQUntxyaOrsLC+EsRGiWOefTznTbEBplqiuH9kxoJts+xy9LVZmDS7TtsC98kOmkltOlXVNb6/xF1PYZ9j897buHOSXC8iTgdzEpbaiH7B5HSPh++1/et1SEMWsiMt7lU92vAhErDR8C2jCXMiT+J67ai51LKSLZuovjntnhA6Y8UoELxoi34u1DFuHvF9veBB4CHCzX0HyVK0pyFxq5L/PJKjd+cM4nPGMMoaoMqBs=', '2024-12-17 10:00:00', '2025-12-17 10:00:00');
 
 CREATE TABLE `topic` (
   `idTopic` int(11) NOT NULL,
@@ -528,10 +513,6 @@ CREATE TABLE `topic` (
   `isShow` varchar(50) NOT NULL,
   `interfaceImage` longtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `topic`
---
 
 INSERT INTO `topic` (`idTopic`, `name`, `isShow`, `interfaceImage`) VALUES
 (1, 'Hoa', 'true', '/images/hoa5.png'),
@@ -543,20 +524,9 @@ INSERT INTO `topic` (`idTopic`, `name`, `isShow`, `interfaceImage`) VALUES
 (7, 'Vũ trụ', 'true', '/images/vutru4.png'),
 (8, 'Xe', 'true', '/images/xe2.png'),
 (9, 'hhi', 'true', '/images/lizardon.jpg'),
+(10, 'Giải Trí', 'true', '/images/meme0.png'),
 (11, 'Thiên nhiên', 'true', '/images/thiennhien4.png'),
 (12, 'Test', 'true', '/images/slide4.jpg');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `user`
---
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `watermark`
---
 
 CREATE TABLE `watermark` (
   `id` int(11) NOT NULL,
@@ -564,9 +534,6 @@ CREATE TABLE `watermark` (
   `source` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Đang đổ dữ liệu cho bảng `watermark`
---
 
 INSERT INTO `watermark` (`id`, `idAlbum`, `source`) VALUES
 (1, 33, '/images-watermark/images (1).jfif'),

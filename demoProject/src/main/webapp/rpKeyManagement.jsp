@@ -328,17 +328,20 @@
             </tbody>
         </table>
         <% } else { %>
+        <div class="align-middle" style="display: flex;justify-content: space-between">
+            <%--  note : chỉnh thành chuyển thành nút xem lịch sử Report của USER                          --%>
+            <div class="cols-md-6 mb-4">
+                <a href="./userkeys-management" style="display: flex;justify-content: center">
+                    <button class="btn btn-block btn-primary"
+                            style="width: 100%">Quay lại Trang PublicKey
+                    </button>
+                </a>
+            </div>
+        </div>
         <div class="">
             <div class="text-center mb-4">
                 <h2 class="section px-5"><span
                 >Bạn chưa Report Key nào.</span></h2>
-            </div>
-            <div class="text-center" style="margin-top: 40px; ">
-                <a href="./report-priKey?action=direct" style="display: flex;justify-content: center">
-                    <button class="btn btn-block btn-primary my-3 py-3"
-                            style="width: 50%">Đến FORM Report Key nếu bạn muốn Báo Cáo Lộ Key.
-                    </button>
-                </a>
             </div>
         </div>
         <% } %>
