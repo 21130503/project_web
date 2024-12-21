@@ -61,7 +61,7 @@ public class ReportKeysDAO {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
-                int userId = rs.getInt("userId");
+                int userId = rs.getInt("reportUserID");
                 int publicKeysId = rs.getInt("publicKeysId");
                 Date date = rs.getDate("date");
                 Time time = rs.getTime("time");

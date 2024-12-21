@@ -5,6 +5,7 @@
 <%@ page import="favourite.Favourite" %>
 <%@ page import="cart.Cart" %>
 <%@ page import="nhom26.*" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -41,6 +42,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"
             integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .error-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .error-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 20px 30px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .error-box button,
+        .error-box a {
+            margin-top: 10px;
+            background-color: #721c24;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .error-box button:hover,
+        .error-box a:hover {
+            background-color: #5a131c;
+        }
+    </style>
 </head>
 
 <body>
@@ -65,6 +111,28 @@
     if (cart == null) cart = new Cart();
 %>
 <% ArrayList<Notification> notifications = (ArrayList<Notification>) request.getAttribute("notifications") ;%>
+
+<%
+    String err = (String) request.getAttribute("err") == null ? "" : (String) request.getAttribute("err");
+    if (!err.isEmpty()) {
+%>
+<div class="error-overlay" id="errorOverlay">
+    <div class="error-box">
+        <h3> <i class="fas fa-key text-primary"></i> Error <i class="fas fa-key text-primary"></i></h3>
+        <p><%= err %></p>
+        <button onclick="closeError()">Close</button>
+        <a href="./createKey">Create PublicKey</a>
+    </div>
+</div>
+<% } %>
+
+<script>
+    function closeError() {
+        const errorOverlay = document.getElementById('errorOverlay');
+        errorOverlay.style.display = 'none';
+    }
+</script>
+
 <!-- Topbar Start -->
 <div class="container-fluid">
 

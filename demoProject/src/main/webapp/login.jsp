@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <html lang="en">
@@ -13,7 +14,10 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 </head>
 <body>
-<% String err = (String) request.getAttribute("err") == null ? "" : (String) request.getAttribute("err");%>
+<%
+    String err = (String) request.getAttribute("err") == null ? "" : (String) request.getAttribute("err");
+%>
+
 <div class="inner">
     <h1 class="logo">Nhóm 26</h1>
     <h3 class="title">Đăng nhập</h3>
