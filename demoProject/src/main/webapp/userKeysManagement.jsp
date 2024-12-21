@@ -255,14 +255,16 @@
                                     for (PublicKeys pubKey : publicKeysList) {
                             %>
                                 <tr>
-                                    <td class="text-left"><i class="fas fa-key text-primary"></i> <%= pubKey.getId() %> </td>
-                                    <td class="align-middle" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: calc(1.5em* 31);">
+                                    <td class="text-left <% if (pubKey.getEndTime() != null) { %> text-danger <% } else { %> text-success <% } %> "><i class="fas fa-key text-primary"></i> <%= pubKey.getId() %> </td>
+                                    <td class="align-middle <% if (pubKey.getEndTime() != null) { %> text-danger <% } else { %> text-success <% } %> " style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: calc(1.5em* 31);">
                                         <span id="keySnippet">
                                             <%= pubKey.getPublicKey() %>
                                         </span>
                                     </td>
-                                    <td class="align-middle"><%= pubKey.getCreateTime() %></td>
-                                    <td class="align-middle"><%= pubKey.getEndTime() %></td>
+                                    <td class="align-middle <% if (pubKey.getEndTime() != null) { %> text-danger <% } else { %> text-success <% } %>"><%= pubKey.getCreateTime() %></td>
+                                    <td class="align-middle <% if (pubKey.getEndTime() != null) { %> text-danger <% } else { %> text-success <% } %>">
+                                        <%= pubKey.getEndTime() != null ? pubKey.getEndTime() : "N/A" %>
+                                    </td>
                                     <td class="align-middle">
                                         <button class="btn btn-link p-0" onclick="showFullKey('<%= pubKey.getPublicKey() %>')" style="color: black; padding: 3px !important; background-color: #D19C97; border-radius: 9px;">
                                             Details
