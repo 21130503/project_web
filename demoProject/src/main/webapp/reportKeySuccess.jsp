@@ -49,7 +49,13 @@
                 <p id='message'>
                     Các thông tin về thời gian lộ Private Key đã được gửi về hệ thống !!
                 </p>
-                <a href="./index" id="contBtn">Tiếp tục</a>
+                <a href="./createKey" class="contBtn">Tạo Key Mới</a>
+            </div>
+            <div class="register">
+                <div>
+                    <a class="redirect-home" href="./index" style="color: #00ac4abd; font-size: 18px;"><span ><i
+                            class="fa-solid fa-angle-left"></i></span><span>Về trang chủ</span></a>
+                </div>
             </div>
         </div>
 </div>
